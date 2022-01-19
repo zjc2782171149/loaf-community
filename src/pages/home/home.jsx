@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { Button } from 'antd';
+import React from "react";
+// import { useState } from 'react';
+import { HomeMain } from "./home";
+import Header from "../../publicComponents/header/header.jsx";
+import Section from "../../components/home/section/section.jsx";
+
+// const onChangeCardSk = (checked) => {
+//   this.setState({ loading: !checked });
+// };
 
 const Home = () => {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <p>You clicked {count} times</p>
-      <Button type="primary" onClick={() => setCount(count + 1)}>Click me</Button>
-    </>
-  )
-}
+    <HomeMain>
+      <div className="home">
+        <Header></Header>
+        <Section></Section>
+      </div>
+    </HomeMain>
+  );
+};
 
-export default Home
+export default Home;
