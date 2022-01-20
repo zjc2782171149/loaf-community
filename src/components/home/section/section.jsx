@@ -1,11 +1,10 @@
-import React from "react";
-// import { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import SectionCarousel from "../carousel/carousel.jsx";
 import { SectionStyle } from "./section";
 
 import {
   Button,
   Avatar,
-  Carousel,
   Tabs,
   Menu,
   Dropdown,
@@ -14,16 +13,20 @@ import {
   Skeleton,
   Card,
   Divider,
-  Image
+  Image,
+  Popover
+  // BackTop
 } from "antd";
 import {
   MessageOutlined,
   HeartFilled,
-  StarOutlined,
+  EyeFilled,
   ThunderboltFilled,
   HeartTwoTone,
   EyeTwoTone,
-  FireTwoTone
+  FireTwoTone,
+  DashboardTwoTone,
+  CheckCircleFilled
 } from "@ant-design/icons";
 
 const { TabPane } = Tabs;
@@ -34,25 +37,17 @@ const { Meta } = Card;
 // };
 
 const Section = () => {
+  // const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState({});
+  const [essayList, setEssayList] = useState([]);
+  let loading = false;
   const menu = (
     <Menu>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          按热度排序
-        </a>
+      <Menu.Item key="hot" icon={<FireTwoTone />}>
+        按热度排序
       </Menu.Item>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          按最新排序
-        </a>
+      <Menu.Item key="new" icon={<DashboardTwoTone />}>
+        按最新排序
       </Menu.Item>
     </Menu>
   );
@@ -63,24 +58,42 @@ const Section = () => {
     </Dropdown>
   );
 
-  // function onChange(a, b, c) {
-  //   console.log(a, b, c);
-  // }
   function callback(key) {
     console.log(key);
-  }
-
-  // let loading = true;
-
-  const listData = [];
-  for (let i = 0; i < 6; i++) {
-    listData.push({
-      href: "",
-      title: `ant design part ${i}`,
-      avatar: "https://joeschmoe.io/api/v1/random",
-      description:
-        "Ant Design, a design language for background applications, is refined by Ant UED Team.Ant Design, a design language for background applications, is refined by Ant UED Team.Ant Design, a design language for background applications, is refined by Ant UED Team.Ant Design, a design language for background applications, is refined by Ant UED Team."
-    });
+    // switch (key) {
+    //   case "推荐":
+    //     setEssayList(recommend_essay);
+    //     break;
+    //   case "前端":
+    //     setEssayList(front_essay);
+    //     break;
+    //   case "后端":
+    //     setEssayList(after_essay);
+    //     break;
+    //   case "Android":
+    //     setEssayList(Android_essay);
+    //     break;
+    //   case "iOS":
+    //     setEssayList(iOS_essay);
+    //     break;
+    //   case "人工智能":
+    //     setEssayList(personalIntelligence_essay);
+    //     break;
+    //   case "开发工具":
+    //     setEssayList(tool_essay);
+    //     break;
+    //   case "代码人生":
+    //     setEssayList(code_essay);
+    //     break;
+    //   case "阅读":
+    //     setEssayList(read_essay);
+    //     break;
+    //   case "其他":
+    //     setEssayList(other_essay);
+    //     break;
+    //   default:
+    //     setEssayList([]);
+    // }
   }
 
   const IconText = ({ icon, text }) => (
@@ -90,68 +103,98 @@ const Section = () => {
     </Space>
   );
 
-  const data = [
+  const announcementList = [
     {
-      title: "Ant Design Title 1"
+      title: "【好题分享活动】开奖啦~",
+      description: "2022/01/17"
     },
     {
-      title: "Ant Design Title 2"
+      title: "【笔记创作活动】已开启，超值礼品等…",
+      description: "2022/01/17"
     },
     {
-      title: "Ant Design Title 3"
+      title: "青训营社区|意见&建议反馈收集",
+      description: "2022/01/15"
     },
     {
-      title: "Ant Design Title 4"
+      title: "关于我们(bug生产队)",
+      description: "2022/02/10"
     }
   ];
+
+  // const style = {
+  //   height: 40,
+  //   width: 40,
+  //   lineHeight: "40px",
+  //   borderRadius: 4,
+  //   backgroundColor: "#1088e9",
+  //   color: "#fff",
+  //   textAlign: "center",
+  //   fontSize: 14
+  // };
+
+  // 文章的列表相关
+  useEffect(() => {
+    const recommend_essay = [];
+    // front_essay = [],
+    // after_essay = [],
+    // Android_essay = [],
+    // iOS_essay = [],
+    // personalIntelligence_essay = [],
+    // tool_essay = [],
+    // code_essay = [],
+    // read_essay = [],
+    // other_essay = [];
+    for (let i = 0; i < 6; i++) {
+      recommend_essay.push({
+        href: "",
+        title: `推荐部分 ${i}`,
+        avatar: require("../../../assets/personalAvatar.jpg"),
+        introduction: "recommend",
+        visit_count: 122,
+        like_count: 22,
+        comment_count: 10
+      });
+    }
+
+    // 先模拟从接口获取数据的异步
+    setTimeout(() => {
+      setEssayList(recommend_essay);
+    }, 100);
+  }, []);
+
+  // 用户相关
+  useEffect(() => {
+    setUser({
+      avatar_url: require("../../../assets/personalAvatar.jpg"),
+      username: "Smooth",
+      introduction: "一名SCAU大二前端er",
+      user_like_count: 456,
+      user_visit_count: 23452,
+      user_potential_count: 1233,
+      sign: false
+    });
+  }, []);
 
   return (
     <SectionStyle>
       <section className="section">
         <div className="left-aside">
-          <div className="carousel">
-            {/* afterChange={onChange} */}
-
-            <Carousel autoplay effect="fade">
-              <div>
-                <img
-                  className="carouse-image"
-                  src={require("../../../assets/carousel1.webp")}
-                />
-              </div>
-              <div>
-                <img
-                  className="carouse-image"
-                  src={require("../../../assets/carousel1.webp")}
-                />
-              </div>
-              <div>
-                <img
-                  className="carouse-image"
-                  src={require("../../../assets/carousel1.webp")}
-                />
-              </div>
-              <div>
-                <img
-                  className="carouse-image"
-                  src={require("../../../assets/carousel1.webp")}
-                />
-              </div>
-            </Carousel>
-          </div>
+          <SectionCarousel />
           <div className="main">
             <div className="main-header">
               <div className="tab-flex">
                 <Tabs onChange={callback} tabBarExtraContent={operations}>
-                  <TabPane tab="推荐" key="1"></TabPane>
-                  <TabPane tab="前端" key="2"></TabPane>
-                  <TabPane tab="后端" key="3"></TabPane>
-                  <TabPane tab="Android" key="4"></TabPane>
-                  <TabPane tab="iOS" key="5"></TabPane>
-                  <TabPane tab="人工智能" key="6"></TabPane>
-                  <TabPane tab="开发工具" key="7"></TabPane>
-                  <TabPane tab="代码人生" key="8"></TabPane>
-                  <TabPane tab="阅读" key="9"></TabPane>
+                  <TabPane tab="推荐" key="推荐"></TabPane>
+                  <TabPane tab="前端" key="前端"></TabPane>
+                  <TabPane tab="后端" key="后端"></TabPane>
+                  <TabPane tab="Android" key="Android"></TabPane>
+                  <TabPane tab="iOS" key="iOS"></TabPane>
+                  <TabPane tab="人工智能" key="人工智能"></TabPane>
+                  <TabPane tab="开发工具" key="开发工具"></TabPane>
+                  <TabPane tab="代码人生" key="代码人生"></TabPane>
+                  <TabPane tab="阅读" key="阅读"></TabPane>
+                  <TabPane tab="其他" key="其他"></TabPane>
                 </Tabs>
               </div>
               <div className="main-body">
@@ -164,34 +207,43 @@ const Section = () => {
                     },
                     pageSize: 5
                   }}
-                  dataSource={listData}
+                  dataSource={essayList}
                   renderItem={(item) => (
                     <List.Item
                       className="content-list"
                       key={item.title}
-                      actions={[
-                        <IconText
-                          icon={StarOutlined}
-                          text="156"
-                          key="list-vertical-star-o"
-                        />,
-                        <IconText
-                          icon={HeartFilled}
-                          text="156"
-                          key="list-vertical-like-o"
-                        />,
-                        <IconText
-                          icon={MessageOutlined}
-                          text="2"
-                          key="list-vertical-message"
-                        />
-                      ]}
+                      actions={
+                        !loading && [
+                          <IconText
+                            icon={EyeFilled}
+                            text={item.visit_count}
+                            key="list-vertical-star-o"
+                          />,
+                          <IconText
+                            icon={HeartFilled}
+                            text={item.like_count}
+                            key="list-vertical-like-o"
+                          />,
+                          <IconText
+                            icon={MessageOutlined}
+                            text={item.comment_count}
+                            key="list-vertical-message"
+                          />
+                        ]
+                      }
+                      extra={
+                        <Popover content="点击以查看文章详情">
+                          <EyeTwoTone className="listSeeMore" />
+                        </Popover>
+                      }
                     >
-                      <List.Item.Meta
-                        avatar={<Avatar src={item.avatar} />}
-                        title={<a href={item.href}>{item.title}</a>}
-                        description={item.description}
-                      />
+                      <Skeleton loading={loading} active avatar>
+                        <List.Item.Meta
+                          avatar={<Avatar src={item.avatar} />}
+                          title={<a href={item.href}>{item.title}</a>}
+                          description={item.introduction}
+                        />
+                      </Skeleton>
                     </List.Item>
                   )}
                 />
@@ -206,27 +258,25 @@ const Section = () => {
             actions={[<text key="enter">进入主页</text>]}
             hoverable="true"
           >
-            <Skeleton loading={false} avatar active>
+            <Skeleton loading={loading} avatar active>
               <Meta
-                avatar={
-                  <Avatar src={require("../../../assets/personalAvatar.jpg")} />
-                }
-                title="Smooth"
-                description="一名SCAU大二前端er"
+                avatar={<Avatar src={user.avatar_url} />}
+                title={user.username}
+                description={user.introduction}
               />
               <Divider />
-              <Space size={15}>
+              <Space size={10}>
                 <HeartTwoTone className="iconNum" />
-                获得点赞： 144
+                获得点赞： {user.user_like_count}
               </Space>
-              <br />
-              <Space size={14}>
+
+              <Space size={10}>
                 <EyeTwoTone className="iconNum" />
-                文章被阅读： 3023
+                文章被阅读： {user.user_visit_count}
               </Space>
-              <Space size={14}>
+              <Space size={10}>
                 <FireTwoTone className="iconNum" />
-                潜力值：225
+                潜力值：{user.user_potential_count}
               </Space>
             </Skeleton>
           </Card>
@@ -236,27 +286,36 @@ const Section = () => {
             className="right-aside-card"
             hoverable="true"
             actions={[
-              <Button
-                type="primary"
-                shape="round"
-                icon={<ThunderboltFilled />}
-                size="large"
-                key="daily"
-              >
-                签到
-              </Button>
+              (!user.sign && (
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<ThunderboltFilled />}
+                  size="large"
+                  key="daily"
+                >
+                  签到
+                </Button>
+              )) ||
+                (user.sign && (
+                  <Button
+                    type="default"
+                    shape="round"
+                    icon={<CheckCircleFilled />}
+                    size="large"
+                    key="daily"
+                    disabled
+                  >
+                    已签到
+                  </Button>
+                ))
             ]}
           >
-            <Skeleton loading={false} avatar active>
+            <Skeleton loading={loading} avatar active>
               <Meta
                 avatar={
                   <Avatar
-                    src={
-                      <Image
-                        src={require("../../../assets/personalAvatar.jpg")}
-                        style={{ width: 32 }}
-                      />
-                    }
+                    src={<Image src={user.avatar_url} style={{ width: 32 }} />}
                   />
                 }
                 title="上午好！"
@@ -276,15 +335,16 @@ const Section = () => {
             <List
               loadMore={true}
               itemLayout="horizontal"
-              dataSource={data}
+              dataSource={announcementList}
               renderItem={(item) => (
                 <List.Item>
                   <List.Item.Meta
-                    title={<a href="https://ant.design">{item.title}</a>}
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    title={<a href="">{item.title}</a>}
+                    description={item.description}
                   />
                 </List.Item>
               )}
+              className="content-list"
             />
           </Card>
 
@@ -294,16 +354,16 @@ const Section = () => {
             hoverable="true"
             style={{ width: 295 }}
             cover={
-              <img
-                alt="example"
-                src={require("../../../assets/carousel1.webp")}
-              />
+              <img alt="example" src="https://joeschmoe.io/api/v1/random" />
             }
           >
-            {/* <Meta title="Europe Street beat" description="www.instagram.com" /> */}
+            <Meta title="广告位招租" description="有需要的可以来找我们哈哈" />
           </Card>
         </div>
       </section>
+      {/* <BackTop>
+        <div style={style}>UP</div>
+      </BackTop> */}
     </SectionStyle>
   );
 };
