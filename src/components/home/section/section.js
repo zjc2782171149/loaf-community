@@ -31,7 +31,11 @@ export const SectionStyle = styled.div`
   .main-header {
     padding: 0 20px;
   }
-
+  .content-list {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .main-tabs {
     font-weight: 600;
     line-height: 18px;

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { HeaderStyle } from "./header";
 // import { useState } from 'react';
 import {
@@ -30,6 +31,8 @@ const { Search } = Input;
 const { TabPane } = Tabs;
 
 const Header = () => {
+  const [active, setActive] = useState();
+  const navigate = useNavigate();
   let show = true;
   function handleMenuClick(index) {
     console.log(index);
@@ -153,8 +156,19 @@ const Header = () => {
       </Menu.Item>
     </Menu>
   );
-  function callback(key) {
-    console.log(key);
+  function tabsChange(key) {
+    setActive(key);
+    switch (key) {
+      case "1":
+        navigate("/");
+        break;
+      case "2":
+        navigate("/leetCode");
+        break;
+      case "3":
+        navigate("/fish");
+        break;
+    }
   }
 
   function onSearch(e) {
@@ -167,12 +181,12 @@ const Header = () => {
         <div className="left">
           <img className="image" src={require("../../assets/logo.webp")} />
           <div></div>
-          <p className="text">摸鱼社区</p>
+          <p className="text">摸鱼学社</p>
           <Tabs
-            defaultActiveKey="1"
-            onChange={callback}
+            onChange={tabsChange}
             size="large"
             className="header-tabs"
+            activeKey={active}
           >
             <TabPane tab="首页" key="1"></TabPane>
             <TabPane tab="力扣专区" key="2"></TabPane>
@@ -197,7 +211,7 @@ const Header = () => {
               className="avatar"
               src={
                 <Image
-                  src="https://joeschmoe.io/api/v1/random"
+                  src={require("../../assets/personalAvatar.jpg")}
                   style={{ width: 32 }}
                 />
               }

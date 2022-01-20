@@ -79,7 +79,7 @@ const Section = () => {
       title: `ant design part ${i}`,
       avatar: "https://joeschmoe.io/api/v1/random",
       description:
-        "Ant Design, a design language for background applications, is refined by Ant UED Team."
+        "Ant Design, a design language for background applications, is refined by Ant UED Team.Ant Design, a design language for background applications, is refined by Ant UED Team.Ant Design, a design language for background applications, is refined by Ant UED Team.Ant Design, a design language for background applications, is refined by Ant UED Team."
     });
   }
 
@@ -89,6 +89,21 @@ const Section = () => {
       {text}
     </Space>
   );
+
+  const data = [
+    {
+      title: "Ant Design Title 1"
+    },
+    {
+      title: "Ant Design Title 2"
+    },
+    {
+      title: "Ant Design Title 3"
+    },
+    {
+      title: "Ant Design Title 4"
+    }
+  ];
 
   return (
     <SectionStyle>
@@ -152,6 +167,7 @@ const Section = () => {
                   dataSource={listData}
                   renderItem={(item) => (
                     <List.Item
+                      className="content-list"
                       key={item.title}
                       actions={[
                         <IconText
@@ -184,6 +200,7 @@ const Section = () => {
           </div>
         </div>
         <div className="right-aside">
+          {/* 个人信息展示 */}
           <Card
             className="right-aside-card"
             actions={[<text key="enter">进入主页</text>]}
@@ -214,6 +231,7 @@ const Section = () => {
             </Skeleton>
           </Card>
 
+          {/* 签到 */}
           <Card
             className="right-aside-card"
             hoverable="true"
@@ -246,8 +264,34 @@ const Section = () => {
               />
             </Skeleton>
           </Card>
+
+          {/* 公告栏 */}
           <Card
-            hoverable
+            className="right-aside-card"
+            title="公告栏"
+            extra={<a href="#">More</a>}
+            style={{ width: 300 }}
+            hoverable="true"
+          >
+            <List
+              loadMore={true}
+              itemLayout="horizontal"
+              dataSource={data}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={<a href="https://ant.design">{item.title}</a>}
+                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                  />
+                </List.Item>
+              )}
+            />
+          </Card>
+
+          {/* 照片/广告 */}
+          <Card
+            className="right-aside-card"
+            hoverable="true"
             style={{ width: 295 }}
             cover={
               <img
