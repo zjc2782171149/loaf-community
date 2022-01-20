@@ -32,127 +32,52 @@ const { TabPane } = Tabs;
 
 const Header = () => {
   const [active, setActive] = useState();
+  const [value, setValue] = useState(""); // 搜索有关动作
   const navigate = useNavigate();
   let show = true;
   function handleMenuClick(index) {
     console.log(index);
   }
   const menu = (
-    <Menu>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          查看新消息
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          查看新提醒
-        </a>
-      </Menu.Item>
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="newMessage">查看新消息</Menu.Item>
+      <Menu.Item key="newRemind">查看新提醒</Menu.Item>
     </Menu>
   );
   const menuAvatar = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="1" icon={<EditFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          写文章
-        </a>
+        写文章
       </Menu.Item>
       <Menu.Item key="2" icon={<FileTextFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          草稿箱
-        </a>
+        草稿箱
       </Menu.Item>
       <Divider />
       <Menu.Item key="3" icon={<UserOutlined />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          我的主页
-        </a>
+        我的主页
       </Menu.Item>
       <Menu.Item key="4" icon={<HeartFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          我赞过的
-        </a>
+        我赞过的
       </Menu.Item>
       <Menu.Item key="5" icon={<StarFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          我的收藏
-        </a>
+        我的收藏
       </Menu.Item>
       <Menu.Item key="6" icon={<EyeFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          浏览记录
-        </a>
+        浏览记录
       </Menu.Item>
       <Menu.Item key="7" icon={<TagsFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          标签管理
-        </a>
+        标签管理
       </Menu.Item>
       <Divider />
       <Menu.Item key="8" icon={<SettingFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          设置
-        </a>
+        设置
       </Menu.Item>
       <Menu.Item key="9" icon={<QuestionCircleFilled />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          关于
-        </a>
+        关于
       </Menu.Item>
       <Divider />
       <Menu.Item key="10" icon={<ExportOutlined />}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          退出
-        </a>
+        退出
       </Menu.Item>
     </Menu>
   );
@@ -171,8 +96,9 @@ const Header = () => {
     }
   }
 
-  function onSearch(e) {
-    console.log(e.target.value);
+  function onSearch(inputValue) {
+    setValue(inputValue);
+    console.log(value);
   }
 
   return (

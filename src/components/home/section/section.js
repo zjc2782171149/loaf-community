@@ -2,26 +2,17 @@ import styled from "styled-components";
 import { colorWhite } from "../../../reducer/constant";
 
 const width = document.body.clientWidth;
-const height = document.body.clientHeight;
-console.log(width, height);
+console.log(width);
 
 export const SectionStyle = styled.div`
   .section {
     display: flex;
     width: 100%;
     min-height: 400px;
-    padding: 20px 160px;
+    padding: 20px ${width / 10}px;
   }
   .left-aside {
     flex: 0.75;
-  }
-  .carousel {
-    width: ${(width - 320) * 0.735}px;
-    margin-bottom: 20px;
-  }
-  .carouse-image {
-    width: ${(width - 320) * 0.735}px;
-    height: 225px;
   }
   .main {
     width: ${(width - 320) * 0.735}px;
@@ -47,6 +38,12 @@ export const SectionStyle = styled.div`
   .main-tabs-items {
     margin-bottom: 5px;
     border: none;
+  }
+  .listSeeMore {
+    transform: scale(1.3);
+  }
+  .listSeeMore:hover {
+    cursor: pointer;
   }
   .right-aside {
     flex: 0.25;
