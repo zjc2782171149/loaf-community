@@ -14,8 +14,8 @@ import {
   Card,
   Divider,
   Image,
-  Popover
-  // BackTop
+  Popover,
+  message
 } from "antd";
 import {
   MessageOutlined,
@@ -122,16 +122,14 @@ const Section = () => {
     }
   ];
 
-  // const style = {
-  //   height: 40,
-  //   width: 40,
-  //   lineHeight: "40px",
-  //   borderRadius: 4,
-  //   backgroundColor: "#1088e9",
-  //   color: "#fff",
-  //   textAlign: "center",
-  //   fontSize: 14
-  // };
+  // 每日签到
+  const key = "updatable";
+  const dailySign = () => {
+    message.loading({ content: "请耐心等待", key });
+    setTimeout(() => {
+      message.success({ content: "恭喜您，签到成功!", key, duration: 2 });
+    }, 1000);
+  };
 
   // 文章的列表相关
   useEffect(() => {
@@ -267,16 +265,16 @@ const Section = () => {
               <Divider />
               <Space size={10}>
                 <HeartTwoTone className="iconNum" />
-                获得点赞： {user.user_like_count}
+                获得点赞{user.user_like_count}
               </Space>
 
               <Space size={10}>
                 <EyeTwoTone className="iconNum" />
-                文章被阅读： {user.user_visit_count}
+                文章被阅读{user.user_visit_count}
               </Space>
               <Space size={10}>
                 <FireTwoTone className="iconNum" />
-                潜力值：{user.user_potential_count}
+                潜力值{user.user_potential_count}
               </Space>
             </Skeleton>
           </Card>
@@ -293,6 +291,7 @@ const Section = () => {
                   icon={<ThunderboltFilled />}
                   size="large"
                   key="daily"
+                  onClick={dailySign}
                 >
                   签到
                 </Button>
@@ -361,9 +360,6 @@ const Section = () => {
           </Card>
         </div>
       </section>
-      {/* <BackTop>
-        <div style={style}>UP</div>
-      </BackTop> */}
     </SectionStyle>
   );
 };

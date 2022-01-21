@@ -1,10 +1,13 @@
 import React from "react";
+import LeetCodeSection from "../../components/leetCode/section/section.jsx";
 import { LeetCodeStyle } from "./leetCode";
 
 const LeetCode = () => {
   return (
     <LeetCodeStyle>
-      <div className="leetcode">力扣专区</div>
+      <div className="leetcode">
+        <LeetCodeSection />
+      </div>
     </LeetCodeStyle>
   );
 };
