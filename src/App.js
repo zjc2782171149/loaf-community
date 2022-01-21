@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import routes from "../src/router/index";
-import Header from "./publicComponents/header/header.jsx";
+import Header from "./layout/header/header.jsx";
 import { BackTop } from "antd";
 
 // 回到顶部
