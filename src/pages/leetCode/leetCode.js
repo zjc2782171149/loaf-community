@@ -9,7 +9,7 @@ export const LeetCodeStyle = styled.div`
   .leetcode {
     width: ${width};
     min-width: 1200px;
-    min-height: 1000px;
+    min-height: 800px;
     background-color: ${colorGrey};
   }
 `;

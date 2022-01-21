@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeaderStyle } from "./header";
 // import { useState } from 'react';
@@ -85,12 +85,15 @@ const Header = () => {
     setActive(key);
     switch (key) {
       case "1":
+        localStorage.setItem("headerIndex", 1);
         navigate("/");
         break;
       case "2":
+        localStorage.setItem("headerIndex", 2);
         navigate("/leetCode");
         break;
       case "3":
+        localStorage.setItem("headerIndex", 3);
         navigate("/fish");
         break;
     }
@@ -100,6 +103,13 @@ const Header = () => {
     setValue(inputValue);
     console.log(value);
   }
+
+  // 初始化
+  useEffect(() => {
+    if (localStorage.getItem("headerIndex")) {
+      setActive(localStorage.getItem("headerIndex"));
+    }
+  }, []);
 
   return (
     <HeaderStyle>
@@ -116,7 +126,7 @@ const Header = () => {
           >
             <TabPane tab="首页" key="1"></TabPane>
             <TabPane tab="力扣专区" key="2"></TabPane>
-            <TabPane tab="摸鱼圈" key="3"></TabPane>
+            <TabPane tab="唠嗑圈" key="3"></TabPane>
           </Tabs>
         </div>
         <div className="right">
