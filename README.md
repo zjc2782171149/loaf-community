@@ -6,5 +6,5 @@
 
 #### 启动项目
 
-npm install
+yarn add
 yarn start
