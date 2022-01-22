@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { Button } from 'antd';
+import React from "react";
+// import { useState } from 'react';
+import { HomeStyle } from "./home";
+import Section from "../../components/home/section/section.jsx";
 
 const Home = () => {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <p>You clicked {count} times</p>
-      <Button type="primary" onClick={() => setCount(count + 1)}>Click me</Button>
-    </>
-  )
-}
+    <HomeStyle>
+      <div className="home">
+        <Section></Section>
+      </div>
+    </HomeStyle>
+  );
+};
 
-export default Home
+export default Home;

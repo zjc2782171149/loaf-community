@@ -3,6 +3,8 @@ import { Skeleton } from "antd";
 
 // 配置懒加载
 const Home = lazy(() => import("../pages/home/home.jsx"));
+const Fish = lazy(() => import("../pages/fish/fish.jsx"));
+const LeetCode = lazy(() => import("../pages/leetCode/leetCode.jsx"));
 
 // 懒加载需要加上Suspense的异步回调
 const lazyLoad = (children) => {
@@ -30,13 +32,33 @@ const lazyLoad = (children) => {
 const routes = [
   {
     path: "/",
-    element: lazyLoad(<Home />),
-    children: [
-      {
-        path: "home",
-        element: lazyLoad(<Home />)
-      }
-    ]
+    element: lazyLoad(<Home />)
+    // children: [
+    //   {
+    //     path: "home",
+    //     element: lazyLoad(<Home />)
+    //   }
+    // ]
+  },
+  {
+    path: "/fish",
+    element: lazyLoad(<Fish />)
+    // children: [
+    //   {
+    //     path: "fish",
+    //     element: lazyLoad(<Fish />)
+    //   }
+    // ]
+  },
+  {
+    path: "/leetCode",
+    element: lazyLoad(<LeetCode />)
+    // children: [
+    //   {
+    //     path: "fish",
+    //     element: lazyLoad(<Fish />)
+    //   }
+    // ]
   },
   // 404找不到
   { path: "*", element: lazyLoad(<Home />) }

@@ -5,8 +5,8 @@ const width = document.body.clientWidth;
 const height = document.body.clientHeight;
 console.log(width, height);
 
-export const HomeStyle = styled.div`
-  .home {
+export const LeetCodeStyle = styled.div`
+  .leetcode {
     width: ${width};
     min-width: 1200px;
     min-height: 800px;
