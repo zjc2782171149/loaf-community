@@ -1,36 +1,73 @@
 import styled from "styled-components";
-import { colorWhite } from "../../../reducer/constant";
+import { colorWhite, colorGrey, colorBlue } from "../../../reducer/constant";
 
 const width = document.body.clientWidth;
 console.log(width);
-
 export const SectionStyle = styled.div`
   .section {
     display: flex;
+    justify-content: space-between;
     width: 100%;
     min-height: 400px;
-    padding: 20px ${width / 10}px;
+    padding: 20px ${width / 20}px;
   }
   .left-aside {
-    flex: 0.75;
+    flex: 0.13;
+  }
+  .middle-aside {
+    flex: 0.7;
+    margin: 0 20px;
+  }
+  .right-aside {
+    flex: 0.25;
+  }
+  .left-title {
+    font-weight:600;
+    font-size: 20px;
   }
   .main {
-    width: 100%;
     min-height: 200px;
     background-color: ${colorWhite};
     padding: 20px 0;
   }
-  .leetCodeIntroduce {
-    width: 100%;
-    margin-bottom: 20px;
-  }
   .main-body {
     padding: 0 20px;
+  }
+  .smileHover:hover {
+    color: ${colorBlue};
+    cursor: pointer;
+  }
+  .gutter-row:hover {
+    cursor: pointer;
+  }
+  .sendMessage {
+    width: 100%
+    height:300px;
+  }
+  .textarea {
+    background-color: ${colorGrey};
+    margin-bottom:20px;
+  }
+  .button {
+    float: right;
+    width: 100px;
+  }
+  .messageList {
+    background-color: ${colorWhite};
+    margin-top: -5px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+  .tabs {
+    width: 100%;
+    min-height:300px;
   }
   .content-list {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .hotList {
   }
   .main-tabs {
     font-weight: 600;
@@ -50,10 +87,6 @@ export const SectionStyle = styled.div`
   .listSeeMore:hover {
     cursor: pointer;
   }
-  .right-aside {
-    flex: 0.25;
-    margin-left: 20px;
-  }
   .right-aside-card {
     width: 100%;
     margin-bottom: 20px;
@@ -63,6 +96,7 @@ export const SectionStyle = styled.div`
   }
   .iconNum {
     transform: scale(1.3);
+    cursor: pointer;
   }
   .iconfontBig {
     transform: scale(2);
@@ -71,5 +105,8 @@ export const SectionStyle = styled.div`
   .hotStyle {
     transform: scale(1.5);
     margin: 0 5px;
+  }
+  .left-aside-item {
+    margin-top: 20px;
   }
 `;

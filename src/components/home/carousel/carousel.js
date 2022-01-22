@@ -6,11 +6,11 @@ console.log(width, height);
 
 export const SectionCarouselStyle = styled.div`
   .carousel {
-    width: ${(width - 320) * 0.735}px;
+    width: ${(width - 320) * 0.75}px;
     margin-bottom: 20px;
   }
   .carouse-image {
-    width: ${(width - 320) * 0.735}px;
+    width: 100%;
     height: 225px;
   }
 `;

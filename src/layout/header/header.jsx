@@ -107,7 +107,13 @@ const Header = () => {
   // 初始化
   useEffect(() => {
     if (localStorage.getItem("headerIndex")) {
+      // 本地存过header组件的active索引
       setActive(localStorage.getItem("headerIndex"));
+      tabsChange(localStorage.getItem("headerIndex"));
+    } else {
+      localStorage.setItem("headerIndex", 1);
+      setActive(1);
+      tabsChange(1);
     }
   }, []);
 

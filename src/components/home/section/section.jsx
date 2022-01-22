@@ -328,10 +328,10 @@ const Section = () => {
             className="right-aside-card"
             title="公告栏"
             extra={<a href="#">More</a>}
-            style={{ width: 300 }}
             hoverable="true"
           >
             <List
+              className="content-list"
               loadMore={true}
               itemLayout="horizontal"
               dataSource={announcementList}
@@ -343,7 +343,6 @@ const Section = () => {
                   />
                 </List.Item>
               )}
-              className="content-list"
             />
           </Card>
 
@@ -351,7 +350,6 @@ const Section = () => {
           <Card
             className="right-aside-card"
             hoverable="true"
-            style={{ width: 295 }}
             cover={
               <img alt="example" src="https://joeschmoe.io/api/v1/random" />
             }

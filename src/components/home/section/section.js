@@ -15,7 +15,7 @@ export const SectionStyle = styled.div`
     flex: 0.75;
   }
   .main {
-    width: ${(width - 320) * 0.735}px;
+    width: 100%;
     min-height: 200px;
     background-color: ${colorWhite};
   }
@@ -50,7 +50,7 @@ export const SectionStyle = styled.div`
     margin-left: 20px;
   }
   .right-aside-card {
-    width: ${(width - 320) * 0.246}px;
+    width: 100%;
     margin-bottom: 20px;
   }
   .iconNum {

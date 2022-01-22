@@ -394,6 +394,7 @@ const LeetCodeSection = () => {
               <IconFont type="icon-hot1" className="hotStyle" key="hot" />,
               "热题榜"
             ]}
+            hoverable="true"
           >
             <List
               className="right-aside-card-hot"
