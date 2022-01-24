@@ -5,6 +5,21 @@ import { Skeleton } from "antd";
 const Home = lazy(() => import("../pages/home/home.jsx"));
 const Fish = lazy(() => import("../pages/fish/fish.jsx"));
 const LeetCode = lazy(() => import("../pages/leetCode/leetCode.jsx"));
+const Topic = lazy(() => import("../pages/topic/topic.jsx"));
+const PersonalHome = lazy(() => import("../pages/user/index/user.jsx"));
+const Profile = lazy(() => import("../pages/user/profile/profile.jsx"));
+const Posts = lazy(() => import("../pages/user/posts/posts.jsx"));
+const Says = lazy(() => import("../pages/user/says/says.jsx"));
+const Likes = lazy(() => import("../pages/user/likes/likes.jsx"));
+const PersonalSetting = lazy(() =>
+  import("../pages/user/setting/index/index.jsx")
+);
+const SettingProfile = lazy(() =>
+  import("../pages/user/setting/profile/profile.jsx")
+);
+const Account = lazy(() => import("../pages/user/setting/account/account.jsx"));
+const Resume = lazy(() => import("../pages/user/setting/resume/resume.jsx"));
+// const Essay = lazy(() => import("../pages/essay/essay.jsx"));
 
 // 懒加载需要加上Suspense的异步回调
 const lazyLoad = (children) => {
@@ -41,6 +56,16 @@ const routes = [
     // ]
   },
   {
+    path: "/leetCode",
+    element: lazyLoad(<LeetCode />)
+    // children: [
+    //   {
+    //     path: "fish",
+    //     element: lazyLoad(<Fish />)
+    //   }
+    // ]
+  },
+  {
     path: "/fish",
     element: lazyLoad(<Fish />)
     // children: [
@@ -51,14 +76,58 @@ const routes = [
     // ]
   },
   {
-    path: "/leetCode",
-    element: lazyLoad(<LeetCode />)
-    // children: [
-    //   {
-    //     path: "fish",
-    //     element: lazyLoad(<Fish />)
-    //   }
-    // ]
+    path: "/topic/:id",
+    element: lazyLoad(<Topic />)
+  },
+  // {
+  //   path: "/essay",
+  //   element: lazyLoad(<Essay />)
+  //   // children: [
+  //   //   {
+  //   //     path: "fish",
+  //   //     element: lazyLoad(<Fish />)
+  //   //   }
+  //   // ]
+  // },
+  {
+    path: "/user/:id",
+    element: lazyLoad(<PersonalHome />),
+    children: [
+      {
+        path: "profile",
+        element: lazyLoad(<Profile />)
+      },
+      {
+        path: "posts",
+        element: lazyLoad(<Posts />)
+      },
+      {
+        path: "says",
+        element: lazyLoad(<Says />)
+      },
+      {
+        path: "likes",
+        element: lazyLoad(<Likes />)
+      }
+    ]
+  },
+  {
+    path: "/user/setting",
+    element: lazyLoad(<PersonalSetting />),
+    children: [
+      {
+        path: "profile",
+        element: lazyLoad(<SettingProfile />)
+      },
+      {
+        path: "account",
+        element: lazyLoad(<Account />)
+      },
+      {
+        path: "resume",
+        element: lazyLoad(<Resume />)
+      }
+    ]
   },
   // 404找不到
   { path: "*", element: lazyLoad(<Home />) }
