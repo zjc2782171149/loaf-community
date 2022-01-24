@@ -38,9 +38,9 @@ const FishSection = () => {
       avatar_url: require("../../../assets/personalAvatar.jpg"),
       username: "Smooth",
       introduction: "一名SCAU大二前端er",
-      is_done: 89,
-      is_like: 122,
-      is_collect: 30
+      topic_num: 1,
+      follow: 122,
+      beiFollow: 30
     });
   }, []);
 
@@ -80,14 +80,30 @@ const FishSection = () => {
 
   // 发送动态
   function sendMessage() {
+    let date = new Date();
+    let year = date.getFullYear(); // 2022年
+    let month = date.getMonth() + 1; // 多少月份
+    let day = date.getDate(); // 几号
+    console.log(year, month, day);
+    if (month < 10) {
+      month = "0" + month;
+    }
+    if (day < 10) {
+      day = "0" + day;
+    }
+
     setContentList([
       {
-        title: `测试emoji`,
+        id: 1,
+        title: (
+          <>
+            Smooth
+            <p className="publish-time">{year + "-" + month + "-" + day}</p>
+          </>
+        ),
         avatar: require("../../../assets/personalAvatar.jpg"),
         description: textValue,
-        share_count: 0,
-        like_count: 0,
-        comment_count: 0
+        comment_num: 0
       },
       ...contentList
     ]);
@@ -327,15 +343,11 @@ const FishSection = () => {
                   actions={[
                     <Space key="1">
                       <ShareAltOutlined />
-                      {item.share_count}
-                    </Space>,
-                    <Space key="like">
-                      <LikeOutlined />
-                      {item.like_count}
+                      分享
                     </Space>,
                     <Space key="comment">
                       <MessageOutlined />
-                      {item.comment_count}
+                      {item.comment_num}
                     </Space>
                   ]}
                   key={item.description}
@@ -358,13 +370,13 @@ const FishSection = () => {
             className="right-aside-card"
             actions={[
               <Space direction="vertical" key="enter">
-                <>111</>帖子
+                <>{user.topic_num}</>帖子
               </Space>,
               <Space direction="vertical" key="follow">
-                <>8</>关注
+                <>{user.follow}</>关注
               </Space>,
               <Space direction="vertical" key="follower">
-                <>2</>关注者
+                <>{user.beiFollow}</>关注者
               </Space>
             ]}
             hoverable="true"
@@ -409,7 +421,7 @@ const FishSection = () => {
                         <LikeOutlined />
                         {item.like_count}
                         <MessageOutlined />
-                        {item.comment_count}
+                        {item.comment_num}
                       </Space>
                     }
                     description={item.description}
@@ -433,9 +445,7 @@ const FishSection = () => {
         <Modal
           title="表情符号"
           visible={isModalVisible}
-          onOk={() => {
-            handleOk("");
-          }}
+          onOk={() => handleOk("")}
           onCancel={handleCancel}
         >
           <Row gutter={5}>
@@ -443,9 +453,7 @@ const FishSection = () => {
               return (
                 <Col
                   span={2}
-                  onClick={() => {
-                    handleOk(item.emoji);
-                  }}
+                  onClick={() => handleOk(item.emoji)}
                   key={item.id}
                 >
                   <div>{item.emoji}</div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeaderStyle } from "./header";
 // import { useState } from 'react';
@@ -53,7 +53,7 @@ const Header = () => {
         草稿箱
       </Menu.Item>
       <Divider />
-      <Menu.Item key="3" icon={<UserOutlined />}>
+      <Menu.Item key="3" icon={<UserOutlined />} onClick={turntoPersonal}>
         我的主页
       </Menu.Item>
       <Menu.Item key="4" icon={<HeartFilled />}>
@@ -99,23 +99,37 @@ const Header = () => {
     }
   }
 
+  function turntoPersonal() {
+    navigate("/user" + "/1/profile");
+  }
+
   function onSearch(inputValue) {
     setValue(inputValue);
     console.log(value);
   }
 
   // 初始化
-  useEffect(() => {
-    if (localStorage.getItem("headerIndex")) {
-      // 本地存过header组件的active索引
-      setActive(localStorage.getItem("headerIndex"));
-      tabsChange(localStorage.getItem("headerIndex"));
-    } else {
-      localStorage.setItem("headerIndex", 1);
-      setActive(1);
-      tabsChange(1);
-    }
-  }, []);
+  // useEffect(() => {
+  //   let urlArray = location.href.split("/");
+  //   if (
+  //     urlArray[3] &&
+  //     urlArray[3] !== "header" &&
+  //     urlArray[3] !== "leetCode" &&
+  //     urlArray[3] !== "fish"
+  //   ) {
+  //     setActive(0);
+  //   } else {
+  //     if (localStorage.getItem("headerIndex")) {
+  //       // 本地存过header组件的active索引
+  //       setActive(localStorage.getItem("headerIndex"));
+  //       tabsChange(localStorage.getItem("headerIndex"));
+  //     } else {
+  //       localStorage.setItem("headerIndex", 1);
+  //       setActive(1);
+  //       tabsChange(1);
+  //     }
+  //   }
+  // }, location.href);
 
   return (
     <HeaderStyle>
