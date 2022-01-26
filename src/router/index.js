@@ -20,6 +20,8 @@ const SettingProfile = lazy(() =>
 const Account = lazy(() => import("../pages/user/setting/account/account.jsx"));
 const Resume = lazy(() => import("../pages/user/setting/resume/resume.jsx"));
 // const Essay = lazy(() => import("../pages/essay/essay.jsx"));
+const Subscribe = lazy(() => import("../pages/subscribe/subscribe.jsx"));
+
 
 // 懒加载需要加上Suspense的异步回调
 const lazyLoad = (children) => {
@@ -126,8 +128,12 @@ const routes = [
       {
         path: "resume",
         element: lazyLoad(<Resume />)
-      }
+      },
     ]
+  },
+  {
+    path: "/subscribe",
+    element: lazyLoad(<Subscribe />)
   },
   // 404找不到
   { path: "*", element: lazyLoad(<Home />) }
