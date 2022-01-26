@@ -5,6 +5,8 @@ import { Skeleton } from "antd";
 const Home = lazy(() => import("../pages/home/home.jsx"));
 const Fish = lazy(() => import("../pages/fish/fish.jsx"));
 const LeetCode = lazy(() => import("../pages/leetCode/leetCode.jsx"));
+const Subscribe = lazy(() => import("../pages/subscribe/subscribe.jsx"));
+
 
 // 懒加载需要加上Suspense的异步回调
 const lazyLoad = (children) => {
@@ -59,6 +61,10 @@ const routes = [
     //     element: lazyLoad(<Fish />)
     //   }
     // ]
+  },
+  {
+    path: "/subscribe",
+    element: lazyLoad(<Subscribe />)
   },
   // 404找不到
   { path: "*", element: lazyLoad(<Home />) }

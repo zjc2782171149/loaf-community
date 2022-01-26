@@ -33,10 +33,19 @@ const { TabPane } = Tabs;
 const Header = () => {
   const [active, setActive] = useState();
   const [value, setValue] = useState(""); // 搜索有关动作
+  const [menuKey, setMenuKey] = useState([])
   const navigate = useNavigate();
   let show = true;
-  function handleMenuClick(index) {
-    console.log(index);
+  //点击下拉菜单选项
+  function handleMenuClick(item) {
+    console.log(item);
+    setMenuKey([item.key])
+    switch (item.key) {
+      case "7":
+        navigate("/subscribe");
+        console.log("选中标签管理");
+        break;
+    }
   }
   const menu = (
     <Menu onClick={handleMenuClick}>
@@ -45,7 +54,7 @@ const Header = () => {
     </Menu>
   );
   const menuAvatar = (
-    <Menu onClick={handleMenuClick}>
+    <Menu onClick={handleMenuClick} openKeys={menuKey}>
       <Menu.Item key="1" icon={<EditFilled />}>
         写文章
       </Menu.Item>
