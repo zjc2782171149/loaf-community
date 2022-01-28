@@ -23,6 +23,6 @@ export const AccountStyle = styled.div`
     float: right;
   }
   .button {
-    margin-left: 680px;
+    margin-left: 660px;
   }
 `;

@@ -77,6 +77,18 @@ const SettingProfile = () => {
     }
   };
 
+  // 保存修改
+  const [signLoading, setSignLoading] = useState(false);
+  const key = "updatable";
+  const saveChange = () => {
+    setSignLoading(true);
+    message.loading({ content: "请耐心等待", key });
+    setTimeout(() => {
+      setSignLoading(false);
+      message.success({ content: "保存成功!", key, duration: 2 });
+    }, 1000);
+  };
+
   return (
     <ProfileStyle>
       <Card className="profile" title={<span className="title">个人资料</span>}>
@@ -105,7 +117,12 @@ const SettingProfile = () => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button
+                loading={signLoading}
+                type="primary"
+                htmlType="submit"
+                onClick={saveChange}
+              >
                 保存修改
               </Button>
             </Form.Item>

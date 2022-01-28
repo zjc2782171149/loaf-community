@@ -3,6 +3,10 @@
 /.pnp
 .pnp.js
 
+# dependencies not present but not mentioned in .gitignore
+.yarn/
+.yarnrc.yml
+
 # testing
 /coverage
 

@@ -2,11 +2,13 @@ import React, { Suspense, lazy } from "react";
 import { Skeleton } from "antd";
 
 // 配置懒加载
+const Login = lazy(() => import("../pages/login/login.jsx"));
 const Home = lazy(() => import("../pages/home/home.jsx"));
 const Fish = lazy(() => import("../pages/fish/fish.jsx"));
 const LeetCode = lazy(() => import("../pages/leetCode/leetCode.jsx"));
 const Subscribe = lazy(() => import("../pages/subscribe/subscribe.jsx"));
 const Topic = lazy(() => import("../pages/topic/topic.jsx"));
+const Detail = lazy(() => import("../pages/detail/index.jsx"));
 const PersonalHome = lazy(() => import("../pages/user/index/user.jsx"));
 const Profile = lazy(() => import("../pages/user/profile/profile.jsx"));
 const Posts = lazy(() => import("../pages/user/posts/posts.jsx"));
@@ -20,7 +22,7 @@ const SettingProfile = lazy(() =>
 );
 const Account = lazy(() => import("../pages/user/setting/account/account.jsx"));
 const Resume = lazy(() => import("../pages/user/setting/resume/resume.jsx"));
-// const Essay = lazy(() => import("../pages/essay/essay.jsx"));
+const Essay = lazy(() => import("../pages/essay/essay.jsx"));
 
 // 懒加载需要加上Suspense的异步回调
 const lazyLoad = (children) => {
@@ -46,8 +48,16 @@ const routes = [
     element: lazyLoad(<Subscribe />)
   },
   {
+    path: "/detail/:id",
+    element: lazyLoad(<Detail />)
+  },
+  {
     path: "/topic/:id",
     element: lazyLoad(<Topic />)
+  },
+  {
+    path: "/essay/:id",
+    element: lazyLoad(<Essay />)
   },
   {
     path: "/user/:id",
@@ -88,6 +98,11 @@ const routes = [
         element: lazyLoad(<Resume />)
       }
     ]
+  },
+
+  {
+    path: "/login",
+    element: lazyLoad(<Login />)
   },
   // 404找不到
   { path: "*", element: lazyLoad(<Home />) }

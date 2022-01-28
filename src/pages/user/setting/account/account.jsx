@@ -147,10 +147,14 @@ const Account = () => {
   ];
 
   // 保存修改
+  const [signLoading, setSignLoading] = useState(false);
+  const key = "updatable";
   const saveChange = () => {
-    console.log("保存成功");
+    setSignLoading(true);
+    message.loading({ content: "请耐心等待", key });
     setTimeout(() => {
-      message.success("保存成功");
+      setSignLoading(false);
+      message.success({ content: "保存成功!", key, duration: 2 });
     }, 1000);
   };
 
@@ -161,7 +165,12 @@ const Account = () => {
         title={
           <Space className="title">
             账号设置
-            <Button type="primary" className="button" onClick={saveChange}>
+            <Button
+              loading={signLoading}
+              type="primary"
+              className="button"
+              onClick={saveChange}
+            >
               保存修改
             </Button>
           </Space>
