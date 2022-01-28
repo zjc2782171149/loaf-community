@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { SectionStyle } from "./topic";
 import {
   List,
@@ -52,11 +52,11 @@ const TopicSection = () => {
   const [likes, setLikes] = useState(0);
   const [action, setAction] = useState(null);
 
-  function like() {
+  const like = useCallback(() => {
     console.log("点赞", likes);
     setLikes(1);
     setAction(1);
-  }
+  }, [likes]);
 
   // 嵌套评论
   const ExampleComment = ({
@@ -105,7 +105,7 @@ const TopicSection = () => {
       {
         actions: [
           <Tooltip key="comment-basic-like" title="Like">
-            <span onClick={like(1)}>
+            <span onClick={() => null}>
               {action && <LikeFilled />}
               {!action && <LikeOutlined />}
               <span className="comment-action">{likes}</span>
@@ -193,7 +193,7 @@ const TopicSection = () => {
         ]
       }
     ]);
-  }, []);
+  }, [action, like, likes]);
 
   // 发表评论
   const [textValue, setTextValue] = useState("");

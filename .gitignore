@@ -1,9 +1,11 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+
+# dependencies not present but not mentioned in .gitignore
+.yarn/
+.yarnrc.yml
 
 # testing
 /coverage

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorWhite, colorBlue, colorGrey } from "../../../reducer/constant";
+import { colorWhite } from "../../../reducer/constant";
 
 const width = document.body.clientWidth;
 console.log(width);
@@ -8,35 +8,27 @@ export const SectionStyle = styled.div`
   .section {
     display: flex;
     width: 100%;
-    min-height: 400px;
+    min-height: 800px;
     padding: 20px ${width / 10}px;
   }
   .left-aside {
     flex: 0.75;
   }
+  .section {
+    min-height: 600px;
+  }
   .main {
     width: 100%;
-    min-height: 200px;
+    min-height: 400px;
     background-color: ${colorWhite};
   }
   .main-header {
     padding: 0 20px;
   }
-  .content-list-accnounce {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-right: 10px;
-  }
   .content-list {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-right: 10px;
-  }
-  .content-list:hover {
-    cursor: pointer;
-    background-color: ${colorGrey};
   }
   .main-tabs {
     font-weight: 600;
@@ -66,24 +58,5 @@ export const SectionStyle = styled.div`
   }
   .iconNum {
     transform: scale(1.3);
-  }
-  .hoverBlue:hover {
-    cursor: pointer;
-    color: ${colorBlue};
-  }
-  .essayAvatar {
-    transform: scale(1.6);
-    margin: 20px 0 0 -5px;
-  }
-  .essayHeader {
-    font-size: 14px;
-  }
-  .essayTitle:hover {
-    color: ${colorBlue};
-  }
-  .essayDescription {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 `;

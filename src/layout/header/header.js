@@ -30,11 +30,10 @@ export const HeaderStyle = styled.div`
     display: flex;
   }
   .image {
-    width: 150px;
-    height: 60px;
     display: inline-block;
+    margin: 5px 20px;
   }
-  .text {
+  .textt {
     font-size: 20px;
     font-weight: 600;
   }

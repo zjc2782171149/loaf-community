@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import SectionCarousel from "../carousel/carousel.jsx";
 import { SectionStyle } from "./section";
+import { get_essay_all } from "../../../service/essay";
 
 import {
   Button,
@@ -15,12 +17,16 @@ import {
   Divider,
   Image,
   Popover,
-  message
+  message,
+  Spin
 } from "antd";
 import {
   MessageOutlined,
-  HeartFilled,
-  EyeFilled,
+  StarOutlined,
+  LikeOutlined,
+  EyeOutlined,
+  LikeTwoTone,
+  StarTwoTone,
   ThunderboltFilled,
   HeartTwoTone,
   EyeTwoTone,
@@ -38,6 +44,7 @@ const { Meta } = Card;
 
 const Section = () => {
   // const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [essayList, setEssayList] = useState([]);
   let loading = false;
@@ -106,59 +113,46 @@ const Section = () => {
   const announcementList = [
     {
       title: "【好题分享活动】开奖啦~",
-      description: "2022/01/17"
+      description: "2022-01-17"
     },
     {
       title: "【笔记创作活动】已开启，超值礼品等…",
-      description: "2022/01/17"
+      description: "2022-01-17"
     },
     {
       title: "青训营社区|意见&建议反馈收集",
-      description: "2022/01/15"
+      description: "2022-01-15"
     },
     {
       title: "关于我们(bug生产队)",
-      description: "2022/02/10"
+      description: "2022-02-10"
     }
   ];
 
   // 每日签到
+  const [signLoading, setSignLoading] = useState(false);
   const key = "updatable";
   const dailySign = () => {
+    setSignLoading(true);
     message.loading({ content: "请耐心等待", key });
     setTimeout(() => {
+      setSignLoading(false);
       message.success({ content: "恭喜您，签到成功!", key, duration: 2 });
     }, 1000);
   };
 
   // 文章的列表相关
   useEffect(() => {
-    const recommend_essay = [];
-    // front_essay = [],
-    // after_essay = [],
-    // Android_essay = [],
-    // iOS_essay = [],
-    // personalIntelligence_essay = [],
-    // tool_essay = [],
-    // code_essay = [],
-    // read_essay = [],
-    // other_essay = [];
-    for (let i = 0; i < 6; i++) {
-      recommend_essay.push({
-        href: "",
-        title: `推荐部分 ${i}`,
-        avatar: require("../../../assets/personalAvatar.jpg"),
-        introduction: "recommend",
-        visit_count: 122,
-        like_count: 22,
-        comment_count: 10
-      });
+    async function getEssayAll() {
+      try {
+        const res = await get_essay_all();
+        const recommend_essay = res.data;
+        setEssayList(recommend_essay);
+      } catch (err) {
+        console.log(err);
+      }
     }
-
-    // 先模拟从接口获取数据的异步
-    setTimeout(() => {
-      setEssayList(recommend_essay);
-    }, 100);
+    getEssayAll();
   }, []);
 
   // 用户相关
@@ -173,6 +167,53 @@ const Section = () => {
       sign: false
     });
   }, []);
+
+  // 跳转到文章详情
+  const turntoEssayDetail = (id) => {
+    console.log("跳转到动态详情");
+    navigate(`/essay/${id}`);
+  };
+
+  // 改变文章点赞状态
+  const changeLike = (id, bool) => {
+    console.log(id, bool);
+    essayList.forEach((item) => {
+      if (item.id === id) {
+        // 找到这篇文章了
+        if (bool) {
+          // 点赞
+          item.is_like = true;
+          item.like_count++;
+        } else {
+          // 取消点赞
+          item.is_like = false;
+          item.like_count--;
+        }
+      }
+    });
+
+    setEssayList([...essayList]);
+  };
+
+  // 改变文章收藏状态
+  const changeCollect = (id, bool) => {
+    console.log(id, bool);
+    essayList.forEach((item) => {
+      if (item.id === id) {
+        // 找到这篇文章了
+        if (bool) {
+          // 点赞
+          item.is_collect = true;
+          item.collect_count++;
+        } else {
+          // 取消点赞
+          item.is_collect = false;
+          item.collect_count--;
+        }
+      }
+    });
+    setEssayList([...essayList]);
+  };
 
   return (
     <SectionStyle>
@@ -196,55 +237,127 @@ const Section = () => {
                 </Tabs>
               </div>
               <div className="main-body">
-                <List
-                  itemLayout="vertical"
-                  size="large"
-                  pagination={{
-                    onChange: (page) => {
-                      console.log(page);
-                    },
-                    pageSize: 5
-                  }}
-                  dataSource={essayList}
-                  renderItem={(item) => (
-                    <List.Item
-                      className="content-list"
-                      key={item.title}
-                      actions={
-                        !loading && [
-                          <IconText
-                            icon={EyeFilled}
-                            text={item.visit_count}
-                            key="list-vertical-star-o"
-                          />,
-                          <IconText
-                            icon={HeartFilled}
-                            text={item.like_count}
-                            key="list-vertical-like-o"
-                          />,
-                          <IconText
-                            icon={MessageOutlined}
-                            text={item.comment_count}
-                            key="list-vertical-message"
+                <Spin spinning={essayList.length === 0} tip="加载中，请稍后...">
+                  <List
+                    itemLayout="vertical"
+                    size="large"
+                    pagination={{
+                      onChange: (page) => {
+                        console.log(page);
+                      },
+                      pageSize: 5
+                    }}
+                    dataSource={essayList}
+                    renderItem={(item) => (
+                      <List.Item
+                        className="content-list"
+                        key={item.title}
+                        actions={
+                          !loading && [
+                            <Space key={item.title} size="middle">
+                              <Space className="hoverBlue">
+                                <IconText
+                                  icon={EyeOutlined}
+                                  text={item.visit_count}
+                                  key="list-vertical-star-o"
+                                />
+                              </Space>
+
+                              {!item.is_like && (
+                                <Space
+                                  className="hoverBlue"
+                                  onClick={() => changeLike(item.id, true)}
+                                >
+                                  <IconText
+                                    icon={LikeOutlined}
+                                    text={item.like_count}
+                                    key="list-vertical-like-o"
+                                  />
+                                </Space>
+                              )}
+                              {item.is_like && (
+                                <Space
+                                  className="hoverBlue"
+                                  onClick={() => changeLike(item.id, false)}
+                                >
+                                  <IconText
+                                    icon={LikeTwoTone}
+                                    text={item.like_count}
+                                    key="list-vertical-like-o"
+                                  />
+                                </Space>
+                              )}
+                              <Space className="hoverBlue">
+                                <IconText
+                                  icon={MessageOutlined}
+                                  text={item.comment_count}
+                                  key="list-vertical-message"
+                                />
+                              </Space>
+
+                              {!item.is_collect && (
+                                <Space
+                                  className="hoverBlue"
+                                  onClick={() => changeCollect(item.id, true)}
+                                >
+                                  <IconText
+                                    icon={StarOutlined}
+                                    text={item.collect_count}
+                                    key="list-vertical-message"
+                                  />
+                                </Space>
+                              )}
+                              {item.is_collect && (
+                                <Space
+                                  className="hoverBlue"
+                                  onClick={() => changeCollect(item.id, false)}
+                                >
+                                  <IconText
+                                    icon={StarTwoTone}
+                                    text={item.collect_count}
+                                    key="list-vertical-message"
+                                  />
+                                </Space>
+                              )}
+                            </Space>
+                          ]
+                        }
+                        extra={
+                          <Popover
+                            content="点击以查看文章详情"
+                            onClick={() => turntoEssayDetail(item.id)}
+                          >
+                            <EyeTwoTone className="listSeeMore" />
+                          </Popover>
+                        }
+                      >
+                        <Skeleton loading={false} active avatar>
+                          <List.Item.Meta
+                            avatar={
+                              <Space className="essayAvatar">
+                                <Avatar src={item.avatar} />
+                              </Space>
+                            }
+                            title={
+                              <Space direction="vertical">
+                                <Space className="essayHeader">
+                                  {item.publish_user_id} | {item.publish_time} |{" "}
+                                  {item.tab_id}
+                                </Space>
+                                <span className="essayTitle">{item.title}</span>
+                              </Space>
+                            }
+                            description={
+                              <Space className="essayDescription">
+                                <span>{item.introduction}</span>
+                              </Space>
+                            }
                           />
-                        ]
-                      }
-                      extra={
-                        <Popover content="点击以查看文章详情">
-                          <EyeTwoTone className="listSeeMore" />
-                        </Popover>
-                      }
-                    >
-                      <Skeleton loading={loading} active avatar>
-                        <List.Item.Meta
-                          avatar={<Avatar src={item.avatar} />}
-                          title={<a href={item.href}>{item.title}</a>}
-                          description={item.introduction}
-                        />
-                      </Skeleton>
-                    </List.Item>
-                  )}
-                />
+                        </Skeleton>
+                      </List.Item>
+                    )}
+                  />
+                </Spin>
               </div>
             </div>
           </div>
@@ -253,7 +366,7 @@ const Section = () => {
           {/* 个人信息展示 */}
           <Card
             className="right-aside-card"
-            actions={[<text key="enter">进入主页</text>]}
+            actions={[<span key="enter">进入主页</span>]}
             hoverable="true"
           >
             <Skeleton loading={loading} avatar active>
@@ -286,12 +399,13 @@ const Section = () => {
             actions={[
               (!user.sign && (
                 <Button
+                  loading={signLoading}
                   type="primary"
                   shape="round"
                   icon={<ThunderboltFilled />}
                   size="large"
-                  key="daily"
-                  onClick={dailySign}
+                  key="dailyNo"
+                  onClick={() => dailySign()}
                 >
                   签到
                 </Button>
@@ -302,7 +416,7 @@ const Section = () => {
                     shape="round"
                     icon={<CheckCircleFilled />}
                     size="large"
-                    key="daily"
+                    key="dailyYes"
                     disabled
                   >
                     已签到
@@ -331,7 +445,7 @@ const Section = () => {
             hoverable="true"
           >
             <List
-              className="content-list"
+              className="content-list-accnounce"
               loadMore={true}
               itemLayout="horizontal"
               dataSource={announcementList}
