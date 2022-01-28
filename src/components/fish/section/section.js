@@ -109,4 +109,8 @@ export const SectionStyle = styled.div`
   .left-aside-item {
     margin-top: 20px;
   }
+  .publish-time {
+    color: rgba(0,0,0,0.3);
+    font-size:14px;
+  }
 `;
