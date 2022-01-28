@@ -30,7 +30,6 @@ export const SettingStyle = styled.div`
     display: flex;
     width: 100%;
     height: 600px;
-
     margin: 20px 0 0 0;
   }
   .left {

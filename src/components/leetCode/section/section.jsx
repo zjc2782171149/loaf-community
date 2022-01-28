@@ -359,7 +359,7 @@ const LeetCodeSection = () => {
           {/* 个人信息展示 */}
           <Card
             className="right-aside-card"
-            actions={[<text key="enter">进入主页</text>]}
+            actions={[<span key="enter">进入主页</span>]}
             hoverable="true"
           >
             <Skeleton loading={loading} avatar active>
