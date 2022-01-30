@@ -21,6 +21,7 @@ const Account = lazy(() => import("../pages/user/setting/account/account.jsx"));
 const Resume = lazy(() => import("../pages/user/setting/resume/resume.jsx"));
 // const Essay = lazy(() => import("../pages/essay/essay.jsx"));
 const Subscribe = lazy(() => import("../pages/subscribe/subscribe.jsx"));
+const DraftBox = lazy(() => import("../pages/draftBox/draftBox.jsx"));
 
 
 // 懒加载需要加上Suspense的异步回调
@@ -134,6 +135,10 @@ const routes = [
   {
     path: "/subscribe",
     element: lazyLoad(<Subscribe />)
+  },
+  {
+    path: "/draftBox",
+    element: lazyLoad(<DraftBox />)
   },
   // 404找不到
   { path: "*", element: lazyLoad(<Home />) }

@@ -41,6 +41,10 @@ const Header = () => {
     console.log(item);
     setMenuKey([item.key])
     switch (item.key) {
+      case "2":
+        navigate("/draftBox");
+        console.log("选中草稿箱");
+        break;
       case "7":
         navigate("/subscribe");
         console.log("选中标签管理");
