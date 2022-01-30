@@ -71,7 +71,8 @@ const RightSide = () => {
         await user_register({
           username,
           phone,
-          password
+          password,
+          role: 0
         });
         setTimeout(() => {
           message.success("注册成功！正在跳转登录页面...");
@@ -120,8 +121,7 @@ const RightSide = () => {
             localStorage.setItem("userInfo", JSON.stringify(userInfo)); // 本地设置缓存
           }
           if (access_token) {
-            document.cookie = "token=" + access_token; // 设置cookie
-            localStorage.setItem("token", JSON.stringify(access_token)); // 本地设置缓存，类似功能，记住我
+            localStorage.setItem("token", JSON.stringify(access_token)); // 设置token
           }
         }
 

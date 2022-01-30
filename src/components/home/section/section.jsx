@@ -1,218 +1,135 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import EssayShowDetail from "../../../layout/essayShowDetail/index.jsx";
 import SectionCarousel from "../carousel/carousel.jsx";
 import { SectionStyle } from "./section";
-import { get_essay_all } from "../../../service/essay";
+import {
+  get_like_comment,
+  get_like_essay,
+  get_collect_essay,
+  get_user_sign,
+  set_user_sign
+} from "../../../service/home";
 
 import {
   Button,
   Avatar,
-  Tabs,
-  Menu,
-  Dropdown,
   List,
   Space,
   Skeleton,
   Card,
   Divider,
   Image,
-  Popover,
   message,
-  Spin
+  notification
 } from "antd";
 import {
-  MessageOutlined,
-  StarOutlined,
-  LikeOutlined,
-  EyeOutlined,
-  LikeTwoTone,
   StarTwoTone,
   ThunderboltFilled,
   HeartTwoTone,
-  EyeTwoTone,
   FireTwoTone,
-  DashboardTwoTone,
   CheckCircleFilled
 } from "@ant-design/icons";
 
-const { TabPane } = Tabs;
 const { Meta } = Card;
 
-// const onChangeCardSk = (checked) => {
-//   this.setState({ loading: !checked });
-// };
-
 const Section = () => {
-  // const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [user, setUser] = useState({});
-  const [essayList, setEssayList] = useState([]);
-  let loading = false;
-  const menu = (
-    <Menu>
-      <Menu.Item key="hot" icon={<FireTwoTone />}>
-        按热度排序
-      </Menu.Item>
-      <Menu.Item key="new" icon={<DashboardTwoTone />}>
-        按最新排序
-      </Menu.Item>
-    </Menu>
-  );
 
-  const operations = (
-    <Dropdown overlay={menu} placement="bottomLeft" arrow>
-      <Button>排序</Button>
-    </Dropdown>
-  );
+  const [loading, setLoading] = useState(false);
+  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  function callback(key) {
-    console.log(key);
-    // switch (key) {
-    //   case "推荐":
-    //     setEssayList(recommend_essay);
-    //     break;
-    //   case "前端":
-    //     setEssayList(front_essay);
-    //     break;
-    //   case "后端":
-    //     setEssayList(after_essay);
-    //     break;
-    //   case "Android":
-    //     setEssayList(Android_essay);
-    //     break;
-    //   case "iOS":
-    //     setEssayList(iOS_essay);
-    //     break;
-    //   case "人工智能":
-    //     setEssayList(personalIntelligence_essay);
-    //     break;
-    //   case "开发工具":
-    //     setEssayList(tool_essay);
-    //     break;
-    //   case "代码人生":
-    //     setEssayList(code_essay);
-    //     break;
-    //   case "阅读":
-    //     setEssayList(read_essay);
-    //     break;
-    //   case "其他":
-    //     setEssayList(other_essay);
-    //     break;
-    //   default:
-    //     setEssayList([]);
-    // }
-  }
+  // 用户信息初始化
+  useEffect(() => {
+    async function initUser() {
+      const req = [get_like_comment(), get_like_essay(), get_collect_essay()];
+      const initMessage = await Promise.all(req);
+      const likeComment = initMessage[0]; // 用户点赞评论
+      const likeEssay = initMessage[1];
+      const collectEssay = initMessage[2];
 
-  const IconText = ({ icon, text }) => (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  );
+      setUser({
+        avatar_url: userInfo.avatar_url
+          ? userInfo.avatar_url
+          : require("../../../assets/LoginOut.png"),
+        username: userInfo.username,
+        introduction: userInfo.introduction
+          ? userInfo.introduction
+          : "暂无个人介绍",
+        user_like_count: likeComment.data.length + likeEssay.data.length || 13,
+        user_collect_count: collectEssay.data.length || 132,
+        user_potential_count: parseInt(Math.random() * Math.random() * 1000) // 随机生成潜力值
+      });
+      setLoading(false);
+
+      // 查询签到
+      console.log("查询签到");
+      const haveSign = await get_user_sign();
+      setDailySign(haveSign.data.today);
+    }
+    initUser();
+  }, []);
 
   const announcementList = [
     {
-      title: "【好题分享活动】开奖啦~",
-      description: "2022-01-17"
+      title: "关于我们(bug生产队)",
+      time: "2022-02-10",
+      description:
+        "可通过链接了解我们https://lhcgmmdf97.feishu.cn/docs/doccnYqYVMI4JMLmANnXKGCwdKe#"
     },
     {
       title: "【笔记创作活动】已开启，超值礼品等…",
-      description: "2022-01-17"
+      time: "2022-01-17",
+      description:
+        "认真记录、创作笔记内容的同学将有机会获得我们为大家准备超值大奖🎁 春节礼盒、小米蓝牙耳机、卫衣、保温杯......等你来拿"
     },
     {
-      title: "青训营社区|意见&建议反馈收集",
-      description: "2022-01-15"
+      title: "【好题分享活动】开奖啦~",
+      time: "2022-01-17",
+      description: "请中奖的同学尽快联系相关社区工作人员"
     },
     {
-      title: "关于我们(bug生产队)",
-      description: "2022-02-10"
+      title: "摸鱼学社|意见&建议反馈收集",
+      time: "2022-01-15",
+      description:
+        "如果你对社区有好的建议，欢迎留言，让我们一起把青训营社区建设得更好吧~"
     }
   ];
+  const openAnnouncement = (title) => {
+    console.log(title);
+    announcementList.forEach((item) => {
+      if (item.title === title) {
+        notification.open({
+          message: item.title,
+          description: item.description,
+          duration: 2
+        });
+      }
+    });
+  };
 
   // 每日签到
   const [signLoading, setSignLoading] = useState(false);
+  const [dailySign, setDailySign] = useState(false);
   const key = "updatable";
-  const dailySign = () => {
+  async function DailySign() {
     setSignLoading(true);
     message.loading({ content: "请耐心等待", key });
+    const res = await set_user_sign();
     setTimeout(() => {
       setSignLoading(false);
-      message.success({ content: "恭喜您，签到成功!", key, duration: 2 });
+      setDailySign(true);
+      message.success({
+        content: `恭喜您，${res.msg}!`,
+        key,
+        duration: 2
+      });
     }, 1000);
-  };
+  }
 
-  // 文章的列表相关
-  useEffect(() => {
-    async function getEssayAll() {
-      try {
-        const res = await get_essay_all();
-        const recommend_essay = res.data;
-        setEssayList(recommend_essay);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    getEssayAll();
-  }, []);
-
-  // 用户相关
-  useEffect(() => {
-    setUser({
-      avatar_url: require("../../../assets/personalAvatar.jpg"),
-      username: "Smooth",
-      introduction: "一名SCAU大二前端er",
-      user_like_count: 456,
-      user_visit_count: 23452,
-      user_potential_count: 1233,
-      sign: false
-    });
-  }, []);
-
-  // 跳转到文章详情
-  const turntoEssayDetail = (id) => {
-    console.log("跳转到动态详情");
-    navigate(`/essay/${id}`);
-  };
-
-  // 改变文章点赞状态
-  const changeLike = (id, bool) => {
-    console.log(id, bool);
-    essayList.forEach((item) => {
-      if (item.id === id) {
-        // 找到这篇文章了
-        if (bool) {
-          // 点赞
-          item.is_like = true;
-          item.like_count++;
-        } else {
-          // 取消点赞
-          item.is_like = false;
-          item.like_count--;
-        }
-      }
-    });
-
-    setEssayList([...essayList]);
-  };
-
-  // 改变文章收藏状态
-  const changeCollect = (id, bool) => {
-    console.log(id, bool);
-    essayList.forEach((item) => {
-      if (item.id === id) {
-        // 找到这篇文章了
-        if (bool) {
-          // 点赞
-          item.is_collect = true;
-          item.collect_count++;
-        } else {
-          // 取消点赞
-          item.is_collect = false;
-          item.collect_count--;
-        }
-      }
-    });
-    setEssayList([...essayList]);
+  const enterUser = () => {
+    navigate(`/user/${userInfo.id}/profile`);
   };
 
   return (
@@ -222,143 +139,7 @@ const Section = () => {
           <SectionCarousel />
           <div className="main">
             <div className="main-header">
-              <div className="tab-flex">
-                <Tabs onChange={callback} tabBarExtraContent={operations}>
-                  <TabPane tab="推荐" key="推荐"></TabPane>
-                  <TabPane tab="前端" key="前端"></TabPane>
-                  <TabPane tab="后端" key="后端"></TabPane>
-                  <TabPane tab="Android" key="Android"></TabPane>
-                  <TabPane tab="iOS" key="iOS"></TabPane>
-                  <TabPane tab="人工智能" key="人工智能"></TabPane>
-                  <TabPane tab="开发工具" key="开发工具"></TabPane>
-                  <TabPane tab="代码人生" key="代码人生"></TabPane>
-                  <TabPane tab="阅读" key="阅读"></TabPane>
-                  <TabPane tab="其他" key="其他"></TabPane>
-                </Tabs>
-              </div>
-              <div className="main-body">
-                <Spin spinning={essayList.length === 0} tip="加载中，请稍后...">
-                  <List
-                    itemLayout="vertical"
-                    size="large"
-                    pagination={{
-                      onChange: (page) => {
-                        console.log(page);
-                      },
-                      pageSize: 5
-                    }}
-                    dataSource={essayList}
-                    renderItem={(item) => (
-                      <List.Item
-                        className="content-list"
-                        key={item.title}
-                        actions={
-                          !loading && [
-                            <Space key={item.title} size="middle">
-                              <Space className="hoverBlue">
-                                <IconText
-                                  icon={EyeOutlined}
-                                  text={item.visit_count}
-                                  key="list-vertical-star-o"
-                                />
-                              </Space>
-
-                              {!item.is_like && (
-                                <Space
-                                  className="hoverBlue"
-                                  onClick={() => changeLike(item.id, true)}
-                                >
-                                  <IconText
-                                    icon={LikeOutlined}
-                                    text={item.like_count}
-                                    key="list-vertical-like-o"
-                                  />
-                                </Space>
-                              )}
-                              {item.is_like && (
-                                <Space
-                                  className="hoverBlue"
-                                  onClick={() => changeLike(item.id, false)}
-                                >
-                                  <IconText
-                                    icon={LikeTwoTone}
-                                    text={item.like_count}
-                                    key="list-vertical-like-o"
-                                  />
-                                </Space>
-                              )}
-                              <Space className="hoverBlue">
-                                <IconText
-                                  icon={MessageOutlined}
-                                  text={item.comment_count}
-                                  key="list-vertical-message"
-                                />
-                              </Space>
-
-                              {!item.is_collect && (
-                                <Space
-                                  className="hoverBlue"
-                                  onClick={() => changeCollect(item.id, true)}
-                                >
-                                  <IconText
-                                    icon={StarOutlined}
-                                    text={item.collect_count}
-                                    key="list-vertical-message"
-                                  />
-                                </Space>
-                              )}
-                              {item.is_collect && (
-                                <Space
-                                  className="hoverBlue"
-                                  onClick={() => changeCollect(item.id, false)}
-                                >
-                                  <IconText
-                                    icon={StarTwoTone}
-                                    text={item.collect_count}
-                                    key="list-vertical-message"
-                                  />
-                                </Space>
-                              )}
-                            </Space>
-                          ]
-                        }
-                        extra={
-                          <Popover
-                            content="点击以查看文章详情"
-                            onClick={() => turntoEssayDetail(item.id)}
-                          >
-                            <EyeTwoTone className="listSeeMore" />
-                          </Popover>
-                        }
-                      >
-                        <Skeleton loading={false} active avatar>
-                          <List.Item.Meta
-                            avatar={
-                              <Space className="essayAvatar">
-                                <Avatar src={item.avatar} />
-                              </Space>
-                            }
-                            title={
-                              <Space direction="vertical">
-                                <Space className="essayHeader">
-                                  {item.publish_user_id} | {item.publish_time} |{" "}
-                                  {item.tab_id}
-                                </Space>
-                                <span className="essayTitle">{item.title}</span>
-                              </Space>
-                            }
-                            description={
-                              <Space className="essayDescription">
-                                <span>{item.introduction}</span>
-                              </Space>
-                            }
-                          />
-                        </Skeleton>
-                      </List.Item>
-                    )}
-                  />
-                </Spin>
-              </div>
+              <EssayShowDetail />
             </div>
           </div>
         </div>
@@ -366,7 +147,11 @@ const Section = () => {
           {/* 个人信息展示 */}
           <Card
             className="right-aside-card"
-            actions={[<span key="enter">进入主页</span>]}
+            actions={[
+              <span key="enter" onClick={() => enterUser()}>
+                进入主页
+              </span>
+            ]}
             hoverable="true"
           >
             <Skeleton loading={loading} avatar active>
@@ -376,18 +161,20 @@ const Section = () => {
                 description={user.introduction}
               />
               <Divider />
-              <Space size={10}>
-                <HeartTwoTone className="iconNum" />
-                获得点赞{user.user_like_count}
-              </Space>
+              <Space direction="vertical">
+                <Space size={10}>
+                  <HeartTwoTone className="iconNum" />
+                  获得点赞{user.user_like_count}
+                </Space>
 
-              <Space size={10}>
-                <EyeTwoTone className="iconNum" />
-                文章被阅读{user.user_visit_count}
-              </Space>
-              <Space size={10}>
-                <FireTwoTone className="iconNum" />
-                潜力值{user.user_potential_count}
+                <Space size={10}>
+                  <StarTwoTone className="iconNum" />
+                  文章被收藏{user.user_collect_count}
+                </Space>
+                <Space size={10}>
+                  <FireTwoTone className="iconNum" />
+                  潜力值{user.user_potential_count}
+                </Space>
               </Space>
             </Skeleton>
           </Card>
@@ -397,7 +184,7 @@ const Section = () => {
             className="right-aside-card"
             hoverable="true"
             actions={[
-              (!user.sign && (
+              (!dailySign && (
                 <Button
                   loading={signLoading}
                   type="primary"
@@ -405,12 +192,12 @@ const Section = () => {
                   icon={<ThunderboltFilled />}
                   size="large"
                   key="dailyNo"
-                  onClick={() => dailySign()}
+                  onClick={() => DailySign()}
                 >
                   签到
                 </Button>
               )) ||
-                (user.sign && (
+                (dailySign && (
                   <Button
                     type="default"
                     shape="round"
@@ -424,24 +211,22 @@ const Section = () => {
                 ))
             ]}
           >
-            <Skeleton loading={loading} avatar active>
-              <Meta
-                avatar={
-                  <Avatar
-                    src={<Image src={user.avatar_url} style={{ width: 32 }} />}
-                  />
-                }
-                title="上午好！"
-                description="点亮你在社区的每一天"
-              />
-            </Skeleton>
+            <Meta
+              avatar={
+                <Avatar
+                  src={<Image src={user.avatar_url} style={{ width: 32 }} />}
+                />
+              }
+              title="上午好！"
+              description="点亮你在社区的每一天"
+            />
           </Card>
 
           {/* 公告栏 */}
           <Card
             className="right-aside-card"
             title="公告栏"
-            extra={<a href="#">More</a>}
+            extra={<a href="">更多</a>}
             hoverable="true"
           >
             <List
@@ -452,8 +237,18 @@ const Section = () => {
               renderItem={(item) => (
                 <List.Item>
                   <List.Item.Meta
-                    title={<a href="">{item.title}</a>}
-                    description={item.description}
+                    title={
+                      <a
+                        href=""
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openAnnouncement(item.title);
+                        }}
+                      >
+                        {item.title}
+                      </a>
+                    }
+                    description={item.time}
                   />
                 </List.Item>
               )}

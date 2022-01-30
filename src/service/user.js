@@ -1,9 +1,10 @@
-import instance from "../utils/request";
+import instance, { uploadFile } from "../utils/request";
+// import axios from "axios";
 
-// 通过 token 来获取用户信息
-export const get_user_info = () => {
+// 通过 id 来获取用户信息
+export const get_user_info = (options) => {
   return instance({
-    url: "/user/info",
+    url: `/user/${options.id}/info`,
     method: "GET"
   });
 };
@@ -26,27 +27,36 @@ export const set_user_setting = (options) => {
   });
 };
 
+// 修改密码
+export const set_user_password = (options) => {
+  return instance({
+    url: "/user/password",
+    method: "PUT",
+    data: options
+  });
+};
+
 // 上传用户头像
 export const set_user_avatar = (options) => {
-  return instance({
+  return uploadFile({
     url: "/user/avatar/upload",
     method: "POST",
     data: options
   });
 };
 
-// 用户签到
-export const set_user_sign = () => {
-  return instance({
-    url: "/user/sign",
-    method: "POST"
-  });
-};
-
 // 获取用户发表话题列表
 export const get_user_topic = () => {
   return instance({
-    url: "/user/topic",
+    url: "/topic/list",
+    method: "GET"
+  });
+};
+
+// 获取话题详情
+export const get_topic_detail = (options) => {
+  return instance({
+    url: `/topic/list/${options.id}`,
     method: "GET"
   });
 };
@@ -100,5 +110,41 @@ export const delete_user_follow = (options) => {
   return instance({
     url: `/user/follow/${options.id}`,
     method: "DELETE"
+  });
+};
+
+/**
+ * 个人资料下面的四个分类
+ */
+
+// 获取某个用户已发表文章列表
+export const get_publish_essay = (options) => {
+  return instance({
+    url: `/user/${options.id}/essay/list`,
+    method: "GET"
+  });
+};
+
+// 获取用户点赞的文章列表
+export const get_like_essay = () => {
+  return instance({
+    url: `/user/essay/like`,
+    method: "GET"
+  });
+};
+
+// 获取用户收藏的文章列表
+export const get_collect_essay = () => {
+  return instance({
+    url: `/user/essay/collect`,
+    method: "GET"
+  });
+};
+
+// 获取用户发表的帖子列表
+export const get_publish_topic = () => {
+  return instance({
+    url: `/user/topic`,
+    method: "GET"
   });
 };

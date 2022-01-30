@@ -10,19 +10,45 @@ const request = axios.create({
   }
 });
 
+export const uploadFile = axios.create({
+  baseURL: baseUrl,
+  timeout: 30000,
+  headers: {
+    "Content-Type": "multipart/form-data"
+  }
+});
+
+// // 请求拦截器
+uploadFile.interceptors.request.use(
+  (request) => {
+    if (localStorage.getItem("token")) {
+      // console.log("有token", localStorage.getItem("token"));
+      const token = JSON.parse(localStorage.getItem("token"));
+      // console.log(token);
+      request.headers["Authorization"] = `Bearer ${token}`; // 如果有token，每次请求都在axios请求头上进行携带
+    } else {
+      console.log("删除 token 了");
+      delete request.headers["Authorization"]; // 如果本地token没了，就要将请求头中的token删掉，
+    }
+    // console.log("请求拦截 成功");
+    return request;
+  },
+  (error) => Promise.reject(error)
+);
+
 // // 请求拦截器
 request.interceptors.request.use(
   (request) => {
     if (localStorage.getItem("token")) {
       // console.log("有token", localStorage.getItem("token"));
       const token = JSON.parse(localStorage.getItem("token"));
+      // console.log(token);
       request.headers["Authorization"] = `Bearer ${token}`; // 如果有token，每次请求都在axios请求头上进行携带
     } else {
       console.log("删除 token 了");
       delete request.headers["Authorization"]; // 如果本地token没了，就要将请求头中的token删掉，
-      // 适用情况：有人手动将application中token删掉，测试还能不能请求成功
     }
-    console.log("请求拦截 成功");
+    // console.log("请求拦截 成功");
     return request;
   },
   (error) => Promise.reject(error)

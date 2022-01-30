@@ -25,7 +25,7 @@ const PersonalSetting = () => {
     navigate(`/user/1/profile`);
   };
 
-  // 初始化
+  // activeKey 初始化
   useEffect(() => {
     if (location.href.split("/")[5]) {
       console.log(location.href.split("/")[5]);

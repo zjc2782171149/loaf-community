@@ -3,34 +3,10 @@ import instance from "../utils/request";
 /**
  * 个人资料页面
  */
-// 获取用户发表的文章列表，非本人？？为啥
+// 获取用户发表的文章列表，非本人
 export const get_user_essay = (options) => {
   return instance({
     url: `/user/${options.id}/essay/list`,
-    method: "GET"
-  });
-};
-
-// 获取用户点赞的评论列表，本人
-export const get_like_comment = () => {
-  return instance({
-    url: `/user/comment/like`,
-    method: "GET"
-  });
-};
-
-// 获取用户点赞的文章列表，本人
-export const get_like_essay = () => {
-  return instance({
-    url: `/user/essay/like`,
-    method: "GET"
-  });
-};
-
-// 获取用户收藏的文章列表，本人
-export const get_collect_essay = () => {
-  return instance({
-    url: `/user/essay/collect`,
     method: "GET"
   });
 };
@@ -46,22 +22,23 @@ export const get_draftBox_essay = (options) => {
   });
 };
 
-// 获取文章分类列表
-export const get_essay_all = () => {
+// 根据id获取文章详情
+export const get_essay_detail = (options) => {
   return instance({
-    url: `/essay/list`,
+    url: `/essay/${options.id}`,
     method: "GET"
   });
 };
 
-// 获取某个板块下的文章列表
-export const get_tabs_essay = (options) => {
+// 根据id获取文章点赞、收藏状态
+export const get_essay_status = (options) => {
   return instance({
-    url: `/essay/list/${options.id}`,
+    url: `/essay/${options.id}/info`,
     method: "GET"
   });
 };
-////////////////////////////////
+
+//////////////////////////////
 
 // 新增文章
 export const add_essay = (options) => {

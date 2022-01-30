@@ -21,7 +21,7 @@ import {
   collectArticle,
   digArticle,
   get_essay_detail,
-  get__essay_status,
+  get_essay_status,
   get_user_follow,
   getThisUserArticleList
 } from "../../service/detail.js";
@@ -36,10 +36,9 @@ const { Meta } = Card;
 dayjs.locale("zh-cn"); // use locale
 dayjs.extend(relativeTime);
 
-// 采用 memo 对子组件重新渲染造成的影响进行控制
 const Detail = () => {
   // 状态定义
-  const { id } = useParams();
+  const { id } = useParams(); // 从路由中读取文章id
   const navigate = useNavigate();
   const [artLoading, setArtLoading] = useState(false); // 骨架屏显示
   const [article, setArticle] = useState({}); // 文章数据
@@ -66,7 +65,7 @@ const Detail = () => {
           // 获取文章详情
           get_essay_detail({ id: id }),
           // 获取文章的点赞、收藏状态
-          get__essay_status({ id: id })
+          get_essay_status({ id: id })
         ];
         const resArticle = await Promise.all(requestArticle);
         const [resDetail, resStatus] = [resArticle[0], resArticle[1]];
@@ -105,7 +104,11 @@ const Detail = () => {
         setArtLoading(false);
         /**
          * 上面是获取文章相关状态和该用户关注状态
-         *
+         */
+
+        // 获取文章发布者的相关信息
+
+        /**
          * 下面是根据发布者id获取该发布者发布的其他文章
          */
         const userArticle = await getThisUserArticleList({

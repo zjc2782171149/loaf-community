@@ -111,49 +111,49 @@ const Header = () => {
   // 路由守卫，没登录就跳到登录页面，登录了就获取用户信息
   useEffect(() => {
     async function getUserInfo() {
-      if (document.cookie.indexOf("token") === -1) {
-        // 说明cookie过期，浏览器自动删除了，此时跳转到登录页面
+      if (location.href.split("/")[3] === "login") return; // 登录页面，不用请求数据
+      try {
+        // 用于自动登录，返回数据跟login成功是一样的，更新数据
+        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        const res = await get_user_info({ id: userInfo.id });
+        const {
+          id,
+          username,
+          password,
+          phone,
+          avatar_url,
+          position,
+          theme_color,
+          introduction,
+          font_size,
+          dark_mode
+        } = res.data;
+        userInfo = {
+          id,
+          username,
+          password,
+          phone,
+          avatar_url,
+          position,
+          theme_color,
+          introduction,
+          font_size,
+          dark_mode
+        };
+        localStorage.setItem("userInfo", JSON.stringify(userInfo)); // 本地设置缓存
+      } catch (err) {
+        console.log(err);
+        // 后端返回的不是401状态码，而是设置成了我无法访问直接报401错，所以我只能通过catch err 捕获异常得知token过期
+        console.log("token失效，返回登录页面");
         localStorage.removeItem("token"); // 本地存储中的token不会过期，得手动删除
+        localStorage.removeItem("userInfo"); //
         navigate("/login");
-      } else {
-        if (location.href.split("/")[3] === "login") return; // 登录页面，不用请求数据
-        try {
-          const res = await get_user_info();
-          const {
-            id,
-            username,
-            password,
-            phone,
-            avatar_url,
-            position,
-            theme_color,
-            introduction,
-            font_size,
-            dark_mode
-          } = res.data;
-          const userInfo = {
-            id,
-            username,
-            password,
-            phone,
-            avatar_url,
-            position,
-            theme_color,
-            introduction,
-            font_size,
-            dark_mode
-          };
-          console.log(userInfo);
-          localStorage.setItem("userInfo", JSON.stringify(userInfo)); // 本地设置缓存
-        } catch (err) {
-          console.log(err);
-        }
       }
     }
     getUserInfo();
   }, [navigate]);
 
-  // 初始化;
+  // 页头激活标签初始化;
   useEffect(() => {
     let urlArray = location.href.split("/");
     console.log(urlArray[3]);

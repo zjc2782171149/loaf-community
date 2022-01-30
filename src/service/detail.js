@@ -9,7 +9,7 @@ export const get_essay_detail = (options) => {
 };
 
 // 根据id获取文章点赞、收藏状态
-export const get__essay_status = (options) => {
+export const get_essay_status = (options) => {
   return instance({
     url: `/essay/${options.id}/info`,
     method: "GET"

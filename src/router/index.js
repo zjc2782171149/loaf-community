@@ -13,6 +13,7 @@ const Profile = lazy(() => import("../pages/user/profile/profile.jsx"));
 const Posts = lazy(() => import("../pages/user/posts/posts.jsx"));
 const Says = lazy(() => import("../pages/user/says/says.jsx"));
 const Likes = lazy(() => import("../pages/user/likes/likes.jsx"));
+const Follow = lazy(() => import("../pages/user/follow/follow.jsx"));
 const PersonalSetting = lazy(() =>
   import("../pages/user/setting/index/index.jsx")
 );
@@ -73,6 +74,10 @@ const routes = [
       {
         path: "likes",
         element: lazyLoad(<Likes />)
+      },
+      {
+        path: "follow",
+        element: lazyLoad(<Follow />)
       }
     ]
   },
