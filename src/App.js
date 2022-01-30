@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import routes from "../src/router/index";
-import Header from "./layout/header/header.jsx";
 import { BackTop } from "antd";
+import Header from "./layout/header/header.jsx";
 
 // 回到顶部
 const style = {

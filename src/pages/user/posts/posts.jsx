@@ -22,9 +22,9 @@ const Posts = () => {
     for (let i = 0; i < 6; i++) {
       recommend_essay.push({
         id: i,
-        title: `文章 ${i}`,
+        title: `标题 ${i}`,
         avatar: require("../../../assets/personalAvatar.jpg"),
-        publish_user_id: "某不知名网友",
+        publish_user_id: "Smooth",
         publish_time: "3个月前",
         tab_id: "前端",
         introduction:

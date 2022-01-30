@@ -4,6 +4,6 @@ export const xxx = (options) => {
   return request({
     url: '接口相对路径',
     method: '方法',
-    params: options;
+    data: options;
   })
 }
