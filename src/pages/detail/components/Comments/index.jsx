@@ -50,7 +50,7 @@ const Comments = ({ id }) => {
     getCommentlist();
     const localToken = JSON.parse(localStorage.getItem("token")) ?? null;
     setHasToken(localToken);
-  }, []);
+  }, [id]);
 
   //初次渲染评论
   useEffect(() => {
@@ -97,7 +97,7 @@ const Comments = ({ id }) => {
     setUserId([...userId]);
     setReplyNum([...replyNum]);
     setReplyComments([...replyComments]);
-  }, [comment_list]);
+  }, [comment_list, likes, action, commentId, userId, replyNum, replyComments]);
 
   // comment下方的可操作按钮，点赞
   async function like(a) {
@@ -210,7 +210,6 @@ const Comments = ({ id }) => {
     // id是每条评论内容，包括在评论区下标，和对应的回复数组
     useEffect(() => {
       setLoding(false);
-      console.log(dianzanProps);
     }, [callback]);
 
     return (
@@ -245,7 +244,7 @@ const Comments = ({ id }) => {
     // 存储点赞数量
     const callback = useCallback(() => {
       return count;
-    });
+    }, [count]);
 
     //回复区进行初始化渲染
     useEffect(() => {
@@ -276,7 +275,7 @@ const Comments = ({ id }) => {
         }
       }
       setReplyList([...replyList]);
-    }, [comment_list]);
+    }, [props.pinlun, replyList, deleteReply]);
 
     //回复区进行渲染
     // function getReplyCom() {
@@ -329,63 +328,66 @@ const Comments = ({ id }) => {
     // }
 
     // 点击删除回复
-    async function deleteReply({ comment_id, delete_comment_id }) {
-      // await delete_comments({ id: delete_comment_id });
-      console.log(comment_id, delete_comment_id);
-      console.log(comment_list);
-      let delete_index;
-      comment_list.forEach((item) => {
-        if (item.id === comment_id) {
-          // 找到这个评论，接下来找要删除的回复
-          item.reply_comment.forEach((item2, index) => {
-            if (item2.id === delete_comment_id) {
-              console.log(item2, index);
-              delete_index = index;
-            }
-          });
-          // 删除该评论下的该回复
-          item.reply_comment.splice(delete_index, 1);
-        }
-      });
-      // console.log(comment_list);
-      /**
-       *
-       * 下面重新渲染该评论的回复评论区域
-       *
-       */
-      setReplyList([]);
-      const arr = [];
-      console.log(comment_list);
-      console.log(comment_list[props.a]);
-      const replyListContent = comment_list[props.a]?.reply_comment;
-
-      for (let i = 0; i < replyListContent.length; i++) {
-        let each_reply = {
-          //如果需要对评论回复进行回复和点赞等功能，可以在这里进行添加
-          actions: [
-            <Tooltip
-              key={data.id}
-              title="删除回复"
-              onClick={() =>
-                deleteReply({
-                  comment_id: replyListContent[i].reply_comment_id,
-                  delete_comment_id: replyListContent[i].id
-                })
+    const deleteReply = useCallback(
+      ({ comment_id, delete_comment_id }) => {
+        // await delete_comments({ id: delete_comment_id });
+        console.log(comment_id, delete_comment_id);
+        console.log(comment_list);
+        let delete_index;
+        comment_list.forEach((item) => {
+          if (item.id === comment_id) {
+            // 找到这个评论，接下来找要删除的回复
+            item.reply_comment.forEach((item2, index) => {
+              if (item2.id === delete_comment_id) {
+                console.log(item2, index);
+                delete_index = index;
               }
-            >
-              <DeleteOutlined />
-            </Tooltip>
-          ],
-          author: replyListContent[i].username,
-          avatar: replyListContent[i].avatar_url,
-          content: <p>{replyListContent[i].content}</p>
-        };
-        arr.push(each_reply);
-      }
-      replyNum[props.a]--;
-      setReplyList([...arr]);
-      setReplyNum([...replyNum]);
-    }
+            });
+            // 删除该评论下的该回复
+            item.reply_comment.splice(delete_index, 1);
+          }
+        });
+        // console.log(comment_list);
+        /**
+         *
+         * 下面重新渲染该评论的回复评论区域
+         *
+         */
+        setReplyList([]);
+        const arr = [];
+        console.log(comment_list);
+        console.log(comment_list[props.a]);
+        const replyListContent = comment_list[props.a]?.reply_comment;
+
+        for (let i = 0; i < replyListContent.length; i++) {
+          let each_reply = {
+            //如果需要对评论回复进行回复和点赞等功能，可以在这里进行添加
+            actions: [
+              <Tooltip
+                key={data.id}
+                title="删除回复"
+                onClick={() =>
+                  deleteReply({
+                    comment_id: replyListContent[i].reply_comment_id,
+                    delete_comment_id: replyListContent[i].id
+                  })
+                }
+              >
+                <DeleteOutlined />
+              </Tooltip>
+            ],
+            author: replyListContent[i].username,
+            avatar: replyListContent[i].avatar_url,
+            content: <p>{replyListContent[i].content}</p>
+          };
+          arr.push(each_reply);
+        }
+        replyNum[props.a]--;
+        setReplyList([...arr]);
+        setReplyNum([...replyNum]);
+      },
+      [props.a]
+    );
 
     //点击回复评论
     async function commentReply() {

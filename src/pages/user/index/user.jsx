@@ -52,12 +52,12 @@ const PersonalHome = () => {
     navigate(`/user/setting/profile`);
   };
 
-  // 初始化
+  // 初始化，根据url改变，第一种是通过header来改变，第二种是进到个人主页后点击tabs来改变
   useEffect(() => {
     if (location.href.split("/")[5]) {
       setActiveKey(location.href.split("/")[5]);
     }
-  }, []);
+  }, [location.href]);
 
   return (
     <UserStyle>

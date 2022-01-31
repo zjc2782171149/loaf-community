@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import Header from "./components/header/index.jsx";
 // import LeftSide from "./components/leftSide/index.jsx";
 import RightSide from "./components/rightSide/index.jsx";
@@ -6,6 +6,10 @@ import { LoginStyle } from "./style";
 import ParticlesBg from "particles-bg";
 
 const Login = () => {
+  useEffect(() => {
+    console.log("成功跳转到登录页面");
+  }, []);
+
   return (
     <LoginStyle>
       <ParticlesBg
