@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { SectionStyle } from "./section";
-
 import {
   Avatar,
   Space,
@@ -13,136 +13,91 @@ import {
   List
 } from "antd";
 import { createFromIconfontCN } from "@ant-design/icons";
+import {
+  get_user_leetCode,
+  get_leetCode_all,
+  get_leetCode_detail,
+  done_leetCode,
+  disdone_leetCode,
+  like_leetCode,
+  dislike_leetCode,
+  collect_leetCode,
+  discollect_leetCode
+} from "../../../service/leetCode";
 
 const { Meta } = Card;
 
 const LeetCodeSection = () => {
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
   const [user, setUser] = useState({});
-  let loading = false;
+  const [loading, setLoading] = useState(false);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  // 用户相关
+  // 用户信息初始化
   useEffect(() => {
-    setUser({
-      avatar_url: require("../../../assets/personalAvatar.jpg"),
-      username: "Smooth",
-      introduction: "一名SCAU大二前端er",
-      is_done: 89,
-      is_like: 122,
-      is_collect: 30
-    });
+    async function initUser() {
+      try {
+        const res = await get_user_leetCode({ id: userInfo.id });
+        let init = {};
+        init.done_count = res.data[0].done_count;
+        init.like_count = res.data[0].like_count;
+        init.collect_count = res.data[0].collect_count;
+        init.avatar_url = userInfo.avatar_url
+          ? userInfo.avatar_url
+          : require("../../../assets/LoginOut.png");
+        init.username = userInfo.username;
+        init.introduction = userInfo.introduction;
+        setUser(init);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    initUser();
   }, []);
+
+  // 力扣题目信息初始化
+  useEffect(() => {
+    async function initLeetcode() {
+      setLoading(true);
+      try {
+        const res = await get_leetCode_all();
+        initLeetcodeDetail(res.data);
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
+    }
+    initLeetcode();
+  }, []);
+
+  // 各题目完成、点赞、收藏状态初始化
+  async function initLeetcodeDetail(list) {
+    try {
+      const len = list.length;
+      for (let i = 0; i < len; i++) {
+        const res = await get_leetCode_detail({ id: list[i].id });
+        list[i].key = list[i].id;
+        list[i].passing_rate = list[i].passing_rate + "%";
+        list[i].status = [];
+        list[i].status.push(
+          res.data.is_done,
+          res.data.is_like,
+          res.data.is_collect
+        );
+      }
+      setData([...list]);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  }
 
   // iconfont图标
   const IconFont = createFromIconfontCN({
     scriptUrl: "//at.alicdn.com/t/font_3155494_c8d2d91r6m.js"
   });
-
-  // 表格要渲染的题目列表 数据和更新
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const initData = [
-      {
-        id: 1,
-        key: "1",
-        title: "最小子数组",
-        passing_rate: "70%",
-        level: "medium",
-        status: [false, false, true],
-        url: ""
-      },
-      {
-        id: 2,
-        key: "2",
-        title: "无重复字符的最长子串",
-        passing_rate: "38.4%",
-        level: "easy",
-        status: [false, false, true],
-        url: "https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/"
-      },
-      {
-        id: 3,
-        key: "3",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 4,
-        key: "4",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 5,
-        key: "5",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 6,
-        key: "6",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 7,
-        key: "7",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 8,
-        key: "8",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 9,
-        key: "9",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 10,
-        key: "10",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      },
-      {
-        id: 11,
-        key: "11",
-        title: "寻找两个正序数组的中位数",
-        passing_rate: "41.1%",
-        level: "hard",
-        status: [true, true, false],
-        url: "https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"
-      }
-    ];
-    setData(initData);
-  }, []);
 
   // 改变题目完成状态
   function changeDone(value, key, topic) {
@@ -161,19 +116,48 @@ const LeetCodeSection = () => {
     changeStatus(value, key, topic); // 这里传的1，代表修改收藏状态
   }
   // 改变
-  function changeStatus(value, key, topic) {
-    topic.status[key] = value;
-    let updated = [...data],
-      deleteIndex;
-    updated.forEach((item, index) => {
-      if (item.id === topic.id) {
-        deleteIndex = index; // 记录下要移出的题目的下标
+  async function changeStatus(value, key, topic) {
+    console.log(value, key, topic);
+    try {
+      if (key === 0) {
+        // 改变完成
+        if (value === 1) {
+          // 完成
+          await done_leetCode({ id: topic.id });
+        } else {
+          await disdone_leetCode({ id: topic.id });
+        }
+      } else if (key === 1) {
+        // 改变点赞
+        if (value === 1) {
+          // 点赞
+          await like_leetCode({ id: topic.id });
+        } else {
+          await dislike_leetCode({ id: topic.id });
+        }
+      } else {
+        // 改变收藏
+        if (value === 1) {
+          // 收藏
+          await collect_leetCode({ id: topic.id });
+        } else {
+          await discollect_leetCode({ id: topic.id });
+        }
       }
-    });
-    updated.splice(deleteIndex, 1); // 删除原题目
-    updated.splice(deleteIndex, 0, topic); // 加回改变状态后的原题目
-    console.log(updated);
-    setData(updated);
+      topic.status[key] = value;
+      let updated = [...data],
+        deleteIndex;
+      updated.forEach((item, index) => {
+        if (item.id === topic.id) {
+          deleteIndex = index; // 记录下要移出的题目的下标
+        }
+      });
+      updated.splice(deleteIndex, 1); // 删除原题目
+      updated.splice(deleteIndex, 0, topic); // 加回改变状态后的原题目
+      setData(updated);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const columns = [
@@ -191,24 +175,24 @@ const LeetCodeSection = () => {
       dataIndex: "level",
       filters: [
         {
-          text: "easy",
-          value: "easy"
+          text: "简单",
+          value: "简单"
         },
         {
-          text: "medium",
-          value: "medium"
+          text: "中等",
+          value: "中等"
         },
         {
-          text: "hard",
-          value: "hard"
+          text: "困难",
+          value: "困难"
         }
       ],
       onFilter: (value, record) => record.level.indexOf(value) === 0,
       render: (level) => (
         <span>
-          {(level === "easy" && <Tag color="#00b6c3">{level}</Tag>) ||
-            (level === "medium" && <Tag color="#ffb800">{level}</Tag>) ||
-            (level === "hard" && <Tag color="#ff2d55">{level}</Tag>)}
+          {(level === "简单" && <Tag color="#00b6c3">{level}</Tag>) ||
+            (level === "中等" && <Tag color="#ffb800">{level}</Tag>) ||
+            (level === "困难" && <Tag color="#ff2d55">{level}</Tag>)}
         </span>
       )
     },
@@ -218,7 +202,11 @@ const LeetCodeSection = () => {
       filters: [
         {
           text: "未完成",
-          value: false
+          value: 0
+        },
+        {
+          text: "已完成",
+          value: 1
         }
       ],
       onFilter: (value, record) => record.status[0] === value,
@@ -228,26 +216,26 @@ const LeetCodeSection = () => {
           {status.map((item, index) => {
             if (index === 0) {
               // 是否已完成该题目
-              if (item === false) {
+              if (item === 0) {
                 return (
                   // 还没完成
-                  <Popover content="待完成">
+                  <Popover content="待完成" key={index}>
                     <IconFont
                       type="icon-weiwancheng-lanse"
                       className="iconfontBig"
-                      onClick={() => changeDone(true, 0, topic)}
+                      onClick={() => changeDone(1, 0, topic)}
                     />
                   </Popover>
                 );
               } else {
                 return (
                   // 已完成
-                  <Popover content="已完成">
+                  <Popover content="已完成" key={index}>
                     <IconFont
                       type="icon-yiwancheng-lan"
                       className="iconfontBig"
                       onClick={() => {
-                        changeDone(false, 0, topic);
+                        changeDone(0, 0, topic);
                       }}
                     />
                   </Popover>
@@ -255,15 +243,15 @@ const LeetCodeSection = () => {
               }
             } else if (index === 1) {
               // 是否已点赞该题目
-              if (item === false) {
+              if (item === 0) {
                 return (
                   // 还没点赞
-                  <Popover content="待点赞">
+                  <Popover content="待点赞" key={index}>
                     <IconFont
                       type="icon-dianzan"
                       className="iconfontBig"
                       onClick={() => {
-                        changeLike(true, 1, topic);
+                        changeLike(1, 1, topic);
                       }}
                     />
                   </Popover>
@@ -271,12 +259,12 @@ const LeetCodeSection = () => {
               } else {
                 return (
                   // 已点赞
-                  <Popover content="已点赞">
+                  <Popover content="已点赞" key={index}>
                     <IconFont
                       type="icon-dianzanlanse"
                       className="iconfontBig"
                       onClick={() => {
-                        changeLike(false, 1, topic);
+                        changeLike(0, 1, topic);
                       }}
                     />
                   </Popover>
@@ -284,15 +272,15 @@ const LeetCodeSection = () => {
               }
             } else {
               // 是否已收藏该题目
-              if (item === false) {
+              if (item === 0) {
                 return (
                   // 还没收藏
-                  <Popover content="待收藏">
+                  <Popover content="待收藏" key={index}>
                     <IconFont
                       type="icon-shoucang"
                       className="iconfontBig"
                       onClick={() => {
-                        changeCollect(true, 2, topic);
+                        changeCollect(1, 2, topic);
                       }}
                     />
                   </Popover>
@@ -300,12 +288,12 @@ const LeetCodeSection = () => {
               } else {
                 return (
                   // 已收藏
-                  <Popover content="已收藏">
+                  <Popover content="已收藏" key={index}>
                     <IconFont
                       type="icon-shoucanglan"
                       className="iconfontBig"
                       onClick={() => {
-                        changeCollect(false, 2, topic);
+                        changeCollect(1, 2, topic);
                       }}
                     />
                   </Popover>
@@ -331,6 +319,10 @@ const LeetCodeSection = () => {
   function tableChange(e) {
     console.log(e);
   }
+
+  const enterUser = () => {
+    navigate(`/user/${userInfo.id}/profile`);
+  };
 
   return (
     <SectionStyle>
@@ -359,29 +351,37 @@ const LeetCodeSection = () => {
           {/* 个人信息展示 */}
           <Card
             className="right-aside-card"
-            actions={[<span key="enter">进入主页</span>]}
+            actions={[
+              <span key="enter" onClick={() => enterUser()}>
+                进入主页
+              </span>
+            ]}
             hoverable="true"
           >
             <Skeleton loading={loading} avatar active>
               <Meta
                 avatar={<Avatar src={user.avatar_url} />}
                 title={user.username}
-                description={user.introduction}
+                description={
+                  user.introduction
+                    ? user.introduction
+                    : "该用户很懒，暂没留下个人介绍"
+                }
               />
               <Divider />
               <Space direction="vertical">
                 <Space size={10}>
                   <IconFont type="icon-yiwancheng-lan" className="iconNum" />
-                  已完成题目数{user.is_done}
+                  已完成题目数{user.done_count ? user.done_count : 0}
                 </Space>
 
                 <Space size={10}>
                   <IconFont type="icon-dianzanlanse" className="iconNum" />
-                  已点赞题目数{user.is_like}
+                  已点赞题目数{user.like_count ? user.like_count : 0}
                 </Space>
                 <Space size={10}>
                   <IconFont type="icon-shoucanglan" className="iconNum" />
-                  已收藏题目数{user.is_collect}
+                  已收藏题目数{user.collect_count ? user.collect_count : 0}
                 </Space>
               </Space>
             </Skeleton>
@@ -399,24 +399,29 @@ const LeetCodeSection = () => {
             <List
               className="right-aside-card-hot"
               size="small"
-              dataSource={data.slice(3, 7)}
+              // 热题榜通过随机数生成序列
+              dataSource={data.slice(
+                0,
+                Math.floor(Math.random() * data.length)
+              )}
               renderItem={(item) => (
                 <List.Item
+                  key={item.title}
                   actions={[
-                    (item.level === "easy" && (
+                    (item.level === "简单" && (
                       <Tag color="#00b6c3">{item.level}</Tag>
                     )) ||
-                      (item.level === "medium" && (
+                      (item.level === "中等" && (
                         <Tag color="#ffb800">{item.level}</Tag>
                       )) ||
-                      (item.level === "hard" && (
+                      (item.level === "困难" && (
                         <Tag color="#ff2d55">{item.level}</Tag>
                       )),
                     <a
                       target="_blank"
                       rel="noreferrer"
                       href={item.url}
-                      key="goLeetCode"
+                      key={item.url}
                     >
                       go
                     </a>

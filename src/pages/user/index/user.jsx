@@ -99,7 +99,7 @@ const PersonalHome = () => {
                           <IdcardFilled />
                           {userInfo.introduction
                             ? userInfo.introduction
-                            : "未填写个人介绍"}
+                            : "该用户很懒，暂没留下个人介绍"}
                           <Button
                             className="editPersonal"
                             onClick={() => {

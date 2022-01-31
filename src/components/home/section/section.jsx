@@ -55,7 +55,7 @@ const Section = () => {
         username: userInfo.username,
         introduction: userInfo.introduction
           ? userInfo.introduction
-          : "暂无个人介绍",
+          : "该用户很懒，暂没留下个人介绍",
         user_like_count: likeComment.data.length + likeEssay.data.length || 13,
         user_collect_count: collectEssay.data.length || 132,
         user_potential_count: parseInt(Math.random() * Math.random() * 1000) // 随机生成潜力值
