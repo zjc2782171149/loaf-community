@@ -3,7 +3,8 @@ import { useNavigate } from "react-router";
 import { SaysStyle } from "./says";
 import { List, Avatar, Card, Space, Skeleton, Spin } from "antd";
 import { ShareAltOutlined, MessageOutlined } from "@ant-design/icons";
-import { get_user_topic } from "../../../service/user";
+import { get_user_topic } from "../../../service/topic";
+import { get_topic_all } from "../../../service/topic";
 import { formatDate } from "../../../utils/date";
 import moment from "moment";
 moment.locale();
@@ -22,6 +23,7 @@ const Says = () => {
       setLoading(true);
       try {
         const res = await get_user_topic();
+        await get_topic_all();
         setSaysList(res.data);
         setLoading(false);
       } catch (err) {
@@ -77,7 +79,6 @@ const Says = () => {
                       <p>{userInfo.username}</p>
                       <Space className="publish-time">
                         {/* position */}
-                        {userInfo.position ? userInfo.position : ""}
                         {item.publish_time
                           ? moment(
                               formatDate(formatDate(item.publish_time)),
@@ -86,10 +87,11 @@ const Says = () => {
                               .startOf("day")
                               .fromNow()
                           : ""}
+                        {userInfo.position ? userInfo.position : ""}
                       </Space>
                     </>
                   }
-                  description={item.content}
+                  description={item.content ? item.content : "暂无帖子介绍"}
                 />
               </Skeleton>
             </Card>

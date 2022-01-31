@@ -36,7 +36,6 @@ const { Meta } = Card;
 const Section = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
-
   const [loading, setLoading] = useState(false);
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 

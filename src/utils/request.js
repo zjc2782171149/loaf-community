@@ -68,7 +68,12 @@ request.interceptors.response.use(
     if (response.status !== 200) {
       return Promise.reject("未知错误");
     }
-    if (response.data.code === 0 && !response.data.data) {
+    // 登录状态的拦截，由于返回的不是状态码而是直接401报错，只能try catch 捕获了
+    if (
+      location.href.split("/")[3] === "login" &&
+      response.data.code === 0 &&
+      !response.data.data
+    ) {
       return Promise.reject(response.data.msg);
     }
     if (response.data.code !== 0) {

@@ -2,12 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { SectionStyle } from "./style";
 import {
-  get_user_info,
-  get_essay_detail
-  // get_essay_status,
-  // get_publish_topic
-} from "../../../../service/home";
-import {
   get_publish_essay,
   get_like_essay,
   get_collect_essay
@@ -16,13 +10,12 @@ import { formatDate } from "../../../../utils/date";
 import moment from "moment";
 moment.locale();
 
-import { Avatar, List, Space, Popover, Spin } from "antd";
+import { Avatar, List, Space, Spin } from "antd";
 import {
   MessageOutlined,
   StarOutlined,
   LikeOutlined,
-  EyeOutlined,
-  EyeTwoTone
+  EyeOutlined
 } from "@ant-design/icons";
 
 const EssayShowDetail = ({ name }) => {
@@ -52,55 +45,24 @@ const EssayShowDetail = ({ name }) => {
     setLoading(true);
 
     console.log(func);
-
-    // 如果找到该 板块，进行请求
+    let res;
     try {
-      // 由于api在上面返回的数据中还没四个数量和 点赞收藏状态，还得分别再进行两个api的申请
-      let result;
-      if (id) result = await func({ id: id });
-      else result = await func();
-
-      console.log(result.data);
-      let arr = result.data;
-      const length = arr.length;
-      for (let i = 0; i <= length; i++) {
-        // 跳出循环
-        if (i === length) {
-          setLoading(false);
-          break;
-        }
-        // 进行请求
-        const res = await get_essay_detail({
-          id: arr[i].id
-        });
-        console.log(res);
-        const { like_count, collect_count, comment_count, publish_user_id } =
-          res.data; // 抽离出发布者
-
-        // 再根据每篇文章 发布者ID，去查找发布者姓名
-        console.log(publish_user_id);
-        const resUser = await get_user_info({ id: publish_user_id });
-        const { username, avatar_url } = resUser.data;
-        arr[i].like_count = like_count ? like_count : 0;
-        arr[i].collect_count = collect_count ? collect_count : 0;
-        arr[i].comment_count = comment_count ? comment_count : 0;
-        arr[i].visit_count = parseInt(Math.random() * Math.random() * 1000); // 产生一个随机阅读量
+      if (id) res = await func({ id: id });
+      else res = await func();
+      let arr = res.data;
+      arr.forEach((item) => {
+        item.visit_count = parseInt(Math.random() * Math.random() * 1000); // 产生一个随机阅读量
         // 发布时间，将时间戳格式化为相对时间
-        arr[i].publish_time = arr[i].publish_time
-          ? moment(formatDate(formatDate(arr[i].publish_time)), "YYYYMMDD")
+        item.publish_time = item.publish_time
+          ? moment(formatDate(formatDate(item.publish_time)), "YYYYMMDD")
               .startOf("day")
               .fromNow()
           : "时间数据有误";
-        arr[i].avatar_url = avatar_url
-          ? avatar_url
-          : require("../../assets/LoginOut.png");
-        arr[i].username = username;
-        // arr[i].name = arr[i].name ? arr[i].name : "无";
-        setEssayList([...arr]);
-      }
+      });
+      setEssayList([...arr]);
+      setLoading(false);
     } catch (err) {
       console.log(err);
-      setEssayList([]);
       setLoading(false);
     }
   }
@@ -134,12 +96,13 @@ const EssayShowDetail = ({ name }) => {
             dataSource={essayList}
             renderItem={(item) => (
               <List.Item
+                onClick={() => turntoEssayDetail(item.id)}
                 className="content-list"
                 key={item.title}
                 actions={
                   !loading && [
                     <Space key={item.title} size="middle">
-                      <Space className="hoverBlue">
+                      <Space>
                         <IconText
                           icon={EyeOutlined}
                           text={item.visit_count}
@@ -148,7 +111,7 @@ const EssayShowDetail = ({ name }) => {
                       </Space>
 
                       {
-                        <Space className="hoverBlue">
+                        <Space>
                           <IconText
                             icon={LikeOutlined}
                             text={item.like_count}
@@ -156,7 +119,7 @@ const EssayShowDetail = ({ name }) => {
                           />
                         </Space>
                       }
-                      <Space className="hoverBlue">
+                      <Space>
                         <IconText
                           icon={MessageOutlined}
                           text={item.comment_count}
@@ -165,7 +128,7 @@ const EssayShowDetail = ({ name }) => {
                       </Space>
 
                       {
-                        <Space className="hoverBlue">
+                        <Space>
                           <IconText
                             icon={StarOutlined}
                             text={item.collect_count}
@@ -175,14 +138,6 @@ const EssayShowDetail = ({ name }) => {
                       }
                     </Space>
                   ]
-                }
-                extra={
-                  <Popover
-                    content="点击以查看文章详情"
-                    onClick={() => turntoEssayDetail(item.id)}
-                  >
-                    <EyeTwoTone className="listSeeMore" />
-                  </Popover>
                 }
               >
                 <List.Item.Meta

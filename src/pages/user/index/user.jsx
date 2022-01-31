@@ -42,7 +42,7 @@ const PersonalHome = () => {
   ];
 
   // 跳转到对应组件
-  const [activeKey, setActiveKey] = useState("posts");
+  const [activeKey, setActiveKey] = useState(location.href.split("/")[5]);
   const tabsChange = (key) => {
     navigate(`/user/${userInfo.id}/${key}`);
     setActiveKey(key);
@@ -116,7 +116,7 @@ const PersonalHome = () => {
                 </div>
               </div>
             </div>
-            {/* 发表评论 */}
+
             <div className="send">
               <Tabs
                 size="large"

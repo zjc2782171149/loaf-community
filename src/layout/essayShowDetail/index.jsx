@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { SectionStyle } from "./style";
 import {
-  get_user_info,
   get_essay_all,
   get_tabs_essay,
-  get_essay_detail,
-  get_essay_status,
   like_essay,
   dislike_essay,
   collect_essay,
@@ -115,82 +112,36 @@ const EssayShowDetail = () => {
   // 改变 tabs 时，根据key请求对应分类文章
   async function tabsChange(key, bool) {
     setLoading(true);
-    let flag = 0,
-      tabsId = null;
-    console.log(key, bool);
+    let tabsId = null;
+
     // 如果是初始化，直接传id=1过去
     if (bool) {
       tabsId = 1;
-      flag = 1;
     } else {
       tabsList.forEach((item) => {
         if (item.name === key) {
           // 切换到该tab，对这个板块的文章进行请求
           tabsId = item.id;
-          flag = 1;
         }
       });
     }
 
-    if (flag) {
-      // 如果找到该 板块，进行请求
-      try {
-        const res = await get_tabs_essay({ id: tabsId });
-        let arr = res.data;
-        console.log(arr);
-
-        // 由于api在上面返回的数据中还没四个数量和 点赞收藏状态，还得分别再进行两个api的申请
-        const length = arr.length;
-        for (let i = 0; i <= length; i++) {
-          // 跳出循环
-          if (i === length) {
-            setLoading(false);
-            break;
-          }
-          const requestEssay = [
-            // 获取文章详情
-            get_essay_detail({ id: arr[i].id }),
-            // 获取文章的点赞、收藏状态
-            get_essay_status({ id: arr[i].id })
-          ];
-          console.log(arr[i].id);
-          // 进行请求
-          const res = await Promise.all(requestEssay);
-          console.log(res);
-          const [resDetail, resStatus] = [res[0], res[1]];
-          const { name, like_count, collect_count, comment_count } =
-            resDetail.data; // 抽离出发布者
-          const { is_like, is_collect } = resStatus.data; // 我对文章的状态，是否点赞和收藏
-          // 再根据每篇文章 发布者ID，去查找发布者姓名
-          const resUser = await get_user_info({ id: arr[i].publish_user_id });
-          console.log(arr[i]);
-          arr[i].like_count = like_count ? like_count : 0;
-          arr[i].collect_count = collect_count ? collect_count : 0;
-          arr[i].comment_count = comment_count ? comment_count : 0;
-          arr[i].visit_count = parseInt(Math.random() * Math.random() * 1000); // 产生一个随机阅读量
-          arr[i].is_like = is_like;
-          arr[i].is_collect = is_collect;
-          // 发布时间，将时间戳格式化为相对时间
-          arr[i].publish_time = arr[i].publish_time
-            ? moment(formatDate(formatDate(arr[i].publish_time)), "YYYYMMDD")
-                .startOf("day")
-                .fromNow()
-            : "时间数据有误";
-          arr[i].avatar_url = arr[i].avatar_url
-            ? arr[i].avatar_url
-            : require("../../assets/LoginOut.png");
-          arr[i].username = resUser.data.username;
-          arr[i].name = name ? name : "无";
-          console.log(arr[i]);
-          setEssayList([...arr]);
-        }
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
-    } else {
-      // 没找到，进行清空
-      setEssayList([]);
+    try {
+      const res = await get_tabs_essay({ id: tabsId });
+      let arr = res.data;
+      arr.forEach((item) => {
+        item.visit_count = parseInt(Math.random() * Math.random() * 1000); // 产生一个随机阅读量
+        // 发布时间，将时间戳格式化为相对时间
+        item.publish_time = item.publish_time
+          ? moment(formatDate(formatDate(item.publish_time)), "YYYYMMDD")
+              .startOf("day")
+              .fromNow()
+          : "时间数据有误";
+      });
+      setEssayList([...arr]);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
       setLoading(false);
     }
   }
@@ -215,16 +166,20 @@ const EssayShowDetail = () => {
     for (let i = 0; i < length; i++) {
       if (essayList[i].id === id) {
         // 找到这篇文章了
-        if (bool) {
-          // 点赞
-          await like_essay({ id: id });
-          essayList[i].is_like = true;
-          essayList[i].like_count++;
-        } else {
-          // 取消点赞
-          await dislike_essay({ id: id });
-          essayList[i].is_like = false;
-          essayList[i].like_count--;
+        try {
+          if (bool) {
+            // 点赞
+            await like_essay({ id: id });
+            essayList[i].is_like = true;
+            essayList[i].like_count++;
+          } else {
+            // 取消点赞
+            await dislike_essay({ id: id });
+            essayList[i].is_like = false;
+            essayList[i].like_count--;
+          }
+        } catch (err) {
+          console.log(err);
         }
       }
     }
@@ -238,16 +193,20 @@ const EssayShowDetail = () => {
     for (let i = 0; i < length; i++) {
       if (essayList[i].id === id) {
         // 找到这篇文章了
-        if (bool) {
-          // 收藏
-          await collect_essay({ id: id });
-          essayList[i].is_collect = true;
-          essayList[i].collect_count++;
-        } else {
-          // 取消收藏
-          await discollect_essay({ id: id });
-          essayList[i].is_collect = false;
-          essayList[i].collect_count--;
+        try {
+          if (bool) {
+            // 收藏
+            await collect_essay({ id: id });
+            essayList[i].is_collect = true;
+            essayList[i].collect_count++;
+          } else {
+            // 取消收藏
+            await discollect_essay({ id: id });
+            essayList[i].is_collect = false;
+            essayList[i].collect_count--;
+          }
+        } catch (err) {
+          console.log(err);
         }
       }
     }
@@ -360,7 +319,13 @@ const EssayShowDetail = () => {
                 <List.Item.Meta
                   avatar={
                     <Space className="essayAvatar">
-                      <Avatar src={item.avatar_url} />
+                      <Avatar
+                        src={
+                          item.avatar_url
+                            ? item.avatar_url
+                            : require("../../assets/LoginOut.png")
+                        }
+                      />
                     </Space>
                   }
                   title={

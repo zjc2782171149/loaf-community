@@ -30,14 +30,17 @@ const { Search } = Input;
 const { TabPane } = Tabs;
 
 const Header = () => {
+  const navigate = useNavigate();
   const [isShow, setIsShow] = useState(true);
   const [active, setActive] = useState();
   const [value, setValue] = useState(""); // 搜索有关动作
-  const navigate = useNavigate();
   let show = true;
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   function handleMenuClick(index) {
     console.log(index);
   }
+
   const menu = (
     <Menu onClick={() => handleMenuClick()}>
       <Menu.Item key="newMessage">查看新消息</Menu.Item>
@@ -100,7 +103,7 @@ const Header = () => {
   }
 
   function turntoPersonal() {
-    navigate("/user" + "/1/profile");
+    navigate(`/user/${userInfo.id}/profile`);
   }
 
   function onSearch(inputValue) {

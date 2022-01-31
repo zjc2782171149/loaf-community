@@ -14,6 +14,7 @@ import {
 const PersonalSetting = () => {
   const navigate = useNavigate();
   const [activeKey, setActiveKey] = useState("profile");
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const tabsChange = (item) => {
     console.log(item.key);
@@ -22,7 +23,7 @@ const PersonalSetting = () => {
   };
 
   const backPersonalHome = () => {
-    navigate(`/user/1/profile`);
+    navigate(`/user/${userInfo.id}/posts`);
   };
 
   // activeKey 初始化
