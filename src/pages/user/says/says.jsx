@@ -79,14 +79,7 @@ const Says = () => {
                       <p>{userInfo.username}</p>
                       <Space className="publish-time">
                         {/* position */}
-                        {item.publish_time
-                          ? moment(
-                              formatDate(formatDate(item.publish_time)),
-                              "YYYYMMDD"
-                            )
-                              .startOf("day")
-                              .fromNow()
-                          : ""}
+                        {item.publish_time ? formatDate(item.publish_time) : ""}
                         {userInfo.position ? userInfo.position : ""}
                       </Space>
                     </>

@@ -148,3 +148,24 @@ export const get_publish_topic = () => {
     method: "GET"
   });
 };
+
+/**
+ * 我的草稿箱
+ */
+
+// 获取某个用户草稿箱列表
+export const get_drftbox_essay = (options) => {
+  return instance({
+    url: `/user/${options.id}/save/list`,
+    method: "GET"
+  });
+};
+
+// 新增草稿箱文章
+export const add_drftbox_essay = (options) => {
+  return instance({
+    url: `/essay/save`,
+    method: "POST",
+    data: options
+  });
+};

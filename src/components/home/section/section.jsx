@@ -124,13 +124,10 @@ const Section = () => {
 
       setSignLoading(false);
       setDailySign(true);
-      message.success({
-        content: `恭喜您，${res.msg}!`,
-        key,
-        duration: 2
-      });
+      message.success(`恭喜您，${res.msg}!`);
     } catch (err) {
       console.log(err);
+      message.error("签到失败");
       setSignLoading(false);
     }
   }
