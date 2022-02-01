@@ -64,8 +64,12 @@ const Section = () => {
 
       // 查询签到
       console.log("查询签到");
-      const haveSign = await get_user_sign();
-      setDailySign(haveSign.data.today);
+      try {
+        const haveSign = await get_user_sign();
+        setDailySign(haveSign.data.today);
+      } catch (err) {
+        console.log(err);
+      }
     }
     initUser();
   }, []);
@@ -115,8 +119,9 @@ const Section = () => {
   async function DailySign() {
     setSignLoading(true);
     message.loading({ content: "请耐心等待", key });
-    const res = await set_user_sign();
-    setTimeout(() => {
+    try {
+      const res = await set_user_sign();
+
       setSignLoading(false);
       setDailySign(true);
       message.success({
@@ -124,7 +129,10 @@ const Section = () => {
         key,
         duration: 2
       });
-    }, 1000);
+    } catch (err) {
+      console.log(err);
+      setSignLoading(false);
+    }
   }
 
   const enterUser = () => {

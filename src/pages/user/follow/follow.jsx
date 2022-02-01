@@ -96,21 +96,21 @@ const Follow = () => {
   return (
     <FollowStyle>
       <Spin spinning={loading} tip="加载中，请稍后...">
-        <Space direction="vertical">
-          <Space>
-            <span className="focus">关注</span>
-            <Tabs
-              defaultActiveKey="1"
-              onChange={() => callback()}
-              className="focusTabs"
-              size="small"
-            >
-              <TabPane tab="关注的用户" key="1"></TabPane>
-              <TabPane tab="关注者" key="2"></TabPane>
-            </Tabs>
-          </Space>
+        <Space>
+          <span className="focus">关注</span>
+          <Tabs
+            defaultActiveKey="1"
+            onChange={() => callback()}
+            className="focusTabs"
+            size="small"
+          >
+            <TabPane tab="关注的用户" key="1"></TabPane>
+            <TabPane tab="关注者" key="2"></TabPane>
+          </Tabs>
         </Space>
+
         <Divider />
+
         <List
           itemLayout="horizontal"
           dataSource={followList}

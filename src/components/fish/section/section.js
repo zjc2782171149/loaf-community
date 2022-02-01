@@ -113,4 +113,33 @@ export const SectionStyle = styled.div`
     color: rgba(0,0,0,0.3);
     font-size:14px;
   }
+  .focusTabs {
+    position: absolute;
+    top: -15px;
+    right: 0;
+  }
+  .avatarContent {
+    transform:scale(1.2);
+    margin-top:10px;
+  }
+  .tabsTopic {
+    padding: 10px 0px 0 0;
+  }
+  .topic-time {
+    color: rgba(0,0,0,0.6);
+    font-size: 13px;
+  }
+  .topicHover {
+    cursor: pointer;
+    padding: 0 0 0 10px;
+  }
+  .topicHover:hover {
+    background-color: ${colorGrey};
+  }
+  .hotContent {
+    width: 100%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
 `;

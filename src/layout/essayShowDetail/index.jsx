@@ -133,9 +133,7 @@ const EssayShowDetail = () => {
         item.visit_count = parseInt(Math.random() * Math.random() * 1000); // 产生一个随机阅读量
         // 发布时间，将时间戳格式化为相对时间
         item.publish_time = item.publish_time
-          ? moment(formatDate(formatDate(item.publish_time)), "YYYYMMDD")
-              .startOf("day")
-              .fromNow()
+          ? formatDate(item.publish_time)
           : "时间数据有误";
       });
       setEssayList([...arr]);
