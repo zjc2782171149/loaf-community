@@ -5,6 +5,7 @@ import Profile from "../profile/profile.jsx";
 import Posts from "../posts/posts.jsx";
 import Says from "../says/says.jsx";
 import Likes from "../likes/likes.jsx";
+import Follow from "../follow/follow.jsx";
 import { List, Space, Card, Image, Button, Divider, Tabs } from "antd";
 // Avatar, Button
 import {
@@ -20,6 +21,7 @@ const { TabPane } = Tabs;
 
 const PersonalHome = () => {
   const navigate = useNavigate();
+  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const announcementList = [
     {
       title: "【好题分享活动】开奖啦~",
@@ -39,9 +41,10 @@ const PersonalHome = () => {
     }
   ];
 
-  const [activeKey, setActiveKey] = useState("profile");
+  // 跳转到对应组件
+  const [activeKey, setActiveKey] = useState(location.href.split("/")[5]);
   const tabsChange = (key) => {
-    navigate(`/user/1/${key}`);
+    navigate(`/user/${userInfo.id}/${key}`);
     setActiveKey(key);
   };
 
@@ -49,12 +52,12 @@ const PersonalHome = () => {
     navigate(`/user/setting/profile`);
   };
 
-  // 初始化
+  // 初始化，根据url改变，第一种是通过header来改变，第二种是进到个人主页后点击tabs来改变
   useEffect(() => {
     if (location.href.split("/")[5]) {
       setActiveKey(location.href.split("/")[5]);
     }
-  }, []);
+  }, [location.href]);
 
   return (
     <UserStyle>
@@ -70,11 +73,15 @@ const PersonalHome = () => {
                       <Image
                         className="image"
                         width={100}
-                        src={require("../../../assets/personalAvatar.jpg")}
+                        src={
+                          userInfo.avatar_url
+                            ? userInfo.avatar_url
+                            : require("../../../assets/LoginOut.png")
+                        }
                       />
                       <Space direction="vertical">
                         <Space>
-                          <span className="username">Smoothzjc</span>
+                          <span className="username">{userInfo.username}</span>
                           <Space className="icon" size="middle">
                             <WeiboCircleOutlined />
                             <GithubOutlined />
@@ -83,11 +90,16 @@ const PersonalHome = () => {
                         </Space>
                         <Space className="position">
                           <ContactsFilled />
-                          前端工程师 | 学生 | 华南农业大学
+                          {userInfo.position
+                            ? userInfo.position
+                            : "未填写职位"}{" "}
+                          | {userInfo.phone ? userInfo.phone : "未填写手机"}
                         </Space>
                         <Space className="introduction">
                           <IdcardFilled />
-                          一名SCAU大二学生，现沉迷于前端领域学习
+                          {userInfo.introduction
+                            ? userInfo.introduction
+                            : "该用户很懒，暂没留下个人介绍"}
                           <Button
                             className="editPersonal"
                             onClick={() => {
@@ -104,7 +116,7 @@ const PersonalHome = () => {
                 </div>
               </div>
             </div>
-            {/* 发表评论 */}
+
             <div className="send">
               <Tabs
                 size="large"
@@ -112,17 +124,17 @@ const PersonalHome = () => {
                 onChange={tabsChange}
                 activeKey={activeKey}
               >
-                <TabPane tab="动态" key="profile"></TabPane>
                 <TabPane tab="我的文章" key="posts"></TabPane>
-                <TabPane tab="我的唠嗑" key="says"></TabPane>
                 <TabPane tab="我的点赞" key="likes"></TabPane>
-                {/* <TabPane tab="我的关注" key="follow"></TabPane> */}
+                <TabPane tab="我的收藏" key="profile"></TabPane>
+                <TabPane tab="我的唠嗑" key="says"></TabPane>
+                <TabPane tab="我的关注" key="follow"></TabPane>
               </Tabs>
               {activeKey === "profile" && <Profile />}
               {activeKey === "posts" && <Posts />}
               {activeKey === "says" && <Says />}
               {activeKey === "likes" && <Likes />}
-              {/* {activeKey === "follow" && <Likes />} */}
+              {activeKey === "follow" && <Follow />}
             </div>
           </div>
           <div className="right-aside">

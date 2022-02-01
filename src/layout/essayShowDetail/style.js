@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorWhite, colorBlue, colorGrey } from "../../../reducer/constant";
+import { colorWhite, colorBlue, colorGrey } from "../../reducer/constant";
 
 const width = document.body.clientWidth;
 console.log(width);

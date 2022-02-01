@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorGrey } from "../../reducer/constant";
+import { colorBlue, colorGrey } from "../../reducer/constant";
 
 const width = document.body.clientWidth;
 const height = document.body.clientHeight;
@@ -76,5 +76,12 @@ export const HeaderStyle = styled.div`
     position: absolute;
     right: 0;
     margin: 15px 0 0 0;
+  }
+  .modalTitle {
+    color: ${colorBlue};
+    font-size: 20px;
+  }
+  .modalFooter {
+    font-weight: 600;
   }
 `;

@@ -19,6 +19,14 @@ export const get_like_leetCode = () => {
   });
 };
 
+// 获取用户的力扣信息
+export const get_user_leetCode = (options) => {
+  return instance({
+    url: `/user/${options.id}/leetcode/info`,
+    method: "GET"
+  });
+};
+
 /**
  * 力扣页面
  */
@@ -31,7 +39,7 @@ export const get_leetCode_all = () => {
 };
 
 // 获取用户的leetcode信息
-export const get_leetCode_self = (options) => {
+export const get_leetCode_detail = (options) => {
   return instance({
     url: `/leetcode/${options.id}/info`,
     method: "GET"
@@ -71,7 +79,7 @@ export const discollect_leetCode = (options) => {
 };
 
 // 完成leetcode某个题目
-export const collect_leetCode = (options) => {
+export const done_leetCode = (options) => {
   return instance({
     url: `/leetcode/${options.id}/done`,
     method: "POST"
@@ -79,7 +87,7 @@ export const collect_leetCode = (options) => {
 };
 
 // 取消完成leetcode某个题目
-export const discollect_leetCode = (options) => {
+export const disdone_leetCode = (options) => {
   return instance({
     url: `/leetcode/${options.id}/done`,
     method: "DELETE"

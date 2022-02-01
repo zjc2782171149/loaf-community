@@ -27,6 +27,7 @@ export const UserStyle = styled.div`
   }
   .image {
     display: inline-block;
+    transform: scale(0.8);
   }
   .username {
     margin-top: 20px;
@@ -35,7 +36,8 @@ export const UserStyle = styled.div`
   }
   .editPersonal {
     position: absolute;
-    margin: -15px 0 0 140px;
+    bottom: 70px;
+    right: 15px;
     border: 1px solid ${colorBlue};
     color: ${colorBlue};
   }

@@ -28,7 +28,7 @@ export const DetailWrapper = styled.div`
     line-height: 16px;
     font-size: 12px;
     color: #707070;
-    margin: 20px 0 0px 0px;
+    margin: 20px 0;
   }
   .article-container {
     width: 100%;
@@ -67,6 +67,7 @@ export const DetailWrapper = styled.div`
   .right-sidebar {
     display: flex;
     flex: 0.3;
+    max-width: 350px;
     margin-left: 20px;
     background-color: ${colorWhite};
     flex-direction: column;
@@ -82,7 +83,7 @@ export const DetailWrapper = styled.div`
     font-size: 13px;
   }
   .hotTitle {
-    margin: 10px 37% 0;
+    margin: 15px 37%;
   }
   .clearBgColor {
     height: 20px;
