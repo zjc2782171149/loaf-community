@@ -217,6 +217,8 @@ const Header = () => {
       }
     } else if (urlArray[3] === "login") {
       setIsShow(false);
+    } else if (urlArray[3] === "editContent") {
+      setIsShow(false);
     } else {
       setIsShow(true);
       // 其他的比如个人主页啥的别的页面，那就activeKey设置为其他就行

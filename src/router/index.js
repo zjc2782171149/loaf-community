@@ -6,6 +6,7 @@ const Home = lazy(() => import("../pages/home/home.jsx"));
 const Fish = lazy(() => import("../pages/fish/fish.jsx"));
 const LeetCode = lazy(() => import("../pages/leetCode/leetCode.jsx"));
 const Detail = lazy(() => import("../pages/detail/index.jsx"));
+const EditContent = lazy(() => import("../pages/editContent/index.jsx"));
 const Topic = lazy(() => import("../pages/topic/topic.jsx"));
 const PersonalHome = lazy(() => import("../pages/user/index/user.jsx"));
 const Profile = lazy(() => import("../pages/user/profile/profile.jsx"));
@@ -43,6 +44,10 @@ const routes = [
   {
     path: "/fish",
     element: lazyLoad(<Fish />)
+  },
+  {
+    path: "/editContent",
+    element: lazyLoad(<EditContent />)
   },
   {
     path: "/detail/:id",

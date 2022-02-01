@@ -1,5 +1,27 @@
 import instance from "../utils/request";
 
+/**
+ * 个人资料页面
+ */
+// 获取用户发表的文章列表，非本人
+export const get_user_essay = (options) => {
+  return instance({
+    url: `/user/${options.id}/essay/list`,
+    method: "GET"
+  });
+};
+
+/**
+ * 主页面
+ */
+// 获取用户的草稿箱列表
+export const get_draftBox_essay = (options) => {
+  return instance({
+    url: `/user/${options.id}/save/list`,
+    method: "GET"
+  });
+};
+
 // 根据id获取文章详情
 export const get_essay_detail = (options) => {
   return instance({
@@ -16,46 +38,62 @@ export const get_essay_status = (options) => {
   });
 };
 
-// 查看关注列表 --完成
-export const get_user_follow = () => {
-  return instance({
-    url: "/user/follow/list",
-    method: "GET"
-  });
-};
+//////////////////////////////
 
-// 获取用户发布的文章列表
-export const getThisUserArticleList = (options) => {
+// 新增文章
+export const add_essay = (options) => {
   return instance({
-    url: "/article_list_user",
-    method: "GET",
+    url: `/essay`,
+    method: "POST",
     data: options
   });
 };
 
-// 根据标签获取文章
-export const getArticleByTag = (options) => {
+// 点赞文章
+export const like_essay = (options) => {
   return instance({
-    url: "/article_list",
-    method: "GET",
-    data: options
+    url: `/essay/${options.id}/like`,
+    method: "POST"
   });
 };
 
-// 点赞文章，传入文章 id，通过token判断用户
-export const digArticle = (options) => {
+// 取消点赞文章
+export const dislike_essay = (options) => {
   return instance({
-    url: "/article_digg",
-    method: "PUT",
-    data: options
+    url: `/essay/${options.id}/like`,
+    method: "DELETE"
   });
 };
 
 // 收藏文章
-export const collectArticle = (options) => {
+export const collect_essay = (options) => {
   return instance({
-    url: "/article_like",
-    method: "PUT",
+    url: `/essay/${options.id}/collect`,
+    method: "POST"
+  });
+};
+
+// 取消收藏文章
+export const discollect_essay = (options) => {
+  return instance({
+    url: `/essay/${options.id}/collect`,
+    method: "DELETE"
+  });
+};
+
+// 新增草稿箱文章
+export const add_draftBox_essay = (options) => {
+  return instance({
+    url: `/essay/save`,
+    method: "POST",
     data: options
+  });
+};
+
+// 查询某个用户关注者列表
+export const get_which_user_followed = (options) => {
+  return instance({
+    url: `/user/${options.id}/followed/list`,
+    method: "GET"
   });
 };

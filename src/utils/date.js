@@ -2,7 +2,6 @@
 export const formatDate = (now) => {
   if (!now) return "时间数据有误";
   now = new Date(Number(now));
-  console.log(now);
   const year = now.getFullYear();
   const month =
     now.getMonth() + 1 < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1;
@@ -11,6 +10,5 @@ export const formatDate = (now) => {
   const minute =
     now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes();
   const endTime = year + "-" + month + "-" + day + " " + hour + ":" + minute;
-  console.log(endTime);
   return endTime;
 };

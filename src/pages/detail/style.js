@@ -28,7 +28,7 @@ export const DetailWrapper = styled.div`
     line-height: 16px;
     font-size: 12px;
     color: #707070;
-    margin: 20px 0 0px 0px;
+    margin: 20px 0;
   }
   .article-container {
     width: 100%;

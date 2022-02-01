@@ -16,19 +16,19 @@ import {
 } from "antd";
 import { HeartTwoTone, EyeTwoTone, FireTwoTone } from "@ant-design/icons";
 import Comments from "./components/Comments";
-
 import {
-  collectArticle,
-  digArticle,
+  like_essay,
+  collect_essay,
   get_essay_detail,
   get_essay_status,
-  get_user_follow,
-  getThisUserArticleList
+  get_which_user_followed
 } from "../../service/detail.js";
+import { get_user_info, get_publish_essay } from "../../service/user.js";
+import { formatDate } from "../../utils/date.js";
+// import Article from "./components/article/index.jsx";
 import HotArticle from "./components/HotArticle";
 import LeftSide from "./components/LeftSide";
 import { DetailWrapper } from "./style";
-// import { FocusAuthor } from "../../service/user";
 import RenderIfVisible from "react-render-if-visible";
 
 const { Meta } = Card;
@@ -41,6 +41,7 @@ const Detail = () => {
   const { id } = useParams(); // 从路由中读取文章id
   const navigate = useNavigate();
   const [artLoading, setArtLoading] = useState(false); // 骨架屏显示
+  const [author, setAuthor] = useState({}); // 文章数据
   const [article, setArticle] = useState({}); // 文章数据
   const [articleList, setArticleList] = useState([]); // 该用户发布的文章列表数据
   const [size, setSize] = useState(16); // 文章字体大小，默认16
@@ -71,13 +72,16 @@ const Detail = () => {
         const [resDetail, resStatus] = [resArticle[0], resArticle[1]];
         console.log(resDetail);
         console.log(resStatus);
-        const { data: article, publish_user_id } = resDetail.data; // 抽离出文章详情、发布者id
+        const { data: article } = resDetail; // 抽离出文章，给后面初始化，同步状态
+        setArticle(resDetail.data); // 设置文章详情
         const { is_like, is_collect } = resStatus.data; // 我对文章的状态，是否点赞和收藏
-        // 用发布者id去请求是否关注的状态
-        const res = await get_user_follow();
+
+        const author = await get_user_info({ id: article.publish_user_id }); // 用发布者id去请求发布者详细信息
+        setAuthor(author.data);
+        const res = await get_which_user_followed(); // 请求关注列表，看是否关注了这个作者
         let flag = 0;
         res.data.forEach((item) => {
-          if (item.id === publish_user_id) {
+          if (item.id === article.publish_user_id) {
             flag = 1;
           }
         });
@@ -91,15 +95,6 @@ const Detail = () => {
           collect: is_collect,
           focus: isFollow
         });
-        // 根据上传时间设置到现在的时间
-        article.publish_time = dayjs
-          .unix(article.publish_time)
-          .format("YYYY-MM-DD HH:mm");
-        article.title = "测试标题测试标题测试标题测试标题测试标题测试标题";
-        article.publish_time =
-          "测试发布时间测试发布时间测试发布时间测试发布时间测试发布时间测试发布时间";
-        article.content =
-          "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试";
         setArticle(article);
         setArtLoading(false);
         /**
@@ -111,8 +106,8 @@ const Detail = () => {
         /**
          * 下面是根据发布者id获取该发布者发布的其他文章
          */
-        const userArticle = await getThisUserArticleList({
-          id: publish_user_id
+        const userArticle = await get_publish_essay({
+          id: article.publish_user_id
         });
         // 热门文章数据
         const articleList = userArticle.data.article_list;
@@ -126,14 +121,14 @@ const Detail = () => {
         setArticleList(articleList);
       } catch (error) {
         // 获取失败直接返回首页
+        console.log(error);
         message.error("加载失败，请重试");
         // navigate("/");
         setArtLoading(false);
       }
     };
     getArticle();
-    return () => null;
-  }, [id, navigate]);
+  }, []);
 
   // 处理点赞事件
   const handleLove = () => {
@@ -143,7 +138,7 @@ const Detail = () => {
         loveNum: numGroup.loveDone ? --numGroup.loveNum : ++numGroup.loveNum,
         loveDone: !numGroup.loveDone
       });
-      digArticle({ article_id: article.item_id });
+      like_essay({ id: article.id });
     } else {
       message.info("请先登录");
     }
@@ -158,7 +153,7 @@ const Detail = () => {
           : ++numGroup.collectNum,
         collect: !numGroup.collect
       });
-      collectArticle({ article_id: article.item_id });
+      collect_essay({ id: article.id });
     } else {
       message.info("请先登录");
     }
@@ -223,18 +218,18 @@ const Detail = () => {
             {/* 文章内容 */}
             <div className="main">
               <div className="article-container">
-                {/* <h1 dangerouslySetInnerHTML={{ __html: article.title }} /> */}
-                <h1>测试标题</h1>
-                <div className="article-meta">
-                  {/* <div className="article-time">{article.publish_time}</div> */}
-                  <div className="article-time">3个月前</div>
-                  <div className="article-author">
-                    {article?.media_user?.media_name}{" "}
-                  </div>
-                </div>
+                <h2>{article.title}</h2>
+                <Space className="article-meta">
+                  {formatDate(article.publish_time)}
+                  {author.username}
+                </Space>
+                {/* <Article content={article.content} /> */}
 
-                {/* <article dangerouslySetInnerHTML={{ __html: article.content }} /> */}
-                <article>文章主要内容</article>
+                <article
+                  dangerouslySetInnerHTML={{
+                    __html: article.content
+                  }}
+                />
               </div>
               {/* 评论区 */}
               <div id="comment" className="comment-container">
@@ -249,15 +244,15 @@ const Detail = () => {
               <Card
                 className="author"
                 onClick={() => {
-                  navigate(`/user/${article.media_id}`);
+                  navigate(`/user/${article.publish_user_id}`);
                 }}
                 title={
                   <Space>
                     <Avatar
                       src={
-                        article?.avatar_url
-                          ? article?.avatar_url
-                          : require("../../assets/zjtd.png")
+                        author.avatar_url
+                          ? author.avatar_url
+                          : require("../../assets/LoginOut.png")
                       }
                       size={50}
                     />
@@ -266,10 +261,10 @@ const Detail = () => {
                       className="authorInfo"
                       size="small"
                     >
-                      <span className="author-title">掘金安东尼</span>
-                      <Space className="author-message">
-                        <span>黄金矿工</span>
-                        <span>@前端工程师</span>
+                      <span className="author-title">{author.username}</span>
+                      <Space className="author-message" direction="vertical">
+                        <span>@{author.position}</span>
+                        <span>{author.introduction}</span>
                       </Space>
                     </Space>
                   </Space>
@@ -292,16 +287,18 @@ const Detail = () => {
                 <Space direction="vertical">
                   <Space size={5}>
                     <HeartTwoTone className="iconNum" />
+                    {/* 获得点赞{authorCount.data.like_count} */}
                     获得点赞{111}
                   </Space>
 
                   <Space size={5}>
                     <EyeTwoTone className="iconNum" />
-                    文章被阅读{222}
+                    {/* 文章被收藏{authorCount.data.collect_count} */}
+                    文章被收藏{222}
                   </Space>
                   <Space size={5}>
                     <FireTwoTone className="iconNum" />
-                    潜力值{333}
+                    潜力值{Math.random() * Math.random() * 1000}
                   </Space>
                 </Space>
               </Card>

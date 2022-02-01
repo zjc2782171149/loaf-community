@@ -97,7 +97,7 @@ const Comments = ({ id }) => {
     setUserId([...userId]);
     setReplyNum([...replyNum]);
     setReplyComments([...replyComments]);
-  }, [comment_list, likes, action, commentId, userId, replyNum, replyComments]);
+  }, []);
 
   // comment下方的可操作按钮，点赞
   async function like(a) {
