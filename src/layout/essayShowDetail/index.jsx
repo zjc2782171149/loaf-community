@@ -254,7 +254,7 @@ const EssayShowDetail = () => {
                         />
                       </Space>
 
-                      {!item.is_like && (
+                      {Boolean(!item.is_like) && (
                         <Space
                           className="hoverBlue"
                           onClick={() => changeLike(item.id, true)}
@@ -266,7 +266,7 @@ const EssayShowDetail = () => {
                           />
                         </Space>
                       )}
-                      {item.is_like && (
+                      {Boolean(item.is_like) && (
                         <Space
                           className="hoverBlue"
                           onClick={() => changeLike(item.id, false)}
@@ -286,7 +286,7 @@ const EssayShowDetail = () => {
                         />
                       </Space>
 
-                      {!item.is_collect && (
+                      {Boolean(!item.is_collect) && (
                         <Space
                           className="hoverBlue"
                           onClick={() => changeCollect(item.id, true)}
@@ -298,7 +298,7 @@ const EssayShowDetail = () => {
                           />
                         </Space>
                       )}
-                      {item.is_collect && (
+                      {Boolean(item.is_collect) && (
                         <Space
                           className="hoverBlue"
                           onClick={() => changeCollect(item.id, false)}
@@ -319,9 +319,8 @@ const EssayShowDetail = () => {
                     <Space className="essayAvatar">
                       <Avatar
                         src={
-                          item.avatar_url
-                            ? item.avatar_url
-                            : require("../../assets/LoginOut.png")
+                          item.avatar_url ??
+                          require("../../assets/LoginOut.png")
                         }
                       />
                     </Space>

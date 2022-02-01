@@ -82,7 +82,7 @@ export const LeftSection = styled.div`
     font-size: 14px;
     height: 30px;
     line-height: 30px;
-    margin: -10px 0 0 -8px;
+    margin: -10px 0 0 -30px;
   }
   .slide {
     width: 120px;

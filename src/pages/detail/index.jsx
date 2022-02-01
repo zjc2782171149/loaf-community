@@ -23,7 +23,13 @@ import {
   get_essay_status,
   get_which_user_followed
 } from "../../service/detail.js";
-import { get_user_info, get_publish_essay } from "../../service/user.js";
+import {
+  get_user_info,
+  get_publish_essay,
+  set__user_follow,
+  delete_user_follow,
+  set_user_setting
+} from "../../service/user.js";
 import { formatDate } from "../../utils/date.js";
 // import Article from "./components/article/index.jsx";
 import HotArticle from "./components/HotArticle";
@@ -44,7 +50,6 @@ const Detail = () => {
   const [author, setAuthor] = useState({}); // 文章数据
   const [article, setArticle] = useState({}); // 文章数据
   const [articleList, setArticleList] = useState([]); // 该用户发布的文章列表数据
-  const [size, setSize] = useState(16); // 文章字体大小，默认16
   const [hasToken, setHasToken] = useState(false);
   const [numGroup, setNumGroup] = useState({
     loveNum: 0,
@@ -55,6 +60,9 @@ const Detail = () => {
     focus: false,
     read: false
   });
+  const [userInfo, setUserInfo] = useState(
+    JSON.parse(localStorage.getItem("userInfo"))
+  );
 
   // 初始化文章数据
   useEffect(() => {
@@ -78,7 +86,7 @@ const Detail = () => {
 
         const author = await get_user_info({ id: article.publish_user_id }); // 用发布者id去请求发布者详细信息
         setAuthor(author.data);
-        const res = await get_which_user_followed(); // 请求关注列表，看是否关注了这个作者
+        const res = await get_which_user_followed({ id: userInfo.id }); // 请求关注列表，看是否关注了这个作者
         let flag = 0;
         res.data.forEach((item) => {
           if (item.id === article.publish_user_id) {
@@ -96,7 +104,6 @@ const Detail = () => {
           focus: isFollow
         });
         setArticle(article);
-        setArtLoading(false);
         /**
          * 上面是获取文章相关状态和该用户关注状态
          */
@@ -109,16 +116,10 @@ const Detail = () => {
         const userArticle = await get_publish_essay({
           id: article.publish_user_id
         });
-        // 热门文章数据
-        const articleList = userArticle.data.article_list;
-        // 计算该用户发布的各文章到当前时间的距离
-        articleList.forEach((article) => {
-          article.publish_time = dayjs(
-            parseInt(article.publish_time + "000")
-          ).fromNow();
-        });
-        // 添加文章列表数据
-        setArticleList(articleList);
+        console.log(userArticle.data);
+        // 添加热门文章数据
+        setArticleList(userArticle.data);
+        setArtLoading(false);
       } catch (error) {
         // 获取失败直接返回首页
         console.log(error);
@@ -160,27 +161,29 @@ const Detail = () => {
   };
   // 处理关注用户事件
   const focusUser = () => {
-    if (hasToken) {
+    try {
       if (numGroup.focus) {
         Modal.confirm({
           title: "你确定要取消关注作者吗？",
           onOk: () => {
+            const res = delete_user_follow({ id: article.publish_user_id });
+            console.log(res);
             setNumGroup({
               ...numGroup,
               focus: !numGroup.focus
             });
-            // FocusAuthor({ media_id: article.media_id });
           }
         });
       } else {
+        const res = set__user_follow({ id: article.publish_user_id });
+        console.log(res);
         setNumGroup({
           ...numGroup,
           focus: !numGroup.focus
         });
-        // FocusAuthor({ media_id: article.media_id });
       }
-    } else {
-      message.info("请先登录");
+    } catch (err) {
+      console.log(err);
     }
   };
   // 跳转评论区
@@ -189,10 +192,20 @@ const Detail = () => {
     anchorElement.scrollIntoView({ block: "start", behavior: "smooth" });
   };
   // 切换字体大小
-  const handleSize = (value) => {
-    setSize(value);
-    localStorage.setItem("fontSize", value);
-  };
+  async function handleSize(value) {
+    try {
+      await set_user_setting({
+        theme_color: userInfo.theme_color,
+        dark_mode: userInfo.dark_mode,
+        font_size: value
+      });
+      const res = await get_user_info({ id: userInfo.id });
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
+      setUserInfo(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   // 检查token状态，是否过期或不见了
   useEffect(() => {
@@ -209,7 +222,7 @@ const Detail = () => {
 
             <LeftSide
               articleInfo={numGroup}
-              size={size}
+              size={userInfo.font_size}
               handleCollect={handleCollect}
               handleComment={handleComment}
               handleLove={handleLove}
@@ -243,12 +256,12 @@ const Detail = () => {
               {/* 作者信息 */}
               <Card
                 className="author"
-                onClick={() => {
-                  navigate(`/user/${article.publish_user_id}`);
-                }}
                 title={
                   <Space>
                     <Avatar
+                      onClick={() => {
+                        navigate(`/user/${article.publish_user_id}`);
+                      }}
                       src={
                         author.avatar_url
                           ? author.avatar_url
@@ -257,6 +270,9 @@ const Detail = () => {
                       size={50}
                     />
                     <Space
+                      onClick={() => {
+                        navigate(`/user/${article.publish_user_id}`);
+                      }}
                       direction="vertical"
                       className="authorInfo"
                       size="small"
@@ -271,7 +287,7 @@ const Detail = () => {
                 }
                 extra={
                   <Button
-                    onClick={focusUser}
+                    onClick={() => focusUser()}
                     type="primary"
                     style={
                       numGroup.focus
@@ -298,7 +314,7 @@ const Detail = () => {
                   </Space>
                   <Space size={5}>
                     <FireTwoTone className="iconNum" />
-                    潜力值{Math.random() * Math.random() * 1000}
+                    潜力值{parseInt(Math.random() * Math.random() * 1000)}
                   </Space>
                 </Space>
               </Card>

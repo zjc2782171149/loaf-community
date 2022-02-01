@@ -101,7 +101,7 @@ export const get_which_user_followed = (options) => {
 export const set__user_follow = (options) => {
   return instance({
     url: `/user/follow/${options.id}`,
-    method: "GET"
+    method: "POST"
   });
 };
 

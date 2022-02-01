@@ -57,7 +57,7 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
-    console.log(response);
+    // console.log(response);
     // 后端接口判断请求头有无 token，没有或者 token 过期，返回403；
     if (response.data.status === 403) {
       //用户token失效
