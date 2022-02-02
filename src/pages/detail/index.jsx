@@ -247,7 +247,7 @@ const Detail = () => {
               {/* 评论区 */}
               <div id="comment" className="comment-container">
                 <RenderIfVisible defaultHeight={200}>
-                  <Comments id={id}></Comments>
+                  <Comments id={id} type="essay"></Comments>
                 </RenderIfVisible>
               </div>
             </div>

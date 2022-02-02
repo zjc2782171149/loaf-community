@@ -47,7 +47,7 @@ const FishSection = () => {
   const [selectTab_id, setSelectTab_id] = useState(0);
   const [textValue, setTextValue] = useState("");
   const [nowSendKind, setNowSendKind] = useState("圈子类型");
-  const [nowTopic, setNowTopic] = useState("技术圈");
+  const [nowTopic, setNowTopic] = useState("全部");
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 用户相关
@@ -110,9 +110,10 @@ const FishSection = () => {
     async function initContent() {
       setLoading(true);
       try {
-        const res = await get_tabs_topic_({ id: 1 });
-        console.log(res.data);
-        setContentList(res.data);
+        const res1 = await get_tabs_topic_({ id: 1 });
+        const res2 = await get_tabs_topic_({ id: 2 });
+        const res3 = await get_tabs_topic_({ id: 3 });
+        setContentList([...res1.data, ...res2.data, ...res3.data]);
       } catch (err) {
         console.log(err);
       }
@@ -123,6 +124,9 @@ const FishSection = () => {
 
   const menu = (
     <Menu>
+      <Menu.Item key="all" onClick={() => sorted("all")}>
+        全部
+      </Menu.Item>
       <Menu.Item key="IT" icon={<DollarTwoTone />} onClick={() => sorted("IT")}>
         技术圈
       </Menu.Item>
@@ -183,7 +187,14 @@ const FishSection = () => {
   async function sorted(key) {
     try {
       console.log(key);
-      if (key === "IT") {
+      if (key === "all") {
+        // 获取每个话题分类下的详细文章
+        const res1 = await get_tabs_topic_({ id: 1 });
+        const res2 = await get_tabs_topic_({ id: 2 });
+        const res3 = await get_tabs_topic_({ id: 3 });
+        setNowTopic("全部");
+        setContentList([...res1.data, ...res2.data, ...res3.data]);
+      } else if (key === "IT") {
         // 获取每个话题分类下的详细文章
         const res = await get_tabs_topic_({ id: 1 });
         setNowTopic("技术圈");
@@ -218,10 +229,6 @@ const FishSection = () => {
       });
     }
     setContentList([...arr]);
-  }
-
-  function clickHot(item) {
-    console.log(item);
   }
 
   // 文字输入时，改变文本域的值
@@ -473,11 +480,19 @@ const FishSection = () => {
                 <List.Item
                   key={index}
                   onClick={() => {
-                    clickHot(item);
+                    navigate(`/topic/${item.id}`);
                   }}
                 >
                   <List.Item.Meta
-                    title={item.username}
+                    title={
+                      <Space size="large">
+                        {item.username}
+                        <Space>
+                          <MessageOutlined />
+                          {item.comment_count}
+                        </Space>
+                      </Space>
+                    }
                     description={
                       <Space key="action" className="hotContent">
                         {item.content}

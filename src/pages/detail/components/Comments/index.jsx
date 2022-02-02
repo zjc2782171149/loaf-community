@@ -8,12 +8,17 @@ import {
   add_essay_comments,
   delete_essay_comments,
   like_essay_comments,
-  dislike_essay_comments
+  dislike_essay_comments,
+  get_topic_comments,
+  add_topic_comments,
+  delete_topic_comments,
+  like_topic_comments,
+  dislike_topic_comments
 } from "../../../../service/comment";
 import { CommentReply } from "./style";
 import "moment/locale/zh-cn";
 const { TextArea } = Input;
-const Comments = ({ id }) => {
+const Comments = ({ id, type }) => {
   console.log(id);
   // 文章的评论数据
   const [data, setData] = useState([]); // 记录每一条评论的数据(非回复)
@@ -40,9 +45,17 @@ const Comments = ({ id }) => {
     setCommentLoding(true);
     async function getCommentlist() {
       try {
-        const res_comment = await get_essay_comments({
-          id: id
-        });
+        let res_comment;
+        if (type === "essay") {
+          res_comment = await get_essay_comments({
+            id: id
+          });
+        } else {
+          res_comment = await get_topic_comments({
+            id: id
+          });
+        }
+
         console.log(res_comment);
         setComment_list([...res_comment.data]);
       } catch (err) {
@@ -63,8 +76,8 @@ const Comments = ({ id }) => {
       setUserId([]);
       setReplyNum([]);
       setReplyComments([]);
-      console.log(comment_list.length);
-      console.log(comment_list);
+      setComAll(comment_list.length);
+
       for (let i = 0; i < comment_list.length; i++) {
         //设置每一个动作为0
         likes.push(comment_list[i].like_count ?? 0);
@@ -128,10 +141,18 @@ const Comments = ({ id }) => {
     };
     if (action[index]) {
       // 如果此时值是true，说明是false变为true，即进行点赞
-      await like_essay_comments(options);
+      if (type === "essay") {
+        await like_essay_comments(options);
+      } else {
+        await like_topic_comments(options);
+      }
     } else {
       // 如果此时值是false，说明是true变为false，即进行取消点赞
-      await dislike_essay_comments(options);
+      if (type === "essay") {
+        await dislike_essay_comments(options);
+      } else {
+        await dislike_topic_comments(options);
+      }
     }
     setLikes([...likes]);
     setAction([...action]);
@@ -166,7 +187,12 @@ const Comments = ({ id }) => {
     };
     setValue("");
     try {
-      const result = await add_essay_comments(options);
+      let result;
+      if (type === "essay") {
+        result = await add_essay_comments(options);
+      } else {
+        result = await add_topic_comments(options);
+      }
       commentId.unshift(result.data.id); // 返回评论id
       setCommentID([...commentId]);
       setSubmit(!submitting); // 将评论按钮设置为false
@@ -280,7 +306,11 @@ const Comments = ({ id }) => {
 
     // 点击删除回复
     async function deleteReply({ comment_id, delete_comment_id }) {
-      await delete_essay_comments({ id: delete_comment_id });
+      if (type === "essay") {
+        await delete_essay_comments({ id: delete_comment_id });
+      } else {
+        await delete_topic_comments({ id: delete_comment_id });
+      }
       console.log(comment_id, delete_comment_id);
       console.log(comment_list);
       let delete_index;
@@ -470,7 +500,6 @@ const Comments = ({ id }) => {
       <List
         loading={commentLoding}
         className="comment-list"
-        style={{ textAlign: "left" }}
         header={`共有${comAll}条评论`}
         itemLayout="horizontal"
         dataSource={data}
@@ -481,7 +510,7 @@ const Comments = ({ id }) => {
               author={item.author}
               avatar={item.avatar ?? require("../../../../assets/LoginOut.png")}
               content={item.content}
-              datetime={item.datetime}
+              datetime={item.publish_time}
             ></Comment>
           </li>
         )}

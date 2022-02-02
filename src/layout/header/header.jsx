@@ -59,6 +59,9 @@ const Header = () => {
     console.log(item);
     setMenuKey([item.key]);
     switch (item.key) {
+      case "1":
+        navigate("/editContent");
+        break;
       case "2":
         navigate("/draftBox");
         break;
@@ -250,8 +253,14 @@ const Header = () => {
             placeholder="搜索摸鱼社区"
             onSearch={onSearch}
           />
-          <Button className="button" type="primary">
-            发帖
+          <Button
+            className="button"
+            type="primary"
+            onClick={() => {
+              navigate("/editContent");
+            }}
+          >
+            发文
           </Button>
           <Badge count={show ? 100 : 0} overflowCount={99} className="badge" />
           <Dropdown overlay={menu} placement="bottomCenter" arrow>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeaderStyle } from "./style";
 import { add_essay } from "../../../service/detail";
+import { add_drftbox_essay } from "../../../service/user";
 import {
   Input,
   Button,
@@ -28,7 +29,12 @@ import {
   CodepenCircleOutlined
 } from "@ant-design/icons";
 
-const EditHeader = ({ content }) => {
+const EditHeader = ({
+  contentEdit,
+  titleEdit,
+  introductionEdit,
+  tab_idEdit
+}) => {
   const navigate = useNavigate();
   const [value, setValue] = useState(""); // 搜索有关动作
   const [menuKey, setMenuKey] = useState([]);
@@ -36,6 +42,48 @@ const EditHeader = ({ content }) => {
   const [nowSendKind, setNowSendKind] = useState("请选择板块");
   const [selectTab_id, setSelectTab_id] = useState(0);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  // 初始化，主要用于从草稿箱点击编辑跳转到此
+  useEffect(() => {
+    if (titleEdit) setValue(titleEdit);
+    if (introductionEdit) setIntroduction(introductionEdit);
+    if (tab_idEdit) {
+      switch (tab_idEdit) {
+        case 1:
+          setNowSendKind("推荐");
+          break;
+        case 2:
+          setNowSendKind("前端");
+          break;
+        case 3:
+          setNowSendKind("后端");
+          break;
+        case 4:
+          setNowSendKind("Android");
+          break;
+        case 5:
+          setNowSendKind("IOS");
+          break;
+        case 6:
+          setNowSendKind("人工智能");
+          break;
+        case 7:
+          setNowSendKind("开发工具");
+          break;
+        case 8:
+          setNowSendKind("代码人生");
+          break;
+        case 9:
+          setNowSendKind("阅读");
+          break;
+        case 10:
+          setNowSendKind("其他");
+          break;
+      }
+
+      setSelectTab_id(tab_idEdit);
+    }
+  }, []);
 
   //点击下拉菜单选项
   function handleMenuClick(item) {
@@ -128,11 +176,11 @@ const EditHeader = ({ content }) => {
   };
 
   async function handleSubmit() {
-    console.log(value, content, introduction, selectTab_id);
+    console.log(value, contentEdit, introduction, selectTab_id);
     try {
       await add_essay({
         title: value,
-        content,
+        content: contentEdit,
         introduction,
         tab_id: selectTab_id
       });
@@ -241,6 +289,25 @@ const EditHeader = ({ content }) => {
     }
   }
 
+  // 去草稿箱
+  async function toDraftBox() {
+    try {
+      await add_drftbox_essay({
+        title: value.length ? value : "请填写文章标题",
+        content: contentEdit.length > 1 ? contentEdit : "请填写文章主要内容",
+        introduction: introduction.length ? introduction : "请填写文章介绍",
+        tab_id: selectTab_id ?? 0
+      });
+      message.success("文章已保存至草稿箱");
+      setTimeout(() => {
+        navigate("/draftBox");
+      }, 1000);
+    } catch (err) {
+      console.log(err);
+      message.info("网络异常");
+    }
+  }
+
   return (
     <HeaderStyle>
       <div className="header">
@@ -254,7 +321,11 @@ const EditHeader = ({ content }) => {
         </div>
         <div className="right">
           <Space className="button">
-            <Button className="draftButton" size="middle">
+            <Button
+              className="draftButton"
+              size="middle"
+              onClick={() => toDraftBox()}
+            >
               草稿箱
             </Button>
             <Button type="primary" size="middle" onClick={() => showModal()}>
