@@ -19,8 +19,9 @@ export const SectionStyle = styled.div`
     min-height: 200px;
     background-color: ${colorWhite};
   }
-  .main-header {
-    padding: 0 20px;
+  .avatar {
+    transform: scale(1.4);
+    margin: 15px 0 0 0;
   }
   .content-list {
     overflow: hidden;
@@ -66,14 +67,16 @@ export const SectionStyle = styled.div`
   }
   .concernButton {
     float: right;
-    margin-top: -15px;
-    width: 100px;
   }
   .send {
     width: 100%;
-    margin-top: 20px;
-    padding-top: 20px;
+    padding: 20px;
     background-color: ${colorWhite};
+  }
+  .commentTitle {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
   }
   .textarea {
     width: 540px;

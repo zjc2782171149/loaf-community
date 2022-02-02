@@ -1,35 +1,24 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import { SectionStyle } from "./topic";
+import { List, Space, Card, Skeleton, Avatar, Button, Modal } from "antd";
+import { ShareAltOutlined, MessageOutlined } from "@ant-design/icons";
+import Comments from "../../pages/detail/components/Comments/index.jsx";
+import { get_topic_detail } from "../../service/topic";
 import {
-  List,
-  Space,
-  Card,
-  Skeleton,
-  Avatar,
-  Button,
-  Input,
-  Comment,
-  Tooltip,
-  Divider,
-  message
-} from "antd";
-import {
-  ShareAltOutlined,
-  MessageOutlined,
-  PlusOutlined,
-  TwitterOutlined,
-  LikeOutlined,
-  LikeFilled
-  // LikeOutlined
-} from "@ant-design/icons";
-import moment from "moment";
+  get_user_info,
+  set__user_follow,
+  delete_user_follow,
+  get_which_user_follow
+} from "../../service/user";
+import { formatDate } from "../../utils/date";
 
 const { Meta } = Card;
-const { TextArea } = Input;
 
 const TopicSection = () => {
-  // const [loading, setLoading] = useState(true);
-
+  const { id } = useParams();
+  const [topicDetail, setTopicDetail] = useState({});
+  const [topicLoading, setTopicLoading] = useState(false);
   const announcementList = [
     {
       title: "【好题分享活动】开奖啦~",
@@ -49,186 +38,72 @@ const TopicSection = () => {
     }
   ];
 
-  const [likes, setLikes] = useState(0);
-  const [action, setAction] = useState(null);
-
-  const like = useCallback(() => {
-    console.log("点赞", likes);
-    setLikes(1);
-    setAction(1);
-  }, [likes]);
-
-  // 嵌套评论
-  const ExampleComment = ({
-    actions,
-    author,
-    avatar,
-    content,
-    datetime,
-    childrenn
-  }) => (
-    <Comment
-      actions={actions}
-      author={<a>{author}</a>}
-      avatar={<Avatar src={avatar} alt="Han Solo" />}
-      content={<>{content}</>}
-      datetime={datetime}
-    >
-      {childrenn && (
-        <List
-          className="comment-list"
-          itemLayout="horizontal"
-          dataSource={childrenn}
-          renderItem={(item) => (
-            <li>
-              <Comment
-                actions={item.actions}
-                author={<a>{item.author}</a>}
-                avatar={<Avatar src={item.avatar} alt="Han Solo" />}
-                content={<>{item.content}</>}
-                datetime={item.datetime}
-              ></Comment>
-            </li>
-          )}
-        />
-      )}
-    </Comment>
-  );
-
-  // 评论回复的antd组件
-  const [comments, setComments] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
-
-  // 初始化评论数据，假数据
   useEffect(() => {
-    setComments([
-      {
-        actions: [
-          <Tooltip key="comment-basic-like" title="Like">
-            <span onClick={() => null}>
-              {action && <LikeFilled />}
-              {!action && <LikeOutlined />}
-              <span className="comment-action">{likes}</span>
-            </span>
-          </Tooltip>,
-          <span key="comment-basic-reply-to">Reply to</span>
-        ],
-        author: "Han Solo",
-        avatar: "https://joeschmoe.io/api/v1/random",
-        content: (
-          <p>
-            We supply a series of design principles, practical patterns and high
-            quality design resources (Sketch and Axure), to help people create
-            their product prototypes beautifully and efficiently.
-          </p>
-        ),
-        datetime: (
-          <Tooltip
-            title={moment().subtract(1, "days").format("YYYY-MM-DD HH:mm:ss")}
-          >
-            <span>{moment().subtract(1, "days").fromNow()}</span>
-          </Tooltip>
-        ),
-        childrenn: [
-          {
-            actions: [
-              <Tooltip key="comment-basic-like" title="Like">
-                <span onClick={like(2)}>
-                  {action && <LikeFilled />}
-                  {!action && <LikeOutlined />}
-                  <span className="comment-action">{likes}</span>
-                </span>
-              </Tooltip>,
-              <span key="comment-basic-reply-to">Reply to</span>
-            ],
-            author: "Han Solo",
-            avatar: "https://joeschmoe.io/api/v1/random",
-            content: (
-              <p>
-                We supply a series of design principles, practical patterns and
-                high quality design resources (Sketch and Axure), to help people
-                create their product prototypes beautifully and efficiently.
-              </p>
-            ),
-            datetime: (
-              <Tooltip
-                title={moment()
-                  .subtract(1, "days")
-                  .format("YYYY-MM-DD HH:mm:ss")}
-              >
-                <span>{moment().subtract(1, "days").fromNow()}</span>
-              </Tooltip>
-            )
-          },
-          {
-            actions: [
-              <Tooltip key="comment-basic-like" title="Like">
-                <span onClick={like(3)}>
-                  {action && <LikeFilled />}
-                  {!action && <LikeOutlined />}
-                  <span className="comment-action">{likes}</span>
-                </span>
-              </Tooltip>,
-              <span key="comment-basic-reply-to">Reply to</span>
-            ],
-            author: "Han Solo",
-            avatar: "https://joeschmoe.io/api/v1/random",
-            content: (
-              <p>
-                We supply a series of design principles, practical patterns and
-                high quality design resources (Sketch and Axure), to help people
-                create their product prototypes beautifully and efficiently.
-              </p>
-            ),
-            datetime: (
-              <Tooltip
-                title={moment()
-                  .subtract(1, "days")
-                  .format("YYYY-MM-DD HH:mm:ss")}
-              >
-                <span>{moment().subtract(1, "days").fromNow()}</span>
-              </Tooltip>
-            )
+    async function initTopic() {
+      setTopicLoading(true);
+      let publishUser = {};
+      let flag = 0;
+      try {
+        const res = await get_topic_detail({ id: id });
+        console.log(res);
+        publishUser.publish_user_id = res.data.user_id;
+        publishUser.publish_time = res.data.publish_time;
+        publishUser.comment_count = res.data.comment_count;
+        publishUser.content = res.data.content;
+
+        // 根据发布者id请求详细用户信息
+        const res2 = await get_user_info({ id: res.data.user_id });
+        console.log(res2);
+        publishUser.username = res2.data.username;
+        publishUser.avatar_url = res2.data.avatar_url;
+        publishUser.position = res2.data.position;
+
+        // 根据自己id请求是否关注了该用户
+        const res3 = await get_which_user_follow({ id: res.data.user_id });
+        console.log(res3);
+        res3.data.forEach((item) => {
+          if (item.id === res.data.publish_user_id) {
+            flag = 1;
           }
-        ]
+        });
+        publishUser.is_follow = flag;
+        setTopicDetail(publishUser);
+        setTopicLoading(false);
+      } catch (err) {
+        console.log(err);
+        setTopicLoading(false);
       }
-    ]);
-  }, [action, like, likes]);
-
-  // 发表评论
-  const [textValue, setTextValue] = useState("");
-  // 设置value值
-  function handleChange(e) {
-    console.log(e.target.value);
-    setTextValue(e.target.value);
-  }
-  // 发送评论
-  function sendComment() {
-    console.log("textValue值为：" + textValue);
-    if (!textValue) {
-      console.log("textValue值为：" + textValue);
-      return;
     }
+    initTopic();
+  }, []);
 
-    setSubmitting(true);
+  // 处理关注用户事件
+  const focusUser = () => {
+    try {
+      if (topicDetail.is_follow) {
+        Modal.confirm({
+          title: "你确定要取消关注作者吗？",
+          onOk: () => {
+            delete_user_follow({ id: topicDetail.publish_user_id });
 
-    setTimeout(() => {
-      setSubmitting(false);
-      setTextValue("");
-      setComments([
-        ...comments,
-        {
-          author: "Han Solo",
-          avatar: "https://joeschmoe.io/api/v1/random",
-          content: <p>{textValue}</p>,
-          datetime: moment().fromNow()
-        }
-      ]);
-    }, 1000);
-    setTimeout(() => {
-      message.success({ content: "恭喜您，评论成功!", duration: 3 });
-    }, 1000);
-  }
+            setTopicDetail({
+              ...topicDetail,
+              is_follow: 0
+            });
+          }
+        });
+      } else {
+        set__user_follow({ id: topicDetail.publish_user_id });
+
+        setTopicDetail({
+          ...topicDetail,
+          is_follow: 1
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <SectionStyle>
@@ -250,108 +125,56 @@ const TopicSection = () => {
                       评论
                     </Space>
                   ]}
-                  key={"13fsadasdsa"}
+                  key={topicDetail.id}
                 >
-                  <Skeleton loading={false} avatar active>
+                  <Skeleton loading={topicLoading} avatar active>
                     <Meta
                       avatar={
                         <Avatar
-                          src={require("../../assets/personalAvatar.jpg")}
+                          className="avatar"
+                          src={
+                            topicDetail.avatar_url ??
+                            require("../../assets/LoginOut.png")
+                          }
                         />
                       }
                       title={
                         <>
-                          <p>Smooth</p>
-                          <Space className="publish-time">
-                            {/* position */}
-                            前端开发工程师
-                            {new Date().getFullYear() +
-                              "-" +
-                              (new Date().getMonth() + 1) +
-                              "-" +
-                              new Date().getDate()}
+                          <Space size="large">
+                            {topicDetail.username}
+                            <Space className="publish-time">
+                              {topicDetail.position}
+                              {formatDate(topicDetail.publish_time)}
+                            </Space>
                           </Space>
+
                           <Button
+                            onClick={() => focusUser()}
                             type="primary"
+                            style={
+                              topicDetail.is_follow
+                                ? { backgroundColor: "#2ecc71", border: "none" }
+                                : {}
+                            }
                             className="concernButton"
-                            icon={<PlusOutlined />}
                           >
-                            关注
+                            {topicDetail.is_follow ? "已关注" : "+ 关注"}
                           </Button>
                         </>
                       }
-                      description={"13fsadasdsa"}
+                      description={topicDetail.content}
                     />
                   </Skeleton>
                 </Card>
               </div>
             </div>
           </div>
-          {/* 发表评论 */}
+          {/* 评论区 */}
           <div className="send">
-            <p className="title">评论</p>
-            <Card bordered={false}>
-              <Skeleton loading={false} avatar active>
-                <Space>
-                  <Meta
-                    avatar={
-                      <Avatar
-                        src={require("../../assets/personalAvatar.jpg")}
-                      />
-                    }
-                    title={
-                      <>
-                        <TextArea
-                          className="textarea"
-                          value={textValue}
-                          onChange={handleChange}
-                          maxLength={100}
-                          allowClear="true"
-                          rows={3}
-                          placeholder="快来发表你尊贵的评论吧！"
-                        />
-                        <Button
-                          type="primary"
-                          className="sendComment"
-                          icon={<TwitterOutlined />}
-                          onClick={() => {
-                            sendComment();
-                          }}
-                          loading={submitting}
-                        >
-                          发送
-                        </Button>
-                      </>
-                    }
-                  />
-                </Space>
-              </Skeleton>
-            </Card>
+            <h1 className="commentTitle">评论</h1>
+            <Comments id={id} type="topic" />
           </div>
           {/* 评论区 */}
-          <div className="commentArea" direction="vertical">
-            <p className="title">全部评论</p>
-            <List
-              className="comment-list"
-              header={`${comments.length} 评论`}
-              itemLayout="horizontal"
-              dataSource={comments}
-              renderItem={(item) => (
-                <li>
-                  <ExampleComment
-                    actions={item.actions}
-                    author={item.author}
-                    avatar={item.avatar}
-                    content={item.content}
-                    datetime={item.datetime}
-                    childrenn={item.childrenn}
-                  />
-                </li>
-              )}
-            />
-
-            <Divider />
-          </div>
         </div>
         <div className="right-aside">
           {/* 公告栏 */}

@@ -4,8 +4,10 @@ import { Dropdown, List, Menu, Space, Modal } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { get_drftbox_essay } from "../../../service/user";
 import { formatDate } from "../../../utils/date";
+import { useNavigate } from "react-router-dom";
 
 const Section = () => {
+  const navigate = useNavigate();
   const [draftList, setDraftList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newData, setData] = useState([]);
@@ -65,6 +67,9 @@ const Section = () => {
                             <Menu.Item
                               key={"edit" + item.id}
                               style={{ fontSize: "10%" }}
+                              onClick={() => {
+                                navigate(`/editContent/${item.id}`);
+                              }}
                             >
                               编辑
                             </Menu.Item>

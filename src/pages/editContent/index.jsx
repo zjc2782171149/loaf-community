@@ -3,9 +3,15 @@ import { EditStyle } from "./style";
 // import { Space } from "antd";
 import EditHeader from "./editHeader/editHeader.jsx";
 import Vditor from "vditor";
+import { useParams } from "react-router";
+import { get_essay_detail } from "../../service/detail";
 
 const EditContent = () => {
+  const { id } = useParams();
   const [mdValue, setMdValue] = useState(" ");
+  const [title, setTitle] = useState(null);
+  const [introduction, setIntroduction] = useState(null);
+  const [tab_id, setTab_id] = useState(null);
   const createVidtor = (params) => {
     let { value } = params;
     value = value ? value : " ";
@@ -91,13 +97,28 @@ const EditContent = () => {
 
   // 初始化
   useEffect(() => {
-    createVidtor({ value: "" });
+    async function init() {
+      createVidtor({ value: "" });
+      if (id) {
+        const res = await get_essay_detail({ id: id });
+        setMdValue(res.data.content);
+        setTitle(res.data.title);
+        setIntroduction(res.data.introduction);
+        setTab_id(res.data.tab_id);
+      }
+    }
+    init();
   }, []);
 
   return (
     <EditStyle>
       <div className="editorWrap">
-        <EditHeader content={mdValue} />
+        <EditHeader
+          contentEdit={mdValue}
+          titleEdit={title}
+          introductionEdit={introduction}
+          tab_idEdit={tab_id}
+        />
         <div id="vditor" />
       </div>
     </EditStyle>
