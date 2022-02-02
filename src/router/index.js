@@ -46,7 +46,11 @@ const routes = [
     element: lazyLoad(<Fish />)
   },
   {
-    path: "/editContent",
+    path: "/editContent", // 从页头的写文章、发文 跳转过来，不带文章id
+    element: lazyLoad(<EditContent />)
+  },
+  {
+    path: "/editContent/:id", // 从草稿箱跳转过来，带文章id
     element: lazyLoad(<EditContent />)
   },
   {

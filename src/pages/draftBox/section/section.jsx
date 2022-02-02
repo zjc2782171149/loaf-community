@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { SectionStyle } from "./section";
-import { Dropdown, List, Menu, Space, Modal } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
-import { get_drftbox_essay } from "../../../service/user";
-import { formatDate } from "../../../utils/date";
 import { useNavigate } from "react-router-dom";
+import { SectionStyle } from "./section";
+import { Dropdown, List, Menu, Space, Modal, message } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
+import {
+  get_drftbox_essay,
+  delete_draftbox_essay
+} from "../../../service/user";
 
 const Section = () => {
   const navigate = useNavigate();
   const [draftList, setDraftList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newData, setData] = useState([]);
+  const [deleteIndex, setDeleteIndex] = useState(null);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 初始化草稿箱列表
@@ -26,15 +28,13 @@ const Section = () => {
     initDraftbox();
   }, []);
 
-  function handleMenuClick(item) {
-    let data = [...draftList];
-    console.log(item.key);
-    if (item.key.startsWith("delete")) {
-      const index = item.key[6];
-      console.log(index);
-      data = data.splice(index, 1);
-      console.log(data);
-      setData(data);
+  // 删除文章
+  async function deleteEssay() {
+    try {
+      await delete_draftbox_essay({ id: deleteIndex });
+      message.success("草稿删除成功");
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -54,16 +54,13 @@ const Section = () => {
                 actions={[
                   <Space key={item.id}>
                     <span style={{ marginRight: "10px" }}>
-                      {formatDate(item.publish_time)}
+                      {item.introduction}
                     </span>
                     {/* <Dropdown overlay={menu} trigger={['click']} placement="bottomCenter" onClick={handleMenuClick}><EllipsisOutlined className="dots"/></Dropdown> */}
                     <Dropdown
                       overlay={() => {
                         return (
-                          <Menu
-                            style={{ width: "50px" }}
-                            onClick={() => handleMenuClick()}
-                          >
+                          <Menu style={{ width: "50px" }}>
                             <Menu.Item
                               key={"edit" + item.id}
                               style={{ fontSize: "10%" }}
@@ -76,7 +73,10 @@ const Section = () => {
                             <Menu.Item
                               key={"delete" + item.id}
                               style={{ fontSize: "10%" }}
-                              onClick={() => setIsModalVisible(true)}
+                              onClick={() => {
+                                setIsModalVisible(true);
+                                setDeleteIndex(item.id);
+                              }}
                             >
                               删除
                             </Menu.Item>
@@ -100,12 +100,11 @@ const Section = () => {
             cancelText="取消"
             visible={isModalVisible}
             onOk={() => {
-              setDraftList(newData);
+              deleteEssay();
               setIsModalVisible(false);
             }}
             onCancel={() => {
               setIsModalVisible(false);
-              setData([]);
             }}
           >
             <p>删除后不可恢复，确认删除此草稿吗？</p>

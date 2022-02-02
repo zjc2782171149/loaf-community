@@ -21,18 +21,18 @@ const LeftSide = ({
               className="icon"
               style={articleInfo.loveDone ? { color: "#1890FF" } : {}}
             />
-            <div className="count">{articleInfo.likeNum ?? 121}</div>
+            <div className="count">{articleInfo.loveNum ?? 0}</div>
           </div>
           <div className="eachButton" onClick={() => handleComment()}>
             <MessageFilled className="icon" />
-            <div className="count">{articleInfo.commentNum ?? 41}</div>
+            <div className="count">{articleInfo.commentNum ?? 0}</div>
           </div>
           <div className="eachButton" onClick={() => handleCollect()}>
             <StarFilled
               className="icon"
               style={articleInfo.collect ? { color: "#1890FF" } : {}}
             />
-            <div className="count">{articleInfo.collectNum ?? 232}</div>
+            <div className="count">{articleInfo.collectNum ?? 0}</div>
           </div>
         </div>
 

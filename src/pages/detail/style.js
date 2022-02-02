@@ -18,6 +18,7 @@ export const DetailWrapper = styled.div`
   }
   .main {
     flex: 0.7;
+    max-width: 800px;
     transition: all 0.5s;
     background-color: white;
     padding: 20px;

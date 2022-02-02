@@ -31,15 +31,16 @@ const HotArticle = ({ articleList }) => {
   return (
     <ArticleSection>
       {articleList?.map((article) => (
-        <div
-          key={article?.id}
-          className="article-main"
-          onClick={() => getSideDetail(article.id)}
-        >
+        <div key={article?.id} className="article-main">
           {/* {image(article?.image_url)} */}
           <div className="article-main-list">
             <Space direction="vertical" size="middle">
-              <span className="article-title">{article.title}</span>
+              <a
+                className="article-title"
+                onClick={() => getSideDetail(article.id)}
+              >
+                {article.title}
+              </a>
               <span className="article-content">{article.introduction}</span>
               <Space size="large">
                 <span className="article-read">

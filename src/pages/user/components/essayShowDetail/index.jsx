@@ -7,9 +7,6 @@ import {
   get_collect_essay
 } from "../../../../service/user";
 import { formatDate } from "../../../../utils/date";
-import moment from "moment";
-moment.locale();
-
 import { Avatar, List, Space, Spin } from "antd";
 import {
   MessageOutlined,
@@ -52,10 +49,6 @@ const EssayShowDetail = ({ name }) => {
       let arr = res.data;
       arr.forEach((item) => {
         item.visit_count = parseInt(Math.random() * Math.random() * 1000); // 产生一个随机阅读量
-        // 发布时间，将时间戳格式化为相对时间
-        item.publish_time = item.publish_time
-          ? formatDate(item.publish_time)
-          : "时间数据有误";
       });
       setEssayList([...arr]);
       setLoading(false);
@@ -141,13 +134,18 @@ const EssayShowDetail = ({ name }) => {
                 <List.Item.Meta
                   avatar={
                     <Space className="essayAvatar">
-                      <Avatar src={item.avatar_url} />
+                      <Avatar
+                        src={
+                          item.avatar_url ??
+                          require("../../../../assets/LoginOut.png")
+                        }
+                      />
                     </Space>
                   }
                   title={
                     <Space direction="vertical">
                       <Space className="essayHeader">
-                        {item.username} | {item.publish_time}
+                        {item.username} | {formatDate(item.publish_time)}
                         {/* |{item.name} */}
                       </Space>
                       <span

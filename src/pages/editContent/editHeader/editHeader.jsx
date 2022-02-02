@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { HeaderStyle } from "./style";
 import { add_essay } from "../../../service/detail";
 import { add_drftbox_essay } from "../../../service/user";
@@ -36,15 +36,18 @@ const EditHeader = ({
   tab_idEdit
 }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [value, setValue] = useState(""); // 搜索有关动作
   const [menuKey, setMenuKey] = useState([]);
   const [introduction, setIntroduction] = useState("");
   const [nowSendKind, setNowSendKind] = useState("请选择板块");
   const [selectTab_id, setSelectTab_id] = useState(0);
+  const [initialForm, setInitialForm] = useState({}); // 表单初始化
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 初始化，主要用于从草稿箱点击编辑跳转到此
   useEffect(() => {
+    console.log(contentEdit, titleEdit, introductionEdit, tab_idEdit);
     if (titleEdit) setValue(titleEdit);
     if (introductionEdit) setIntroduction(introductionEdit);
     if (tab_idEdit) {
@@ -80,10 +83,13 @@ const EditHeader = ({
           setNowSendKind("其他");
           break;
       }
-
       setSelectTab_id(tab_idEdit);
+      setInitialForm({
+        introduction: introductionEdit,
+        tab_id: tab_idEdit
+      });
     }
-  }, []);
+  }, [contentEdit, titleEdit, introductionEdit, tab_idEdit]);
 
   //点击下拉菜单选项
   function handleMenuClick(item) {
@@ -292,13 +298,21 @@ const EditHeader = ({
   // 去草稿箱
   async function toDraftBox() {
     try {
-      await add_drftbox_essay({
-        title: value.length ? value : "请填写文章标题",
-        content: contentEdit.length > 1 ? contentEdit : "请填写文章主要内容",
-        introduction: introduction.length ? introduction : "请填写文章介绍",
-        tab_id: selectTab_id ?? 0
-      });
-      message.success("文章已保存至草稿箱");
+      console.log("id为：", id);
+      if (id) {
+        // 如果没参数，说明是旧草稿
+        message.success("文章已保存至草稿箱");
+      } else {
+        // 如果路由中没参数，说明不是从草稿箱跳转过来的，是新文章
+        await add_drftbox_essay({
+          title: value.length ? value : "草稿",
+          content: contentEdit.length > 1 ? contentEdit : "请填写文章主要内容",
+          introduction: introduction.length ? introduction : "请填写文章介绍",
+          tab_id: selectTab_id ? selectTab_id : 1
+        });
+        message.success("文章已新增至草稿箱");
+      }
+
       setTimeout(() => {
         navigate("/draftBox");
       }, 1000);
@@ -362,6 +376,7 @@ const EditHeader = ({
           onValuesChange={onValuesChange}
           autoComplete="off"
           size="large"
+          initialValues={initialForm}
         >
           <Form.Item label="文章介绍" name="introduction">
             <Input.TextArea />
