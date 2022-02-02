@@ -68,9 +68,8 @@ const Says = () => {
                   avatar={
                     <Avatar
                       src={
-                        userInfo.avatar_url
-                          ? userInfo.avatar_url
-                          : require("../../../assets/LoginOut.png")
+                        userInfo.avatar_url ??
+                        require("../../../assets/LoginOut.png")
                       }
                     />
                   }
@@ -80,11 +79,11 @@ const Says = () => {
                       <Space className="publish-time">
                         {/* position */}
                         {item.publish_time ? formatDate(item.publish_time) : ""}
-                        {userInfo.position ? userInfo.position : ""}
+                        {userInfo.position ?? ""}
                       </Space>
                     </>
                   }
-                  description={item.content ? item.content : "暂无帖子介绍"}
+                  description={item.content ?? "暂无帖子介绍"}
                 />
               </Skeleton>
             </Card>

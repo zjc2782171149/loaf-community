@@ -18,7 +18,9 @@ import { HeartTwoTone, EyeTwoTone, FireTwoTone } from "@ant-design/icons";
 import Comments from "./components/Comments";
 import {
   like_essay,
+  dislike_essay,
   collect_essay,
+  discollect_essay,
   get_essay_detail,
   get_essay_status,
   get_which_user_followed
@@ -50,7 +52,6 @@ const Detail = () => {
   const [author, setAuthor] = useState({}); // 文章数据
   const [article, setArticle] = useState({}); // 文章数据
   const [articleList, setArticleList] = useState([]); // 该用户发布的文章列表数据
-  const [hasToken, setHasToken] = useState(false);
   const [numGroup, setNumGroup] = useState({
     loveNum: 0,
     commentNum: 0,
@@ -133,30 +134,34 @@ const Detail = () => {
 
   // 处理点赞事件
   const handleLove = () => {
-    if (hasToken) {
-      setNumGroup({
-        ...numGroup,
-        loveNum: numGroup.loveDone ? --numGroup.loveNum : ++numGroup.loveNum,
-        loveDone: !numGroup.loveDone
-      });
-      like_essay({ id: article.id });
+    setNumGroup({
+      ...numGroup,
+      loveNum: numGroup.loveDone ? --numGroup.loveNum : ++numGroup.loveNum,
+      loveDone: !numGroup.loveDone
+    });
+    if (numGroup.loveDone) {
+      // 取消点赞
+      dislike_essay({ id: article.id });
     } else {
-      message.info("请先登录");
+      // 点赞
+      like_essay({ id: article.id });
     }
   };
   // 处理收藏事件
   const handleCollect = () => {
-    if (hasToken) {
-      setNumGroup({
-        ...numGroup,
-        collectNum: numGroup.collect
-          ? --numGroup.collectNum
-          : ++numGroup.collectNum,
-        collect: !numGroup.collect
-      });
-      collect_essay({ id: article.id });
+    setNumGroup({
+      ...numGroup,
+      collectNum: numGroup.collect
+        ? --numGroup.collectNum
+        : ++numGroup.collectNum,
+      collect: !numGroup.collect
+    });
+    if (numGroup.collect) {
+      // 取消收藏
+      discollect_essay({ id: article.id });
     } else {
-      message.info("请先登录");
+      // 收藏
+      collect_essay({ id: article.id });
     }
   };
   // 处理关注用户事件
@@ -206,11 +211,6 @@ const Detail = () => {
       console.log(err);
     }
   }
-
-  // 检查token状态，是否过期或不见了
-  useEffect(() => {
-    setHasToken(JSON.parse(localStorage.getItem("token")) ?? null);
-  }, []);
 
   return (
     <DetailWrapper>

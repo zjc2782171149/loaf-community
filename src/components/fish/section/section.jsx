@@ -69,6 +69,7 @@ const FishSection = () => {
       async function initTopic() {
         try {
           const res = await get_topic_all();
+
           const data = res.data,
             len = res.data.length;
           for (let i = 0; i < len; i++) {
@@ -77,11 +78,12 @@ const FishSection = () => {
             const topicData = nameTopic.data;
             // 遍历找找有多少篇的 user_id 跟我的id一样
             topicData.forEach((item) => {
-              if (item.user_id === userInfo) topic_num++;
+              if (item.user_id === userInfo.id) topic_num++;
             });
           }
           userNow.topic_num = topic_num;
-          setUser(userNow);
+          console.log(userNow);
+          setUser({ ...userNow });
         } catch (err) {
           console.log(err);
         }
@@ -401,9 +403,8 @@ const FishSection = () => {
                       avatar={
                         <Avatar
                           src={
-                            item.avatar
-                              ? item.avatar
-                              : require("../../../assets/LoginOut.png")
+                            item.avatar_url ??
+                            require("../../../assets/LoginOut.png")
                           }
                           className="avatarContent"
                         />

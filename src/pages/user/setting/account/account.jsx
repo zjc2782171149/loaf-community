@@ -12,19 +12,13 @@ import {
   Input,
   message
 } from "antd";
-import {
-  set_user_info,
-  set_user_setting,
-  set_user_password
-} from "../../../../service/user";
+import { set_user_setting, set_user_password } from "../../../../service/user";
 
 const Account = () => {
-  const [phone, setPhone] = useState(null); // 手机
   const [password, setPassword] = useState(""); // 密码
   const [dark_mode, setDark_mode] = useState(""); // 暗黑模式
   const [theme_color, setTheme_color] = useState(""); // 主题颜色
   const [font_size, setFont_size] = useState(null); // 字体大小
-  const [isModalVisible1, setIsModalVisible1] = useState(false); //控制气泡确认框--手机
   const [isModalVisible2, setIsModalVisible2] = useState(false); //控制气泡确认框--密码
   const [isModalVisible3, setIsModalVisible3] = useState(false); //控制气泡确认框--字体大小
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -32,7 +26,6 @@ const Account = () => {
   // 用户信息改变时进行初始化
   useEffect(() => {
     console.log("用户信息发生变动，进行初始化");
-    setPhone(userInfo.phone);
     setPassword(userInfo.password);
     setDark_mode(userInfo.dark_mode);
     setTheme_color(userInfo.theme_color);
@@ -102,13 +95,6 @@ const Account = () => {
       key: "edit",
       render: (text, record) => (
         <Space size="middle" className="edit" onClick={() => null}>
-          {record.name === "手机" && (
-            <a onClick={() => showModal1(record.name)}>
-              {record.name !== "暗黑模式" &&
-                record.name !== "主体颜色" &&
-                "编辑"}
-            </a>
-          )}
           {record.name === "密码" && (
             <a onClick={() => showModal2(record.name)}>
               {record.name !== "暗黑模式" &&
@@ -129,12 +115,6 @@ const Account = () => {
   ];
 
   const data = [
-    {
-      key: "1",
-      name: "手机",
-      value: phone,
-      edit: true
-    },
     {
       key: "2",
       name: "密码",
@@ -167,28 +147,7 @@ const Account = () => {
   async function saveChange() {
     setSignLoading(true);
     message.loading({ content: "请耐心等待", key });
-    console.log(
-      {
-        username: userInfo.username,
-        phone,
-        position: userInfo.position,
-        introduction: userInfo.introduction,
-        avatar_url: userInfo.avatar_url
-      },
-      {
-        theme_color,
-        dark_mode,
-        font_size
-      }
-    );
     const requestAll = [
-      set_user_info({
-        username: userInfo.username,
-        phone,
-        position: userInfo.position,
-        introduction: userInfo.introduction,
-        avatar_url: userInfo.avatar_url
-      }),
       set_user_setting({
         theme_color,
         dark_mode,
@@ -201,7 +160,6 @@ const Account = () => {
     try {
       await Promise.all(requestAll);
       // 本地用户信息做更改，触发最上面的初始化函数
-      userInfo.phone = phone;
       userInfo.password = password;
       userInfo.theme_color = theme_color;
       userInfo.dark_mode = dark_mode;
@@ -210,28 +168,13 @@ const Account = () => {
 
       setTimeout(() => {
         setSignLoading(false);
-        message.success({ content: "保存成功!", key, duration: 2 });
+        message.success("保存成功!");
       }, 1000);
     } catch (err) {
       console.log(err);
-      message.error({ content: "保存失败!", key, duration: 2 });
+      message.error("保存失败");
     }
   }
-
-  // 手机
-  const showModal1 = () => {
-    setIsModalVisible1(true);
-  };
-  const handleOk1 = () => {
-    setIsModalVisible1(false);
-  };
-  const handleCancel1 = () => {
-    setPhone(null);
-    setIsModalVisible1(false);
-  };
-  const phoneChange = (e) => {
-    setPhone(e.target.value);
-  };
 
   // 密码
   const showModal2 = () => {
@@ -292,15 +235,6 @@ const Account = () => {
         </div>
       </Card>
 
-      {/* 手机弹窗 */}
-      <Modal
-        title="手机"
-        visible={isModalVisible1}
-        onOk={handleOk1}
-        onCancel={handleCancel1}
-      >
-        <Input placeholder="请输手机" value={phone} onChange={phoneChange} />
-      </Modal>
       {/* 密码弹窗 */}
       <Modal
         title="密码"

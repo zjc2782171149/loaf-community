@@ -12,6 +12,7 @@ const EditContent = () => {
   const [title, setTitle] = useState(null);
   const [introduction, setIntroduction] = useState(null);
   const [tab_id, setTab_id] = useState(null);
+
   const createVidtor = (params) => {
     let { value } = params;
     value = value ? value : " ";
@@ -98,17 +99,43 @@ const EditContent = () => {
   // 初始化
   useEffect(() => {
     async function init() {
-      createVidtor({ value: "" });
+      createVidtor({ value: mdValue });
       if (id) {
+        console.log("从草稿箱跳转过来，id为：", id);
         const res = await get_essay_detail({ id: id });
         setMdValue(res.data.content);
         setTitle(res.data.title);
-        setIntroduction(res.data.introduction);
-        setTab_id(res.data.tab_id);
+        setIntroduction(res.data.introduction ?? "请填写文章介绍");
+        setTab_id(whichTabId(res.data.name)); // 通过板块名称筛选一下 tab_id
       }
     }
     init();
   }, []);
+
+  const whichTabId = (name) => {
+    switch (name) {
+      case "推荐":
+        return 1;
+      case "前端":
+        return 2;
+      case "后端":
+        return 3;
+      case "Android":
+        return 4;
+      case "IOS":
+        return 5;
+      case "人工智能":
+        return 6;
+      case "开发工具":
+        return 7;
+      case "代码人生":
+        return 8;
+      case "阅读":
+        return 9;
+      case "其他":
+        return 10;
+    }
+  };
 
   return (
     <EditStyle>

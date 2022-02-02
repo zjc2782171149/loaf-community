@@ -169,3 +169,12 @@ export const add_drftbox_essay = (options) => {
     data: options
   });
 };
+
+// 删除草稿箱文章
+export const delete_draftbox_essay = (options) => {
+  return instance({
+    url: `/essay/save`,
+    method: "POST",
+    data: options
+  });
+};

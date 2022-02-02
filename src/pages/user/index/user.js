@@ -42,7 +42,7 @@ export const UserStyle = styled.div`
     color: ${colorBlue};
   }
   .icon {
-    margin-left: 320px;
+    margin-left: 420px;
     font-size: 20px;
   }
   .position {

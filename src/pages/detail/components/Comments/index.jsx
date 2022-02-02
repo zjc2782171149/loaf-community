@@ -180,7 +180,7 @@ const Comments = ({ id, type }) => {
     let index = data.length;
     console.log(index);
     let options = {
-      essay_id: id,
+      essay_id: Number(id),
       reply_comment_id: 0,
       content: value,
       reply_user_id: 0
@@ -379,7 +379,7 @@ const Comments = ({ id, type }) => {
         console.log(reply_which_comment_id, which_user_reply_comment_id);
         // 调用接口去更新、添加评论
         const addReplyResult = await add_essay_comments({
-          essay_id: id,
+          essay_id: Number(id),
           reply_comment_id: reply_which_comment_id,
           content: val,
           reply_user_id: which_user_reply_comment_id
