@@ -18,7 +18,7 @@ import {
 import { CommentReply } from "./style";
 import "moment/locale/zh-cn";
 const { TextArea } = Input;
-const Comments = ({ id, type }) => {
+const Comments = ({ id, type, commentNum, handleComment }) => {
   console.log(id);
   // 文章的评论数据
   const [data, setData] = useState([]); // 记录每一条评论的数据(非回复)
@@ -37,7 +37,6 @@ const Comments = ({ id, type }) => {
   const [commentLoding, setCommentLoding] = useState(true);
   //评论总数
   const [comAll, setComAll] = useState(0);
-  //渲染得到评论
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 获取评论区总数据
@@ -68,6 +67,7 @@ const Comments = ({ id, type }) => {
   //初次渲染评论
   useEffect(() => {
     const all_comment = [];
+    let commentAll = 0;
     if (comment_list) {
       setLikes([]);
       setAction([]);
@@ -76,7 +76,6 @@ const Comments = ({ id, type }) => {
       setUserId([]);
       setReplyNum([]);
       setReplyComments([]);
-      setComAll(comment_list.length);
 
       for (let i = 0; i < comment_list.length; i++) {
         //设置每一个动作为0
@@ -86,8 +85,8 @@ const Comments = ({ id, type }) => {
         userId.push(comment_list[i].user_id);
         replyNum.push(comment_list[i].comment_count ?? 0);
         replyComments.push(comment_list[i].reply_comment);
-        console.log("下面是每条评论的回复数组");
-        console.log(comment_list[i].reply_comment);
+        commentAll += comment_list[i].reply_comment.length;
+
         let each_comment = {
           actions: [
             //自定义评论组件
@@ -106,6 +105,7 @@ const Comments = ({ id, type }) => {
         all_comment.push(each_comment);
       }
     }
+    setComAll(comment_list.length + commentAll);
     setLikes([...likes]);
     setAction([...action]);
     setData([...all_comment]);
@@ -120,9 +120,7 @@ const Comments = ({ id, type }) => {
   async function like(element) {
     //获取到标签下标
     const index = element.getAttribute("index");
-    console.log(element);
     console.log("点赞下标：", index);
-    console.log(likes);
     //如果点赞了，就加1，如果没有的话，就减-1
     if (action[index]) {
       // 点过赞，那现在就要取消
@@ -133,8 +131,6 @@ const Comments = ({ id, type }) => {
       likes[index]++;
       action[index] = true;
     }
-    console.log(likes);
-    console.log(action);
     //评论区对应的id
     let options = {
       id: commentId[index]
@@ -172,6 +168,8 @@ const Comments = ({ id, type }) => {
     setReplyNum([...replyNum]); // 回复数初始化，为0
     action.unshift(false);
     setAction([...action]);
+    replyComments.unshift([]);
+    setReplyComments([...replyComments]);
     /**
      * 上面评论基本参数初始化完毕
      *
@@ -209,7 +207,7 @@ const Comments = ({ id, type }) => {
       };
       // 要存成api那样的评论数据格式，下面最终要渲染成上面的形式
       let essay_new_comment = {
-        id: 12,
+        id: result.data.id,
         content: value,
         user_id: userInfo.user_id,
         username: userInfo.username,
@@ -220,8 +218,9 @@ const Comments = ({ id, type }) => {
         comment_count: 0,
         reply_comment: []
       };
-      setComment_list([essay_new_comment, ...data]);
       setData([newComment, ...data]); // 评论区数组压到第一位
+      setComment_list([essay_new_comment, ...comment_list]);
+      handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
       setCommentLoding(false);
     } catch (err) {
       console.log(err);
@@ -274,8 +273,8 @@ const Comments = ({ id, type }) => {
 
     // 每条评论的回复区进行初始化渲染
     useEffect(() => {
-      console.log(props.pinlun);
-      const len = props.pinlun.length;
+      console.log(props?.pinlun);
+      const len = props.pinlun?.length;
       if (len) {
         for (let i = 0; i < len; i++) {
           let each_reply = {
@@ -311,8 +310,6 @@ const Comments = ({ id, type }) => {
       } else {
         await delete_topic_comments({ id: delete_comment_id });
       }
-      console.log(comment_id, delete_comment_id);
-      console.log(comment_list);
       let delete_index;
       comment_list.forEach((item) => {
         if (item.id === comment_id) {
@@ -364,6 +361,8 @@ const Comments = ({ id, type }) => {
       replyNum[props.pinglunIndex]--;
       setReplyList([...arr]);
       setReplyNum([...replyNum]);
+      setComAll(--commentNum);
+      handleComment(comAll - 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
     }
 
     //点击回复评论
@@ -410,6 +409,8 @@ const Comments = ({ id, type }) => {
         replyNum[props.pinglunIndex]++;
         setReplyNum([...replyNum]);
       }
+      setComAll(++commentNum);
+      handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
       setVal("");
       setIsreply(false);
     }

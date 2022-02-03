@@ -28,6 +28,7 @@ export const UserStyle = styled.div`
   .image {
     display: inline-block;
     transform: scale(0.8);
+    border-radius: 50%;
   }
   .username {
     margin-top: 20px;

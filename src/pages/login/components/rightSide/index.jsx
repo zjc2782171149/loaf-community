@@ -133,10 +133,8 @@ const RightSide = () => {
       }
     } catch (err) {
       console.log(err);
-      setTimeout(() => {
-        setIsLoading(false);
-        message.error(err);
-      }, 2000);
+      message.error("账号密码错误");
+      setIsLoading(false);
     }
   }
 

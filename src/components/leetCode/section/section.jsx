@@ -406,7 +406,7 @@ const LeetCodeSection = () => {
               )}
               renderItem={(item) => (
                 <List.Item
-                  key={item.title}
+                  key={item.id}
                   actions={[
                     (item.level === "简单" && (
                       <Tag color="#00b6c3">{item.level}</Tag>

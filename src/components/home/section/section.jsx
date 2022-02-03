@@ -4,13 +4,10 @@ import EssayShowDetail from "../../../layout/essayShowDetail/index.jsx";
 import SectionCarousel from "../carousel/carousel.jsx";
 import { SectionStyle } from "./section";
 import {
-  get_like_comment,
-  get_like_essay,
-  get_collect_essay,
   get_user_sign,
-  set_user_sign
+  set_user_sign,
+  get_like_collect_num
 } from "../../../service/home";
-
 import {
   Button,
   Avatar,
@@ -42,22 +39,14 @@ const Section = () => {
   // 用户信息初始化
   useEffect(() => {
     async function initUser() {
-      const req = [get_like_comment(), get_like_essay(), get_collect_essay()];
-      const initMessage = await Promise.all(req);
-      const likeComment = initMessage[0]; // 用户点赞评论
-      const likeEssay = initMessage[1];
-      const collectEssay = initMessage[2];
+      const res = await get_like_collect_num({ id: userInfo.id });
 
       setUser({
-        avatar_url: userInfo.avatar_url
-          ? userInfo.avatar_url
-          : require("../../../assets/LoginOut.png"),
+        avatar_url: userInfo.avatar_url,
         username: userInfo.username,
-        introduction: userInfo.introduction
-          ? userInfo.introduction
-          : "该用户很懒，暂没留下个人介绍",
-        user_like_count: likeComment.data.length + likeEssay.data.length || 13,
-        user_collect_count: collectEssay.data.length || 132,
+        introduction: userInfo.introduction ?? "该用户很懒，暂没留下个人介绍",
+        user_like_count: res.data.like_count ?? 0,
+        user_collect_count: res.data.collect_count ?? 0,
         user_potential_count: parseInt(Math.random() * Math.random() * 1000) // 随机生成潜力值
       });
       setLoading(false);
@@ -65,8 +54,8 @@ const Section = () => {
       // 查询签到
       console.log("查询签到");
       try {
-        const haveSign = await get_user_sign();
-        setDailySign(haveSign.data.today);
+        const res = await get_user_sign();
+        setDailySign(res.data.today);
       } catch (err) {
         console.log(err);
       }
@@ -115,13 +104,10 @@ const Section = () => {
   // 每日签到
   const [signLoading, setSignLoading] = useState(false);
   const [dailySign, setDailySign] = useState(false);
-  const key = "updatable";
   async function DailySign() {
     setSignLoading(true);
-    message.loading({ content: "请耐心等待", key });
     try {
       const res = await set_user_sign();
-
       setSignLoading(false);
       setDailySign(true);
       message.success(`恭喜您，${res.msg}!`);
@@ -160,7 +146,13 @@ const Section = () => {
           >
             <Skeleton loading={loading} avatar active>
               <Meta
-                avatar={<Avatar src={user.avatar_url} />}
+                avatar={
+                  <Avatar
+                    src={
+                      user.avatar_url ?? require("../../../assets/LoginOut.png")
+                    }
+                  />
+                }
                 title={user.username}
                 description={user.introduction}
               />
@@ -218,7 +210,15 @@ const Section = () => {
             <Meta
               avatar={
                 <Avatar
-                  src={<Image src={user.avatar_url} style={{ width: 32 }} />}
+                  src={
+                    <Image
+                      src={
+                        user.avatar_url ??
+                        require("../../../assets/LoginOut.png")
+                      }
+                      style={{ width: 45, height: 45 }}
+                    />
+                  }
                 />
               }
               title="上午好！"

@@ -27,10 +27,10 @@ export const HeaderStyle = styled.div`
   .right {
     flex: 0.3;
     .button {
-      margin-left: 150px;
+      margin-left: 100px;
     }
     .draftButton {
-      margin: 0 10px 0 0;
+      margin: 0 10px;
       color: ${colorBlue};
       border: 1px solid ${colorBlue};
     }

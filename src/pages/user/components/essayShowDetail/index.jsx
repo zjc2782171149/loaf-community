@@ -89,10 +89,10 @@ const EssayShowDetail = ({ name }) => {
               <List.Item
                 onClick={() => turntoEssayDetail(item.id)}
                 className="content-list"
-                key={item.title}
+                key={item.id}
                 actions={
                   !loading && [
-                    <Space key={item.title} size="middle">
+                    <Space key={item.id} size="middle">
                       <Space>
                         <IconText
                           icon={EyeOutlined}

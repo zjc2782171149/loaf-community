@@ -12,6 +12,7 @@ const Section = () => {
   const navigate = useNavigate();
   const [draftList, setDraftList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteID, setDeleteID] = useState(null);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -31,10 +32,13 @@ const Section = () => {
   // 删除文章
   async function deleteEssay() {
     try {
-      await delete_draftbox_essay({ id: deleteIndex });
+      console.log(draftList.splice(deleteIndex, 1));
+      setDraftList([...draftList]);
+      await delete_draftbox_essay({ id: deleteID });
       message.success("草稿删除成功");
     } catch (err) {
       console.log(err);
+      message.success("网络异常，请稍后再试");
     }
   }
 
@@ -48,7 +52,7 @@ const Section = () => {
             itemLayout="vertical"
             size="large"
             dataSource={draftList}
-            renderItem={(item) => (
+            renderItem={(item, index) => (
               <List.Item
                 key={item.id}
                 actions={[
@@ -75,7 +79,8 @@ const Section = () => {
                               style={{ fontSize: "10%" }}
                               onClick={() => {
                                 setIsModalVisible(true);
-                                setDeleteIndex(item.id);
+                                setDeleteID(item.id);
+                                setDeleteIndex(index);
                               }}
                             >
                               删除

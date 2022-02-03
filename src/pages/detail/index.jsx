@@ -30,7 +30,8 @@ import {
   get_publish_essay,
   set__user_follow,
   delete_user_follow,
-  set_user_setting
+  set_user_setting,
+  get_like_collect_num
 } from "../../service/user.js";
 import { formatDate } from "../../utils/date.js";
 // import Article from "./components/article/index.jsx";
@@ -65,7 +66,7 @@ const Detail = () => {
     JSON.parse(localStorage.getItem("userInfo"))
   );
 
-  // 初始化文章数据
+  // 初始化用户和文章数据
   useEffect(() => {
     const getArticle = async () => {
       setArtLoading(true);
@@ -87,6 +88,14 @@ const Detail = () => {
 
         const author = await get_user_info({ id: article.publish_user_id }); // 用发布者id去请求发布者详细信息
         setAuthor(author.data);
+        const author_like_comment = await get_like_collect_num({
+          id: userInfo.id
+        });
+        setAuthor({
+          ...author.data,
+          like_count: author_like_comment.data.like_count,
+          collect_count: author_like_comment.data.collect_count
+        });
         const res = await get_which_user_followed({ id: userInfo.id }); // 请求关注列表，看是否关注了这个作者
         let flag = 0;
         res.data.forEach((item) => {
@@ -192,7 +201,12 @@ const Detail = () => {
     }
   };
   // 跳转评论区
-  const handleComment = () => {
+  const handleComment = (commentChild) => {
+    // 更新评论数
+    setNumGroup({
+      ...numGroup,
+      commentNum: commentChild
+    });
     const anchorElement = document.getElementById("comment");
     anchorElement.scrollIntoView({ block: "start", behavior: "smooth" });
   };
@@ -247,7 +261,12 @@ const Detail = () => {
               {/* 评论区 */}
               <div id="comment" className="comment-container">
                 <RenderIfVisible defaultHeight={200}>
-                  <Comments id={id} type="essay"></Comments>
+                  <Comments
+                    id={id}
+                    type="essay"
+                    commentNum={numGroup.commentNum}
+                    handleComment={handleComment}
+                  ></Comments>
                 </RenderIfVisible>
               </div>
             </div>
@@ -303,14 +322,11 @@ const Detail = () => {
                 <Space direction="vertical">
                   <Space size={5}>
                     <HeartTwoTone className="iconNum" />
-                    {/* 获得点赞{authorCount.data.like_count} */}
-                    获得点赞{111}
+                    获得点赞{author.like_count}
                   </Space>
-
                   <Space size={5}>
                     <EyeTwoTone className="iconNum" />
-                    {/* 文章被收藏{authorCount.data.collect_count} */}
-                    文章被收藏{222}
+                    文章被收藏{author.collect_count}
                   </Space>
                   <Space size={5}>
                     <FireTwoTone className="iconNum" />

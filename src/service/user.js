@@ -1,5 +1,4 @@
 import instance, { uploadFile } from "../utils/request";
-// import axios from "axios";
 
 // 通过 id 来获取用户信息
 export const get_user_info = (options) => {
@@ -174,7 +173,15 @@ export const add_drftbox_essay = (options) => {
 export const delete_draftbox_essay = (options) => {
   return instance({
     url: `/essay/save`,
-    method: "POST",
+    method: "DELETE",
     data: options
+  });
+};
+
+// 获得用户总被点赞量和收藏量
+export const get_like_collect_num = (options) => {
+  return instance({
+    url: `/user/${options.id}/essay/info`,
+    method: "GET"
   });
 };
