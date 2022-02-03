@@ -1,6 +1,5 @@
 import React from "react";
 import { LeftSection } from "./style";
-import { Slider } from "antd";
 import { LikeFilled, MessageFilled, StarFilled } from "@ant-design/icons";
 
 const LeftSide = ({
@@ -8,8 +7,7 @@ const LeftSide = ({
   size,
   handleCollect,
   handleComment,
-  handleLove,
-  handleSize
+  handleLove
 }) => {
   console.log(articleInfo, size);
   return (
@@ -38,7 +36,6 @@ const LeftSide = ({
 
         <div className="fontsize">
           <div className="slide">字体大小:{size}</div>
-          <Slider onChange={handleSize} min={12} max={20} value={size} />
         </div>
       </div>
     </LeftSection>

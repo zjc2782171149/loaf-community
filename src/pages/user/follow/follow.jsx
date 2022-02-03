@@ -12,7 +12,12 @@ import {
   Space,
   Divider
 } from "antd";
-import { get_user_follow, get_user_followed } from "../../../service/user";
+import {
+  get_user_follow,
+  get_user_followed,
+  set__user_follow,
+  delete_user_follow
+} from "../../../service/user";
 
 const { TabPane } = Tabs;
 
@@ -61,8 +66,8 @@ const Follow = () => {
 
   function callback(key) {
     console.log(key);
-    if (key === 1) callback("following");
-    else callback("followed");
+    if (key === 1) changeTabs("following");
+    else changeTabs("followed");
   }
 
   // 跳转到他人主页
@@ -74,22 +79,25 @@ const Follow = () => {
   // 处理关注用户事件
   const focusUser = (item, index) => {
     console.log(item, index);
-    if (localStorage.getItem("token")) {
+    try {
       if (item.is_follow) {
         Modal.confirm({
           title: "你确定要取消关注作者吗？",
           onOk: () => {
+            delete_user_follow({ id: item.id });
             followList[index].is_follow = !item.is_follow;
             setFollowList([...followList]);
           }
         });
       } else {
         // 进行关注
+        set__user_follow({ id: item.id });
+        message.success("关注成功");
         followList[index].is_follow = !item.is_follow;
         setFollowList([...followList]);
       }
-    } else {
-      message.info("请先登录");
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -116,7 +124,6 @@ const Follow = () => {
           dataSource={followList}
           renderItem={(item, index) => (
             <List.Item
-              onClick={() => turntOtherHome(item.id)}
               extra={
                 <Button
                   onClick={() => focusUser(item, index)}
@@ -133,6 +140,7 @@ const Follow = () => {
               }
             >
               <List.Item.Meta
+                onClick={() => turntOtherHome(item.id)}
                 avatar={
                   <Avatar
                     src={

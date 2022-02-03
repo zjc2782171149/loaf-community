@@ -44,8 +44,8 @@ const TopicSection = () => {
       let publishUser = {};
       let flag = 0;
       try {
+        // 根据文章id获取文章帖子详情
         const res = await get_topic_detail({ id: id });
-        console.log(res);
         publishUser.publish_user_id = res.data.user_id;
         publishUser.publish_time = res.data.publish_time;
         publishUser.comment_count = res.data.comment_count;
@@ -53,14 +53,12 @@ const TopicSection = () => {
 
         // 根据发布者id请求详细用户信息
         const res2 = await get_user_info({ id: res.data.user_id });
-        console.log(res2);
         publishUser.username = res2.data.username;
         publishUser.avatar_url = res2.data.avatar_url;
         publishUser.position = res2.data.position;
 
         // 根据自己id请求是否关注了该用户
         const res3 = await get_which_user_follow({ id: res.data.user_id });
-        console.log(res3);
         res3.data.forEach((item) => {
           if (item.id === res.data.publish_user_id) {
             flag = 1;

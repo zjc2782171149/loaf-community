@@ -16,18 +16,17 @@ import { set_user_setting, set_user_password } from "../../../../service/user";
 
 const Account = () => {
   const [password, setPassword] = useState(""); // 密码
-  const [dark_mode, setDark_mode] = useState(false); // 暗黑模式
   const [theme_color, setTheme_color] = useState(""); // 主题颜色
   const [font_size, setFont_size] = useState(null); // 字体大小
   const [isModalVisible2, setIsModalVisible2] = useState(false); //控制气泡确认框--密码
   const [isModalVisible3, setIsModalVisible3] = useState(false); //控制气泡确认框--字体大小
-  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const [dark_mode, setDark_mode] = useState(userInfo.dark_mode); // 暗黑模式
 
   // 用户信息改变时进行初始化
   useEffect(() => {
-    console.log("用户信息发生变动，进行初始化");
     setPassword(userInfo.password);
-    setDark_mode(userInfo.dark_mode);
+    setDark_mode(userInfo.dark_mode === 1 ? true : false);
     setTheme_color(userInfo.theme_color);
     setFont_size(userInfo.font_size);
   }, []);
@@ -54,7 +53,6 @@ const Account = () => {
 
   // 暗黑模式
   function onChange(checked) {
-    console.log(`switch to ${checked}`);
     if (checked) {
       setDark_mode(true);
     } else {
@@ -150,8 +148,8 @@ const Account = () => {
     const requestAll = [
       set_user_setting({
         theme_color,
-        dark_mode,
-        font_size
+        dark_mode: dark_mode === true ? 1 : 0,
+        font_size: Number(font_size)
       }),
       set_user_password({
         password
@@ -162,17 +160,18 @@ const Account = () => {
       // 本地用户信息做更改，触发最上面的初始化函数
       userInfo.password = password;
       userInfo.theme_color = theme_color;
-      userInfo.dark_mode = dark_mode;
+      userInfo.dark_mode = dark_mode === true ? 1 : 0;
       userInfo.font_size = font_size;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
       setTimeout(() => {
-        setSignLoading(false);
         message.success("保存成功!");
+        setSignLoading(false);
       }, 1000);
     } catch (err) {
       console.log(err);
       message.error("保存失败");
+      setSignLoading(false);
     }
   }
 
