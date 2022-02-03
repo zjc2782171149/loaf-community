@@ -48,47 +48,47 @@ const EditHeader = ({
   // 初始化，主要用于从草稿箱点击编辑跳转到此
   useEffect(() => {
     console.log(contentEdit, titleEdit, introductionEdit, tab_idEdit);
-    if (titleEdit) setValue(titleEdit);
-    if (introductionEdit) setIntroduction(introductionEdit);
-    if (tab_idEdit) {
-      switch (tab_idEdit) {
-        case 1:
-          setNowSendKind("推荐");
-          break;
-        case 2:
-          setNowSendKind("前端");
-          break;
-        case 3:
-          setNowSendKind("后端");
-          break;
-        case 4:
-          setNowSendKind("Android");
-          break;
-        case 5:
-          setNowSendKind("IOS");
-          break;
-        case 6:
-          setNowSendKind("人工智能");
-          break;
-        case 7:
-          setNowSendKind("开发工具");
-          break;
-        case 8:
-          setNowSendKind("代码人生");
-          break;
-        case 9:
-          setNowSendKind("阅读");
-          break;
-        case 10:
-          setNowSendKind("其他");
-          break;
-      }
-      setSelectTab_id(tab_idEdit);
-      setInitialForm({
-        introduction: introductionEdit,
-        tab_id: tab_idEdit
-      });
+    setValue(titleEdit);
+    setIntroduction(introductionEdit);
+    setSelectTab_id(tab_idEdit);
+
+    switch (tab_idEdit) {
+      case 1:
+        setNowSendKind("推荐");
+        break;
+      case 2:
+        setNowSendKind("前端");
+        break;
+      case 3:
+        setNowSendKind("后端");
+        break;
+      case 4:
+        setNowSendKind("Android");
+        break;
+      case 5:
+        setNowSendKind("IOS");
+        break;
+      case 6:
+        setNowSendKind("人工智能");
+        break;
+      case 7:
+        setNowSendKind("开发工具");
+        break;
+      case 8:
+        setNowSendKind("代码人生");
+        break;
+      case 9:
+        setNowSendKind("阅读");
+        break;
+      case 10:
+        setNowSendKind("其他");
+        break;
     }
+
+    setInitialForm({
+      introduction: introductionEdit,
+      tab_id: tab_idEdit
+    });
   }, [contentEdit, titleEdit, introductionEdit, tab_idEdit]);
 
   //点击下拉菜单选项
@@ -331,6 +331,7 @@ const EditHeader = ({
             bordered={false}
             placeholder="输入文章标题..."
             onChange={titleChange}
+            value={value}
           />
         </div>
         <div className="right">
@@ -352,8 +353,11 @@ const EditHeader = ({
               className="avatar"
               src={
                 <Image
-                  src="https://joeschmoe.io/api/v1/random"
-                  style={{ width: 32 }}
+                  src={
+                    userInfo.avatar_url ??
+                    require("../../../assets/LoginOut.png")
+                  }
+                  style={{ width: 32, height: 32 }}
                   preview={false}
                 />
               }

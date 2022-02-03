@@ -16,7 +16,7 @@ import { set_user_setting, set_user_password } from "../../../../service/user";
 
 const Account = () => {
   const [password, setPassword] = useState(""); // 密码
-  const [dark_mode, setDark_mode] = useState(""); // 暗黑模式
+  const [dark_mode, setDark_mode] = useState(false); // 暗黑模式
   const [theme_color, setTheme_color] = useState(""); // 主题颜色
   const [font_size, setFont_size] = useState(null); // 字体大小
   const [isModalVisible2, setIsModalVisible2] = useState(false); //控制气泡确认框--密码
@@ -56,9 +56,9 @@ const Account = () => {
   function onChange(checked) {
     console.log(`switch to ${checked}`);
     if (checked) {
-      setDark_mode(1);
+      setDark_mode(true);
     } else {
-      setDark_mode(0);
+      setDark_mode(false);
     }
   }
 

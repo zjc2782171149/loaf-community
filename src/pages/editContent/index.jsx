@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { EditStyle } from "./style";
-// import { Space } from "antd";
 import EditHeader from "./editHeader/editHeader.jsx";
 import Vditor from "vditor";
 import { useParams } from "react-router";
@@ -12,10 +11,12 @@ const EditContent = () => {
   const [title, setTitle] = useState(null);
   const [introduction, setIntroduction] = useState(null);
   const [tab_id, setTab_id] = useState(null);
+  let vditor;
 
   const createVidtor = (params) => {
     let { value } = params;
     value = value ? value : " ";
+    let style = "classic";
 
     // 保存文章
     const saveDoc = () => {
@@ -23,8 +24,8 @@ const EditContent = () => {
       setMdValue(vditor && vditor.getHTML());
     };
 
-    const vditor = new Vditor("vditor", {
-      // theme: "dark",
+    vditor = new Vditor("vditor", {
+      theme: "classic",
       height: 800,
       mode: "sv", //及时渲染模式
       placeholder: "开始撰写你的文章吧",
@@ -82,6 +83,24 @@ const EditContent = () => {
           click() {
             saveDoc();
           }
+        },
+        "",
+        {
+          hotkey: "⌘-p",
+          name: "切换",
+          tipPosition: "p",
+          tip: "切换编辑器风格",
+          className: "right",
+          icon: `<img style="height: 16px;transform:scale(1.5)" src='http://loaf.youlan-lan.xyz/public/image/switch4.png'/>`,
+          click() {
+            if (style === "classic") {
+              vditor.setTheme("dark");
+              style = "dark";
+            } else {
+              vditor.setTheme("classic");
+              style = "classic";
+            }
+          }
         }
       ],
       enable: "true",
@@ -99,14 +118,17 @@ const EditContent = () => {
   // 初始化
   useEffect(() => {
     async function init() {
-      createVidtor({ value: mdValue });
       if (id) {
         console.log("从草稿箱跳转过来，id为：", id);
         const res = await get_essay_detail({ id: id });
+        console.log(res.data);
         setMdValue(res.data.content);
         setTitle(res.data.title);
         setIntroduction(res.data.introduction ?? "请填写文章介绍");
         setTab_id(whichTabId(res.data.name)); // 通过板块名称筛选一下 tab_id
+        createVidtor({ value: res.data.content });
+      } else {
+        createVidtor({ value: " " });
       }
     }
     init();

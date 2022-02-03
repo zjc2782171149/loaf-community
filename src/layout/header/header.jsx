@@ -195,7 +195,7 @@ const Header = () => {
         // 后端返回的不是401状态码，而是设置成了我无法访问直接报401错，所以我只能通过catch err 捕获异常得知token过期
         console.log("token失效，返回登录页面");
         localStorage.removeItem("token"); // 本地存储中的token不会过期，得手动删除
-        localStorage.removeItem("userInfo");
+        localStorage.removeItem("userInfo"); // 本地存储中的token不会过期，得手动删除
         navigate("/login");
       }
     }
@@ -271,8 +271,10 @@ const Header = () => {
               className="avatar"
               src={
                 <Image
-                  src="https://joeschmoe.io/api/v1/random"
-                  style={{ width: 32 }}
+                  src={
+                    userInfo?.avatar_url ?? require("../../assets/LoginOut.png")
+                  }
+                  style={{ width: 32, height: 32 }}
                   preview={false}
                 />
               }

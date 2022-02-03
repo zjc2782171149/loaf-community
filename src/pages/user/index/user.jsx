@@ -73,10 +73,10 @@ const PersonalHome = () => {
                       <Image
                         className="image"
                         width={100}
+                        height={100}
                         src={
-                          userInfo.avatar_url
-                            ? userInfo.avatar_url
-                            : require("../../../assets/LoginOut.png")
+                          userInfo.avatar_url ??
+                          require("../../../assets/LoginOut.png")
                         }
                       />
                       <Space direction="vertical">

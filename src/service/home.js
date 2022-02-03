@@ -70,6 +70,14 @@ export const get_collect_essay = () => {
   });
 };
 
+// 获得用户总被点赞量和收藏量
+export const get_like_collect_num = (options) => {
+  return instance({
+    url: `/user/${options.id}/essay/info`,
+    method: "GET"
+  });
+};
+
 /****
  * 签到 api
  */

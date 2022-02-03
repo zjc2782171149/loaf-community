@@ -242,10 +242,10 @@ const EssayShowDetail = () => {
             renderItem={(item) => (
               <List.Item
                 className="content-list"
-                key={item.title}
+                key={item.id}
                 actions={
                   !loading && [
-                    <Space key={item.title} size="middle">
+                    <Space key={item.id} size="middle">
                       <Space className="hoverBlue">
                         <IconText
                           icon={EyeOutlined}

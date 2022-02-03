@@ -7,7 +7,7 @@ import { set_user_info, set_user_avatar } from "../../../../service/user";
 const SettingProfile = () => {
   // 表单操作
   const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState(null);
+  const [phone, setPhone] = useState("");
   const [position, setPosition] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [avatar_url, setAvatar_url] = useState("");
@@ -82,7 +82,7 @@ const SettingProfile = () => {
     try {
       await set_user_info({
         username: username,
-        phone: Number(phone),
+        phone: phone,
         position: position,
         introduction: introduction,
         avatar_url: avatar_url
