@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const CommentReply = styled.div`
-  /* tile uploaded pictures */
   .comment-action {
     padding-left: 8px;
     cursor: "auto";
@@ -21,5 +20,13 @@ export const CommentReply = styled.div`
   }
   .dianzan {
     width: 30px;
+  }
+`;
+
+export const CommentStyle = styled.div`
+  .commentTitle {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
   }
 `;

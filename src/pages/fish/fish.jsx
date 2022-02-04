@@ -35,7 +35,7 @@ const { Meta } = Card;
 const { TextArea } = Input;
 const { TabPane } = Tabs;
 
-const FishSection = () => {
+const Fish = () => {
   const navigate = useNavigate();
   const [contentList, setContentList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -380,4 +380,4 @@ const FishSection = () => {
   );
 };
 
-export default FishSection;
+export default Fish;

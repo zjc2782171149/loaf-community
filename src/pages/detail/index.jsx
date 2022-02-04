@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import { Skeleton, Button, Modal, Card, Avatar, Space, Tag } from "antd";
 import { HeartTwoTone, EyeTwoTone, FireTwoTone } from "@ant-design/icons";
-import Comments from "./components/Comments";
 import {
   like_essay,
   dislike_essay,
@@ -24,7 +23,7 @@ import {
   get_which_user_follow
 } from "../../service/user.js";
 import { formatDate } from "../../utils/date.js";
-// import Article from "./components/article/index.jsx";
+import Comments from "../../components/Comments/index.jsx";
 import HotArticle from "./components/HotArticle";
 import LeftSide from "./components/LeftSide";
 import { DetailWrapper } from "./style";

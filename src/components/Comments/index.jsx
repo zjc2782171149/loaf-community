@@ -1,8 +1,15 @@
 import React, { createElement, useState, useEffect, useCallback } from "react";
-import { Comment, Form, Button, List, Input, message, Tooltip } from "antd";
-// import moment from "moment";
+import {
+  Comment,
+  Form,
+  Button,
+  List,
+  Input,
+  message,
+  Tooltip,
+  Divider
+} from "antd";
 import { LikeOutlined, LikeFilled, DeleteOutlined } from "@ant-design/icons";
-
 import {
   get_essay_comments,
   add_essay_comments,
@@ -14,10 +21,12 @@ import {
   delete_topic_comments,
   like_topic_comments,
   dislike_topic_comments
-} from "../../../../service/comment";
-import { CommentReply } from "./style";
+} from "../../service/comment";
+import { CommentStyle, CommentReply } from "./style";
 import "moment/locale/zh-cn";
+
 const { TextArea } = Input;
+
 const Comments = ({ id, type, commentNum, handleComment }) => {
   console.log(id);
   // 文章的评论数据
@@ -98,8 +107,7 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
           ],
           author: comment_list[i].username,
           avatar:
-            comment_list[i].avatar_url ??
-            require("../../../../assets/LoginOut.png"),
+            comment_list[i].avatar_url ?? require("../../assets/LoginOut.png"),
           content: <span>{comment_list[i].content}</span>
         };
         all_comment.push(each_comment);
@@ -211,8 +219,7 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
           ></ExtraComment>
         ],
         author: userInfo.username,
-        avatar:
-          userInfo.avatar_url ?? require("../../../../assets/LoginOut.png"),
+        avatar: userInfo.avatar_url ?? require("../../assets/LoginOut.png"),
         content: <span>{value}</span>
       };
 
@@ -493,16 +500,12 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
             dataSource={replyList}
             style={{ textAlign: "left" }}
             renderItem={(item) => (
-              <li>
-                <Comment
-                  actions={item.actions}
-                  author={item.author}
-                  avatar={
-                    item.avatar ?? require("../../../../assets/LoginOut.png")
-                  }
-                  content={item.content}
-                />
-              </li>
+              <Comment
+                actions={item.actions}
+                author={item.author}
+                avatar={item.avatar ?? require("../../assets/LoginOut.png")}
+                content={item.content}
+              />
             )}
           />
         )}
@@ -512,7 +515,11 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
 
   return (
     <>
-      <>
+      <CommentStyle>
+        <Divider />
+        <Form.Item>
+          <span className="commentTitle">评论</span>
+        </Form.Item>
         <Form.Item>
           <TextArea
             rows={4}
@@ -522,11 +529,10 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         </Form.Item>
         <Form.Item>
           <Button htmlType="submit" onClick={() => onSubmit()} type="primary">
-            {/* <Button htmlType="submit" onClick={() => setData()} type="primary"> */}
             评论
           </Button>
         </Form.Item>
-      </>
+      </CommentStyle>
 
       <List
         loading={commentLoding}
@@ -535,15 +541,13 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         itemLayout="horizontal"
         dataSource={data}
         renderItem={(item) => (
-          <li>
-            <Comment
-              actions={item.actions}
-              author={item.author}
-              avatar={item.avatar ?? require("../../../../assets/LoginOut.png")}
-              content={item.content}
-              datetime={item.publish_time}
-            ></Comment>
-          </li>
+          <Comment
+            actions={item.actions}
+            author={item.author}
+            avatar={item.avatar ?? require("../../assets/LoginOut.png")}
+            content={item.content}
+            datetime={item.publish_time}
+          ></Comment>
         )}
       />
     </>
