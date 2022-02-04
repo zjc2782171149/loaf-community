@@ -4,6 +4,7 @@ import EditHeader from "./editHeader/editHeader.jsx";
 import Vditor from "vditor";
 import { useParams } from "react-router";
 import { get_essay_detail } from "../../service/detail";
+import { set_user_avatar } from "../../service/user";
 
 const EditContent = () => {
   const { id } = useParams();
@@ -109,6 +110,33 @@ const EditContent = () => {
       },
       blur() {
         saveDoc();
+      },
+      upload: {
+        accept: "image/*",
+        multiple: false,
+        filename(name) {
+          return name
+            .replace("/[^(a-zA-Z0-9\u4e00-\u9fa5.)]/g", "")
+            .replace("/[?\\/:|<>*[]()$%{}@~]/g", "")
+            .replace("/\\s/g", "");
+        },
+        handler(files) {
+          async function uploadImage() {
+            console.log(files);
+            try {
+              const formData = new FormData();
+              formData.append("file", files[0]); //名字和后端接口名字对应
+              const res = await set_user_avatar(formData);
+              value += `\n <img alt=${
+                res.data.data.path.split("/")[3]
+              } src="http://loaf.youlan-lan.xyz${res.data.data.path}">`;
+              vditor.setValue(value);
+            } catch (err) {
+              console.log(err);
+            }
+          }
+          uploadImage();
+        }
       }
     });
 
