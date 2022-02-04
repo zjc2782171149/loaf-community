@@ -9,13 +9,13 @@ const SectionCarousel = () => {
         <div>
           <img
             className="carouse-image"
-            src={require("../../../assets/carousel1.webp")}
+            src={require("../../../../assets/carousel1.webp")}
           />
         </div>
         <div>
           <img
             className="carouse-image"
-            src={require("../../../assets/zjtd.png")}
+            src={require("../../../../assets/zjtd.png")}
           />
         </div>
       </Carousel>

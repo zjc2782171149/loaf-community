@@ -20,9 +20,11 @@ export const UserStyle = styled.div`
   }
   .left-aside {
     flex: 0.75;
+    min-width: 850px;
   }
   .right-aside {
     flex: 0.25;
+    min-width: 250px;
     margin-left: 20px;
   }
   .image {
@@ -43,7 +45,7 @@ export const UserStyle = styled.div`
     color: ${colorBlue};
   }
   .icon {
-    margin-left: 420px;
+    margin-left: 405px;
     font-size: 20px;
   }
   .position {

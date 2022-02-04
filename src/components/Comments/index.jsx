@@ -1,8 +1,15 @@
 import React, { createElement, useState, useEffect, useCallback } from "react";
-import { Comment, Form, Button, List, Input, message, Tooltip } from "antd";
-// import moment from "moment";
+import {
+  Comment,
+  Form,
+  Button,
+  List,
+  Input,
+  message,
+  Tooltip,
+  Divider
+} from "antd";
 import { LikeOutlined, LikeFilled, DeleteOutlined } from "@ant-design/icons";
-
 import {
   get_essay_comments,
   add_essay_comments,
@@ -14,10 +21,12 @@ import {
   delete_topic_comments,
   like_topic_comments,
   dislike_topic_comments
-} from "../../../../service/comment";
-import { CommentReply } from "./style";
+} from "../../service/comment";
+import { CommentStyle, CommentReply } from "./style";
 import "moment/locale/zh-cn";
+
 const { TextArea } = Input;
+
 const Comments = ({ id, type, commentNum, handleComment }) => {
   console.log(id);
   // 文章的评论数据
@@ -90,21 +99,21 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         let each_comment = {
           actions: [
             //自定义评论组件
-            <Pinglun
+            <ExtraComment
               pinglunIndex={i}
               pinlun={comment_list[i].reply_comment}
               key={comment_list[i].id}
-            ></Pinglun>
+            ></ExtraComment>
           ],
           author: comment_list[i].username,
           avatar:
-            comment_list[i].avatar_url ??
-            require("../../../../assets/LoginOut.png"),
+            comment_list[i].avatar_url ?? require("../../assets/LoginOut.png"),
           content: <span>{comment_list[i].content}</span>
         };
         all_comment.push(each_comment);
       }
     }
+    commentNum = comment_list.length + commentAll;
     setComAll(comment_list.length + commentAll);
     setLikes([...likes]);
     setAction([...action]);
@@ -177,34 +186,43 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
      */
     let index = data.length;
     console.log(index);
-    let options = {
-      essay_id: Number(id),
-      reply_comment_id: 0,
-      content: value,
-      reply_user_id: 0
-    };
     setValue("");
     try {
       let result;
       if (type === "essay") {
-        result = await add_essay_comments(options);
+        result = await add_essay_comments({
+          essay_id: Number(id),
+          reply_comment_id: 0,
+          content: value,
+          reply_user_id: 0
+        });
       } else {
-        result = await add_topic_comments(options);
+        result = await add_topic_comments({
+          topic_id: Number(id),
+          reply_comment_id: 0,
+          content: value,
+          reply_user_id: 0
+        });
       }
       commentId.unshift(result.data.id); // 返回评论id
       setCommentID([...commentId]);
       setSubmit(!submitting); // 将评论按钮设置为false
+
       // 要展现的评论的数据格式
       let newComment = {
         id: result.data.id,
         actions: [
-          <Pinglun pinglunIndex={index} key={index} pinlun={[]}></Pinglun>
+          <ExtraComment
+            pinglunIndex={index}
+            key={index}
+            pinlun={[]}
+          ></ExtraComment>
         ],
         author: userInfo.username,
-        avatar:
-          userInfo.avatar_url ?? require("../../../../assets/LoginOut.png"),
+        avatar: userInfo.avatar_url ?? require("../../assets/LoginOut.png"),
         content: <span>{value}</span>
       };
+
       // 要存成api那样的评论数据格式，下面最终要渲染成上面的形式
       let essay_new_comment = {
         id: result.data.id,
@@ -220,7 +238,9 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       };
       setData([newComment, ...data]); // 评论区数组压到第一位
       setComment_list([essay_new_comment, ...comment_list]);
-      handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+      if (type === "essay") {
+        handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+      }
       setCommentLoding(false);
     } catch (err) {
       console.log(err);
@@ -255,7 +275,7 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
   }
 
   //评论内容
-  const Pinglun = (props) => {
+  const ExtraComment = (props) => {
     const [val, setVal] = useState("");
     // 显示回复框
     const [isReply, setIsreply] = useState(false);
@@ -278,20 +298,22 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       if (len) {
         for (let i = 0; i < len; i++) {
           let each_reply = {
-            //如果需要对评论回复进行回复和点赞等功能，可以在这里进行添加
+            // 回复评论，是本人发送的评论，才渲染删除回复图标
             actions: [
-              <Tooltip
-                key={props.pinlun[i].id}
-                title="删除回复"
-                onClick={() =>
-                  deleteReply({
-                    comment_id: props.pinlun[i].reply_comment_id,
-                    delete_comment_id: props.pinlun[i].id
-                  })
-                }
-              >
-                <DeleteOutlined />
-              </Tooltip>
+              props.pinlun[i].user_id === userInfo.id && (
+                <Tooltip
+                  key={props.pinlun[i].id}
+                  title="删除回复"
+                  onClick={() =>
+                    deleteReply({
+                      comment_id: props.pinlun[i].reply_comment_id,
+                      delete_comment_id: props.pinlun[i].id
+                    })
+                  }
+                >
+                  <DeleteOutlined />
+                </Tooltip>
+              )
             ],
             author: props.pinlun[i].username,
             avatar: props.pinlun[i].avatar_url,
@@ -362,7 +384,9 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       setReplyList([...arr]);
       setReplyNum([...replyNum]);
       setComAll(--commentNum);
-      handleComment(comAll - 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+      if (type === "essay") {
+        handleComment(comAll - 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+      }
     }
 
     //点击回复评论
@@ -376,13 +400,25 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         const which_user_reply_comment_id = userInfo.id; // 谁评论的，读取本地userInfo中的id即可
         let reply_which_comment_id = commentId[props.pinglunIndex]; // 当前评论的id
         console.log(reply_which_comment_id, which_user_reply_comment_id);
+
         // 调用接口去更新、添加评论
-        const addReplyResult = await add_essay_comments({
-          essay_id: Number(id),
-          reply_comment_id: reply_which_comment_id,
-          content: val,
-          reply_user_id: which_user_reply_comment_id
-        });
+        let addReplyResult;
+        if (type === "essay") {
+          addReplyResult = await add_essay_comments({
+            essay_id: Number(id),
+            reply_comment_id: reply_which_comment_id,
+            content: val,
+            reply_user_id: which_user_reply_comment_id
+          });
+        } else {
+          addReplyResult = await add_topic_comments({
+            topic_id: Number(id),
+            reply_comment_id: reply_which_comment_id,
+            content: val,
+            reply_user_id: which_user_reply_comment_id
+          });
+        }
+
         const res = addReplyResult;
 
         let each_reply = {
@@ -410,7 +446,9 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         setReplyNum([...replyNum]);
       }
       setComAll(++commentNum);
-      handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+      if (type === "essay") {
+        handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+      }
       setVal("");
       setIsreply(false);
     }
@@ -457,22 +495,17 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         {/* 子评论区 */}
         {Boolean(replyList.length) && (
           <List
-            // loading={isReplyLoading}
             className="comment-list"
             itemLayout="horizontal"
             dataSource={replyList}
             style={{ textAlign: "left" }}
             renderItem={(item) => (
-              <li>
-                <Comment
-                  actions={item.actions}
-                  author={item.author}
-                  avatar={
-                    item.avatar ?? require("../../../../assets/LoginOut.png")
-                  }
-                  content={item.content}
-                />
-              </li>
+              <Comment
+                actions={item.actions}
+                author={item.author}
+                avatar={item.avatar ?? require("../../assets/LoginOut.png")}
+                content={item.content}
+              />
             )}
           />
         )}
@@ -482,7 +515,11 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
 
   return (
     <>
-      <>
+      <CommentStyle>
+        <Divider />
+        <Form.Item>
+          <span className="commentTitle">评论</span>
+        </Form.Item>
         <Form.Item>
           <TextArea
             rows={4}
@@ -492,11 +529,10 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         </Form.Item>
         <Form.Item>
           <Button htmlType="submit" onClick={() => onSubmit()} type="primary">
-            {/* <Button htmlType="submit" onClick={() => setData()} type="primary"> */}
             评论
           </Button>
         </Form.Item>
-      </>
+      </CommentStyle>
 
       <List
         loading={commentLoding}
@@ -505,15 +541,13 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         itemLayout="horizontal"
         dataSource={data}
         renderItem={(item) => (
-          <li>
-            <Comment
-              actions={item.actions}
-              author={item.author}
-              avatar={item.avatar ?? require("../../../../assets/LoginOut.png")}
-              content={item.content}
-              datetime={item.publish_time}
-            ></Comment>
-          </li>
+          <Comment
+            actions={item.actions}
+            author={item.author}
+            avatar={item.avatar ?? require("../../assets/LoginOut.png")}
+            content={item.content}
+            datetime={item.publish_time}
+          ></Comment>
         )}
       />
     </>

@@ -4,37 +4,26 @@ import { useNavigate, useParams } from "react-router";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
-import {
-  Skeleton,
-  Button,
-  message,
-  Modal,
-  Card,
-  Avatar,
-  Space,
-  Tag
-} from "antd";
+import { Skeleton, Button, Modal, Card, Avatar, Space, Tag } from "antd";
 import { HeartTwoTone, EyeTwoTone, FireTwoTone } from "@ant-design/icons";
-import Comments from "./components/Comments";
 import {
   like_essay,
   dislike_essay,
   collect_essay,
   discollect_essay,
   get_essay_detail,
-  get_essay_status,
-  get_which_user_followed
+  get_essay_status
 } from "../../service/detail.js";
 import {
   get_user_info,
   get_publish_essay,
   set__user_follow,
   delete_user_follow,
-  set_user_setting,
-  get_like_collect_num
+  get_like_collect_num,
+  get_which_user_follow
 } from "../../service/user.js";
 import { formatDate } from "../../utils/date.js";
-// import Article from "./components/article/index.jsx";
+import Comments from "../../components/Comments/index.jsx";
 import HotArticle from "./components/HotArticle";
 import LeftSide from "./components/LeftSide";
 import { DetailWrapper } from "./style";
@@ -53,7 +42,7 @@ const Detail = () => {
   const [author, setAuthor] = useState({}); // 文章数据
   const [article, setArticle] = useState({}); // 文章数据
   const [articleList, setArticleList] = useState([]); // 该用户发布的文章列表数据
-  const [numGroup, setNumGroup] = useState({
+  const [statesGroup, setStatesGroup] = useState({
     loveNum: 0,
     commentNum: 0,
     collectNum: 0,
@@ -62,9 +51,7 @@ const Detail = () => {
     focus: false,
     read: false
   });
-  const [userInfo, setUserInfo] = useState(
-    JSON.parse(localStorage.getItem("userInfo"))
-  );
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 初始化用户和文章数据
   useEffect(() => {
@@ -80,23 +67,26 @@ const Detail = () => {
         ];
         const resArticle = await Promise.all(requestArticle);
         const [resDetail, resStatus] = [resArticle[0], resArticle[1]];
-        console.log(resDetail);
-        console.log(resStatus);
         const { data: article } = resDetail; // 抽离出文章，给后面初始化，同步状态
         setArticle(resDetail.data); // 设置文章详情
         const { is_like, is_collect } = resStatus.data; // 我对文章的状态，是否点赞和收藏
 
-        const author = await get_user_info({ id: article.publish_user_id }); // 用发布者id去请求发布者详细信息
+        // 用发布者id去请求发布者详细信息
+        const author = await get_user_info({ id: article.publish_user_id });
         setAuthor(author.data);
+
+        // 用发布者id去请求发布者的总被点赞、收藏量
         const author_like_comment = await get_like_collect_num({
-          id: userInfo.id
+          id: article.publish_user_id
         });
         setAuthor({
           ...author.data,
-          like_count: author_like_comment.data.like_count,
-          collect_count: author_like_comment.data.collect_count
+          like_count: author_like_comment.data.like_count ?? 0,
+          collect_count: author_like_comment.data.collect_count ?? 0
         });
-        const res = await get_which_user_followed({ id: userInfo.id }); // 请求关注列表，看是否关注了这个作者
+
+        // 请求关注列表，看是否关注了这个作者
+        const res = await get_which_user_follow({ id: userInfo.id });
         let flag = 0;
         res.data.forEach((item) => {
           if (item.id === article.publish_user_id) {
@@ -104,8 +94,9 @@ const Detail = () => {
           }
         });
         const isFollow = flag === 1 ? true : false;
+
         // 存储文章点赞数据，点赞状态迁移
-        setNumGroup({
+        setStatesGroup({
           loveNum: article.like_count,
           commentNum: article.comment_count,
           collectNum: article.collect_count,
@@ -131,10 +122,7 @@ const Detail = () => {
         setArticleList(userArticle.data);
         setArtLoading(false);
       } catch (error) {
-        // 获取失败直接返回首页
         console.log(error);
-        message.error("加载失败，请重试");
-        // navigate("/");
         setArtLoading(false);
       }
     };
@@ -143,12 +131,14 @@ const Detail = () => {
 
   // 处理点赞事件
   const handleLove = () => {
-    setNumGroup({
-      ...numGroup,
-      loveNum: numGroup.loveDone ? --numGroup.loveNum : ++numGroup.loveNum,
-      loveDone: !numGroup.loveDone
+    setStatesGroup({
+      ...statesGroup,
+      loveNum: statesGroup.loveDone
+        ? --statesGroup.loveNum
+        : ++statesGroup.loveNum,
+      loveDone: !statesGroup.loveDone
     });
-    if (numGroup.loveDone) {
+    if (statesGroup.loveDone) {
       // 取消点赞
       dislike_essay({ id: article.id });
     } else {
@@ -156,16 +146,17 @@ const Detail = () => {
       like_essay({ id: article.id });
     }
   };
+
   // 处理收藏事件
   const handleCollect = () => {
-    setNumGroup({
-      ...numGroup,
-      collectNum: numGroup.collect
-        ? --numGroup.collectNum
-        : ++numGroup.collectNum,
-      collect: !numGroup.collect
+    setStatesGroup({
+      ...statesGroup,
+      collectNum: statesGroup.collect
+        ? --statesGroup.collectNum
+        : ++statesGroup.collectNum,
+      collect: !statesGroup.collect
     });
-    if (numGroup.collect) {
+    if (statesGroup.collect) {
       // 取消收藏
       discollect_essay({ id: article.id });
     } else {
@@ -173,58 +164,45 @@ const Detail = () => {
       collect_essay({ id: article.id });
     }
   };
+
   // 处理关注用户事件
   const focusUser = () => {
     try {
-      if (numGroup.focus) {
+      if (statesGroup.focus) {
         Modal.confirm({
           title: "你确定要取消关注作者吗？",
           onOk: () => {
             const res = delete_user_follow({ id: article.publish_user_id });
             console.log(res);
-            setNumGroup({
-              ...numGroup,
-              focus: !numGroup.focus
+            setStatesGroup({
+              ...statesGroup,
+              focus: !statesGroup.focus
             });
           }
         });
       } else {
         const res = set__user_follow({ id: article.publish_user_id });
         console.log(res);
-        setNumGroup({
-          ...numGroup,
-          focus: !numGroup.focus
+        setStatesGroup({
+          ...statesGroup,
+          focus: !statesGroup.focus
         });
       }
     } catch (err) {
       console.log(err);
     }
   };
+
   // 跳转评论区
   const handleComment = (commentChild) => {
     // 更新评论数
-    setNumGroup({
-      ...numGroup,
+    setStatesGroup({
+      ...statesGroup,
       commentNum: commentChild
     });
     const anchorElement = document.getElementById("comment");
     anchorElement.scrollIntoView({ block: "start", behavior: "smooth" });
   };
-  // 切换字体大小
-  async function handleSize(value) {
-    try {
-      await set_user_setting({
-        theme_color: userInfo.theme_color,
-        dark_mode: userInfo.dark_mode,
-        font_size: value
-      });
-      const res = await get_user_info({ id: userInfo.id });
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
-      setUserInfo(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
   return (
     <DetailWrapper>
@@ -235,12 +213,11 @@ const Detail = () => {
             {/* 左侧交互按钮 */}
 
             <LeftSide
-              articleInfo={numGroup}
+              articleInfo={statesGroup}
               size={userInfo.font_size}
               handleCollect={handleCollect}
               handleComment={handleComment}
               handleLove={handleLove}
-              handleSize={handleSize}
             />
             {/* 文章内容 */}
             <div className="main">
@@ -264,7 +241,7 @@ const Detail = () => {
                   <Comments
                     id={id}
                     type="essay"
-                    commentNum={numGroup.commentNum}
+                    commentNum={statesGroup.commentNum}
                     handleComment={handleComment}
                   ></Comments>
                 </RenderIfVisible>
@@ -309,13 +286,13 @@ const Detail = () => {
                     onClick={() => focusUser()}
                     type="primary"
                     style={
-                      numGroup.focus
+                      statesGroup.focus
                         ? { backgroundColor: "#2ecc71", border: "none" }
                         : {}
                     }
                     className="author-love"
                   >
-                    {numGroup.focus ? "已关注" : "+ 关注"}
+                    {statesGroup.focus ? "已关注" : "+ 关注"}
                   </Button>
                 }
               >
