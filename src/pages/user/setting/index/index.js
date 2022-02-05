@@ -8,8 +8,8 @@ console.log(width, height);
 export const SettingStyle = styled.div`
   .setting {
     width: ${width};
-    min-width: 1200px;
-    min-height: 800px;
+    min-width: 800px;
+    min-height: 900px;
     background-color: ${colorGrey};
     padding: 20px ${width / 10}px;
   }

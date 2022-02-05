@@ -10,7 +10,8 @@ import {
   Button,
   Modal,
   Input,
-  message
+  message,
+  ConfigProvider
 } from "antd";
 import { set_user_setting, set_user_password } from "../../../../service/user";
 
@@ -33,14 +34,20 @@ const Account = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item key="0" onClick={() => selectColor("#e74c3c")}>
+      <Menu.Item key="0" onClick={() => selectColor("#F4F5F5")}>
+        <p>默认</p>
+      </Menu.Item>
+      <Menu.Item key="1" onClick={() => selectColor("#e74c3c")}>
         <p>红色</p>
       </Menu.Item>
-      <Menu.Item key="1" onClick={() => selectColor("#3498db")}>
-        <p>蓝色</p>
+      <Menu.Item key="2" onClick={() => selectColor("#87CEFA")}>
+        <p>天蓝色</p>
       </Menu.Item>
-      <Menu.Item key="2" onClick={() => selectColor("#9b59b6")}>
+      <Menu.Item key="3" onClick={() => selectColor("#8470FF")}>
         <p>紫色</p>
+      </Menu.Item>
+      <Menu.Item key="4" onClick={() => selectColor("#AFEEEE")}>
+        <p>蓝绿色</p>
       </Menu.Item>
     </Menu>
   );
@@ -48,6 +55,11 @@ const Account = () => {
   // 主题颜色
   const selectColor = (e) => {
     console.log(e);
+    ConfigProvider.config({
+      theme: {
+        primaryColor: e === "#F4F5F5" ? "#1890ff" : e
+      }
+    });
     setTheme_color(e);
   };
 
@@ -141,10 +153,8 @@ const Account = () => {
 
   // 保存修改
   const [signLoading, setSignLoading] = useState(false);
-  const key = "updatable";
   async function saveChange() {
     setSignLoading(true);
-    message.loading({ content: "请耐心等待", key });
     const requestAll = [
       set_user_setting({
         theme_color,

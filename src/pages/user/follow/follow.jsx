@@ -34,6 +34,7 @@ const Follow = () => {
   // 切换关注的用户、关注者
   async function changeTabs(key) {
     try {
+      console.log(key);
       if (key === "following") {
         // 正在关注的用户
         const res = await get_user_follow();
@@ -66,7 +67,7 @@ const Follow = () => {
 
   function callback(key) {
     console.log(key);
-    if (key === 1) changeTabs("following");
+    if (key === "1") changeTabs("following");
     else changeTabs("followed");
   }
 
@@ -108,7 +109,7 @@ const Follow = () => {
           <span className="focus">关注</span>
           <Tabs
             defaultActiveKey="1"
-            onChange={() => callback()}
+            onChange={callback}
             className="focusTabs"
             size="small"
           >

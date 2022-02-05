@@ -13,7 +13,8 @@ import {
   Image,
   Modal,
   Space,
-  message
+  message,
+  ConfigProvider
 } from "antd";
 import {
   BellOutlined,
@@ -28,6 +29,8 @@ import {
   QuestionCircleFilled,
   ExportOutlined
 } from "@ant-design/icons";
+import { colorGrey } from "../../reducer/constant";
+console.log(colorGrey);
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -41,6 +44,15 @@ const Header = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   let show = true;
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  useEffect(() => {
+    ConfigProvider.config({
+      theme: {
+        // 默认背景色为 #F4F5F5
+        primaryColor: colorGrey === "#F4F5F5" ? "#1890ff" : colorGrey
+      }
+    });
+  });
 
   const showModal = () => {
     setIsModalVisible(true);
