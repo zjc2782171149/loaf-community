@@ -11,6 +11,7 @@ import {
   Modal,
   Input,
   message,
+  Tooltip,
   ConfigProvider
 } from "antd";
 import { set_user_setting, set_user_password } from "../../../../service/user";
@@ -84,14 +85,16 @@ const Account = () => {
       key: "value",
       render: (name) => (
         <Space size="middle">
-          {name !== "暗黑模式" && name !== "主体颜色" && <p>{name}</p>}
+          {name !== "暗黑模式" && name !== "主题颜色" && <p>{name}</p>}
           {name === "暗黑模式" && (
-            <Switch defaultChecked={dark_mode} onChange={onChange} />
+            <Tooltip title="暂不支持当前功能">
+              <Switch defaultChecked={dark_mode} onChange={onChange} disabled />
+            </Tooltip>
           )}
-          {name === "主体颜色" && (
+          {name === "主题颜色" && (
             <Space wrap>
               <Dropdown overlay={menu} placement="bottomLeft">
-                <Button>选择主体颜色</Button>
+                <Button>选择主题颜色</Button>
               </Dropdown>
               {theme_color}
             </Space>
@@ -108,14 +111,14 @@ const Account = () => {
           {record.name === "密码" && (
             <a onClick={() => showModal2(record.name)}>
               {record.name !== "暗黑模式" &&
-                record.name !== "主体颜色" &&
+                record.name !== "主题颜色" &&
                 "编辑"}
             </a>
           )}
           {record.name === "字体大小" && (
             <a onClick={() => showModal3(record.name)}>
               {record.name !== "暗黑模式" &&
-                record.name !== "主体颜色" &&
+                record.name !== "主题颜色" &&
                 "编辑"}
             </a>
           )}
@@ -139,8 +142,8 @@ const Account = () => {
     },
     {
       key: "4",
-      name: "主体颜色",
-      value: "主体颜色",
+      name: "主题颜色",
+      value: "主题颜色",
       edit: false
     },
     {
@@ -176,6 +179,9 @@ const Account = () => {
 
       setTimeout(() => {
         message.success("保存成功!");
+        setTimeout(() => {
+          message.info("请刷新页面以更改主题色");
+        }, 1000);
         setSignLoading(false);
       }, 1000);
     } catch (err) {
