@@ -15,7 +15,6 @@ const addCustomize = () => (config) => {
   if (process.env.NODE_ENV === "production") {
     // 关闭sourceMap
     config.devtool = false;
-    config.output.publicPath = "./";
     config.output.filename = "[name].[hash].bundle.js";
     config.output.chunkFilename = "[name].[hash].chunk.js";
     config.plugins.push(
