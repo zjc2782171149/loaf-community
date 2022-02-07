@@ -21,45 +21,43 @@ const Topic = lazy(() =>
   import(/* webpackChunkName: "topic" */ "../pages/topic/topic.jsx")
 );
 const PersonalHome = lazy(() =>
-  import(/* webpackChunkName: "user/index" */ "../pages/user/index/user.jsx")
+  import(/* webpackChunkName: "userIndex" */ "../pages/user/index/user.jsx")
 );
 const Profile = lazy(() =>
   import(
-    /* webpackChunkName: "user/profile" */ "../pages/user/profile/profile.jsx"
+    /* webpackChunkName: "userProfile" */ "../pages/user/profile/profile.jsx"
   )
 );
 const Posts = lazy(() =>
-  import(/* webpackChunkName: "user/posts" */ "../pages/user/posts/posts.jsx")
+  import(/* webpackChunkName: "userPosts" */ "../pages/user/posts/posts.jsx")
 );
 const Says = lazy(() =>
-  import(/* webpackChunkName: "user/says" */ "../pages/user/says/says.jsx")
+  import(/* webpackChunkName: "userSays" */ "../pages/user/says/says.jsx")
 );
 const Likes = lazy(() =>
-  import(/* webpackChunkName: "user/likes" */ "../pages/user/likes/likes.jsx")
+  import(/* webpackChunkName: "userLikes" */ "../pages/user/likes/likes.jsx")
 );
 const Follow = lazy(() =>
-  import(
-    /* webpackChunkName: "user/follow" */ "../pages/user/follow/follow.jsx"
-  )
+  import(/* webpackChunkName: "userFollow" */ "../pages/user/follow/follow.jsx")
 );
 const PersonalSetting = lazy(() =>
   import(
-    /* webpackChunkName: "user/setting/index" */ "../pages/user/setting/index/index.jsx"
+    /* webpackChunkName: "userSettingIndex" */ "../pages/user/setting/index/index.jsx"
   )
 );
 const SettingProfile = lazy(() =>
   import(
-    /* webpackChunkName: "user/setting/profile" */ "../pages/user/setting/profile/profile.jsx"
+    /* webpackChunkName: "userSettingProfile" */ "../pages/user/setting/profile/profile.jsx"
   )
 );
 const Account = lazy(() =>
   import(
-    /* webpackChunkName: "user/setting/account" */ "../pages/user/setting/account/account.jsx"
+    /* webpackChunkName: "userSettingAccount" */ "../pages/user/setting/account/account.jsx"
   )
 );
 const Resume = lazy(() =>
   import(
-    /* webpackChunkName: "user/setting/resume" */ "../pages/user/setting/resume/resume.jsx"
+    /* webpackChunkName: "userSettingResume" */ "../pages/user/setting/resume/resume.jsx"
   )
 );
 const Subscribe = lazy(() =>

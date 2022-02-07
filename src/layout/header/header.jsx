@@ -42,7 +42,6 @@ const Header = () => {
   const [value, setValue] = useState(""); // 搜索有关动作
   const [menuKey, setMenuKey] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  let show = true;
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
@@ -274,7 +273,7 @@ const Header = () => {
           >
             发文
           </Button>
-          <Badge count={show ? 100 : 0} overflowCount={99} className="badge" />
+          <Badge count={0} overflowCount={99} className="badge" />
           <Dropdown overlay={menu} placement="bottomCenter" arrow>
             <BellOutlined className="bell" />
           </Dropdown>

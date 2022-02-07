@@ -30,6 +30,10 @@ const addCustomize = () => (config) => {
     // 使用Scope
     config.optimization.concatenateModules = true;
     config.optimization.runtimeChunk = "single";
+    config.devServer = {
+      historyApiFallback: true
+    };
+    console.log(config);
   }
   return config;
 };
