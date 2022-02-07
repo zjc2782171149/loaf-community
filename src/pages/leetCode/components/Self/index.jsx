@@ -30,7 +30,7 @@ const Self = () => {
         init.collect_count = res.data[0].collect_count;
         init.avatar_url = userInfo.avatar_url
           ? userInfo.avatar_url
-          : require("../../../assets/LoginOut.png");
+          : require("../../../../assets/LoginOut.png");
         init.username = userInfo.username;
         init.introduction = userInfo.introduction;
         setUser(init);

@@ -2,29 +2,75 @@ import React, { Suspense, lazy } from "react";
 import { Skeleton } from "antd";
 
 // 配置懒加载
-const Home = lazy(() => import("../pages/home/home.jsx"));
-const Fish = lazy(() => import("../pages/fish/fish.jsx"));
-const LeetCode = lazy(() => import("../pages/leetCode/leetCode.jsx"));
-const Detail = lazy(() => import("../pages/detail/index.jsx"));
-const EditContent = lazy(() => import("../pages/editContent/index.jsx"));
-const Topic = lazy(() => import("../pages/topic/topic.jsx"));
-const PersonalHome = lazy(() => import("../pages/user/index/user.jsx"));
-const Profile = lazy(() => import("../pages/user/profile/profile.jsx"));
-const Posts = lazy(() => import("../pages/user/posts/posts.jsx"));
-const Says = lazy(() => import("../pages/user/says/says.jsx"));
-const Likes = lazy(() => import("../pages/user/likes/likes.jsx"));
-const Follow = lazy(() => import("../pages/user/follow/follow.jsx"));
+const Home = lazy(() =>
+  import(/* webpackChunkName: "home" */ "../pages/home/home.jsx")
+);
+const Fish = lazy(() =>
+  import(/* webpackChunkName: "fish" */ "../pages/fish/fish.jsx")
+);
+const LeetCode = lazy(() =>
+  import(/* webpackChunkName: "leetCode" */ "../pages/leetCode/leetCode.jsx")
+);
+const Detail = lazy(() =>
+  import(/* webpackChunkName: "detail" */ "../pages/detail/index.jsx")
+);
+const EditContent = lazy(() =>
+  import(/* webpackChunkName: "editContent" */ "../pages/editContent/index.jsx")
+);
+const Topic = lazy(() =>
+  import(/* webpackChunkName: "topic" */ "../pages/topic/topic.jsx")
+);
+const PersonalHome = lazy(() =>
+  import(/* webpackChunkName: "user/index" */ "../pages/user/index/user.jsx")
+);
+const Profile = lazy(() =>
+  import(
+    /* webpackChunkName: "user/profile" */ "../pages/user/profile/profile.jsx"
+  )
+);
+const Posts = lazy(() =>
+  import(/* webpackChunkName: "user/posts" */ "../pages/user/posts/posts.jsx")
+);
+const Says = lazy(() =>
+  import(/* webpackChunkName: "user/says" */ "../pages/user/says/says.jsx")
+);
+const Likes = lazy(() =>
+  import(/* webpackChunkName: "user/likes" */ "../pages/user/likes/likes.jsx")
+);
+const Follow = lazy(() =>
+  import(
+    /* webpackChunkName: "user/follow" */ "../pages/user/follow/follow.jsx"
+  )
+);
 const PersonalSetting = lazy(() =>
-  import("../pages/user/setting/index/index.jsx")
+  import(
+    /* webpackChunkName: "user/setting/index" */ "../pages/user/setting/index/index.jsx"
+  )
 );
 const SettingProfile = lazy(() =>
-  import("../pages/user/setting/profile/profile.jsx")
+  import(
+    /* webpackChunkName: "user/setting/profile" */ "../pages/user/setting/profile/profile.jsx"
+  )
 );
-const Account = lazy(() => import("../pages/user/setting/account/account.jsx"));
-const Resume = lazy(() => import("../pages/user/setting/resume/resume.jsx"));
-const Subscribe = lazy(() => import("../pages/subscribe/subscribe.jsx"));
-const DraftBox = lazy(() => import("../pages/draftBox/draftBox.jsx"));
-const Login = lazy(() => import("../pages/login/login.jsx"));
+const Account = lazy(() =>
+  import(
+    /* webpackChunkName: "user/setting/account" */ "../pages/user/setting/account/account.jsx"
+  )
+);
+const Resume = lazy(() =>
+  import(
+    /* webpackChunkName: "user/setting/resume" */ "../pages/user/setting/resume/resume.jsx"
+  )
+);
+const Subscribe = lazy(() =>
+  import(/* webpackChunkName: "subscribe" */ "../pages/subscribe/subscribe.jsx")
+);
+const DraftBox = lazy(() =>
+  import(/* webpackChunkName: "draftBox" */ "../pages/draftBox/draftBox.jsx")
+);
+const Login = lazy(() =>
+  import(/* webpackChunkName: "login" */ "../pages/login/login.jsx")
+);
 
 // 懒加载需要加上Suspense的异步回调
 const lazyLoad = (children) => {
