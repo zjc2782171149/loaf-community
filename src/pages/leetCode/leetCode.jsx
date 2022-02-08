@@ -20,6 +20,9 @@ const { Meta } = Card;
 const LeetCode = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [doneNum, setDoneNum] = useState(0);
+  const [likeNum, setLikeNum] = useState(0);
+  const [collectNum, setCollectNum] = useState(0);
 
   // 力扣题目信息初始化
   useEffect(() => {
@@ -198,7 +201,7 @@ const LeetCode = () => {
                       type="icon-shoucanglan"
                       className="iconfontBig"
                       onClick={() => {
-                        changeCollect(1, 2, topic);
+                        changeCollect(0, 2, topic);
                       }}
                     />
                   </Popover>
@@ -245,24 +248,30 @@ const LeetCode = () => {
         if (value === 1) {
           // 完成
           await done_leetCode({ id: topic.id });
+          setDoneNum(1);
         } else {
           await disdone_leetCode({ id: topic.id });
+          setDoneNum(-1);
         }
       } else if (key === 1) {
         // 改变点赞
         if (value === 1) {
           // 点赞
           await like_leetCode({ id: topic.id });
+          setLikeNum(1);
         } else {
           await dislike_leetCode({ id: topic.id });
+          setLikeNum(-1);
         }
       } else {
         // 改变收藏
         if (value === 1) {
           // 收藏
           await collect_leetCode({ id: topic.id });
+          setCollectNum(1);
         } else {
           await discollect_leetCode({ id: topic.id });
+          setCollectNum(-1);
         }
       }
       topic.status[key] = value;
@@ -308,7 +317,7 @@ const LeetCode = () => {
         <RightSideStyle>
           <div className="right-aside">
             {/* 个人信息展示 */}
-            <Self />
+            <Self doneNum={doneNum} likeNum={likeNum} collectNum={collectNum} />
 
             {/* 热题榜 */}
             <HotTopic data={data} />

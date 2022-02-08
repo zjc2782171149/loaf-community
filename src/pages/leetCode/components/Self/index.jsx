@@ -7,7 +7,7 @@ import { SelfStyle } from "./style";
 
 const { Meta } = Card;
 
-const Self = () => {
+const Self = ({ doneNum, likeNum, collectNum }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
@@ -28,9 +28,7 @@ const Self = () => {
         init.done_count = res.data[0].done_count;
         init.like_count = res.data[0].like_count;
         init.collect_count = res.data[0].collect_count;
-        init.avatar_url = userInfo.avatar_url
-          ? userInfo.avatar_url
-          : require("../../../../assets/LoginOut.png");
+        init.avatar_url = userInfo.avatar_url;
         init.username = userInfo.username;
         init.introduction = userInfo.introduction;
         setUser(init);
@@ -41,6 +39,30 @@ const Self = () => {
     }
     initUser();
   }, []);
+
+  // 随传过来的完成数改变
+  useEffect(() => {
+    setUser({
+      ...user,
+      done_count: user.done_count + doneNum
+    });
+  }, [doneNum]);
+
+  // 随传过来的点赞数改变
+  useEffect(() => {
+    setUser({
+      ...user,
+      like_count: user.like_count + likeNum
+    });
+  }, [likeNum]);
+
+  // 随传过来的收藏数改变
+  useEffect(() => {
+    setUser({
+      ...user,
+      collect_count: user.collect_count + collectNum
+    });
+  }, [collectNum]);
 
   const enterUser = () => {
     navigate(`/user/${userInfo.id}/profile`);
@@ -59,7 +81,13 @@ const Self = () => {
       >
         <Skeleton loading={loading} avatar active>
           <Meta
-            avatar={<Avatar src={user.avatar_url} />}
+            avatar={
+              <Avatar
+                src={
+                  user.avatar_url ?? require("../../../../assets/LoginOut.png")
+                }
+              />
+            }
             title={user.username}
             description={
               user.introduction

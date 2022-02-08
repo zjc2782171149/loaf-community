@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Tag, List } from "antd";
 import { createFromIconfontCN } from "@ant-design/icons";
 
 const HotTopic = ({ data }) => {
   // iconfont图标
+  const [randomLen, setRandom] = useState(0);
   const IconFont = createFromIconfontCN({
     scriptUrl: "//at.alicdn.com/t/font_3155494_c8d2d91r6m.js"
   });
+  useEffect(() => {
+    setRandom(Math.floor(Math.random() * 10));
+  }, []);
 
   return (
     <Card
@@ -21,7 +25,7 @@ const HotTopic = ({ data }) => {
         className="right-aside-card-hot"
         size="small"
         // 热题榜通过随机数生成序列
-        dataSource={data.slice(0, Math.floor(Math.random() * data.length))}
+        dataSource={data.slice(0, randomLen)}
         renderItem={(item) => (
           <List.Item
             key={item.id}
