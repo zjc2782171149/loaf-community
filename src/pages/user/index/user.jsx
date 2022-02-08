@@ -6,7 +6,8 @@ import Posts from "../posts/posts.jsx";
 import Says from "../says/says.jsx";
 import Likes from "../likes/likes.jsx";
 import Follow from "../follow/follow.jsx";
-import { List, Space, Card, Image, Button, Divider, Tabs } from "antd";
+import Self from "../components/Self/index.jsx";
+import { Space, Card, Image, Button, Divider, Tabs } from "antd";
 // Avatar, Button
 import {
   WeiboCircleOutlined,
@@ -22,24 +23,6 @@ const { TabPane } = Tabs;
 const PersonalHome = () => {
   const navigate = useNavigate();
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  const announcementList = [
-    {
-      title: "【好题分享活动】开奖啦~",
-      description: "2022/01/17"
-    },
-    {
-      title: "【笔记创作活动】已开启，超值礼品等…",
-      description: "2022/01/17"
-    },
-    {
-      title: "青训营社区|意见&建议反馈收集",
-      description: "2022/01/15"
-    },
-    {
-      title: "关于我们(bug生产队)",
-      description: "2022/02/10"
-    }
-  ];
 
   // 跳转到对应组件
   const [activeKey, setActiveKey] = useState(location.href.split("/")[5]);
@@ -139,26 +122,7 @@ const PersonalHome = () => {
           </div>
           <div className="right-aside">
             {/* 公告栏 */}
-            <Card
-              className="right-aside-card"
-              title="相关推荐"
-              hoverable="true"
-            >
-              <List
-                className="content-list"
-                loadMore={true}
-                itemLayout="horizontal"
-                dataSource={announcementList}
-                renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      title={<a href="">{item.title}</a>}
-                      description={item.description}
-                    />
-                  </List.Item>
-                )}
-              />
-            </Card>
+            <Self />
 
             {/* 照片/广告 */}
             <Card
