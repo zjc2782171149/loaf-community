@@ -29,9 +29,11 @@ const Sign = () => {
     setSignLoading(true);
     try {
       const res = await set_user_sign();
-      setSignLoading(false);
-      setDailySign(true);
-      message.success(`恭喜您，${res.msg}!`);
+      setTimeout(() => {
+        setSignLoading(false);
+        setDailySign(true);
+        message.success(`恭喜您，${res.msg}!`);
+      }, 1000);
     } catch (err) {
       message.error("签到失败");
       setSignLoading(false);

@@ -13,7 +13,17 @@ import { formatDate } from "../../utils/date";
 import moment from "moment";
 moment.locale();
 
-import { Button, Avatar, Tabs, Menu, Dropdown, List, Space, Spin } from "antd";
+import {
+  Button,
+  Avatar,
+  Tabs,
+  Menu,
+  Dropdown,
+  List,
+  Space,
+  Spin,
+  message
+} from "antd";
 import {
   MessageOutlined,
   StarOutlined,
@@ -168,11 +178,13 @@ const EssayShowDetail = () => {
             await like_essay({ id: id });
             essayList[i].is_like = true;
             essayList[i].like_count++;
+            message.success("点赞成功");
           } else {
             // 取消点赞
             await dislike_essay({ id: id });
             essayList[i].is_like = false;
             essayList[i].like_count--;
+            message.success("取消点赞成功");
           }
         } catch (err) {
           console.log(err);
@@ -194,11 +206,13 @@ const EssayShowDetail = () => {
             await collect_essay({ id: id });
             essayList[i].is_collect = true;
             essayList[i].collect_count++;
+            message.success("收藏成功");
           } else {
             // 取消收藏
             await discollect_essay({ id: id });
             essayList[i].is_collect = false;
             essayList[i].collect_count--;
+            message.success("取消收藏成功");
           }
         } catch (err) {
           console.log(err);
