@@ -33,7 +33,7 @@ export const LeftSideStyle = styled.div`
 export const MiddleStyle = styled.div`
 .middle-aside {
   flex: 0.7;
-  min-width: 800px;
+  min-width: 900px;
   margin: 0 20px;
 }
 .main {
@@ -80,6 +80,9 @@ export const MiddleStyle = styled.div`
 .topic-time {
   color: rgba(0,0,0,0.6);
   font-size: 13px;
+}
+.textarea {
+  margin-bottom: 10px;
 }
 `;
 

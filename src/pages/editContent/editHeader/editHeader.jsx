@@ -298,9 +298,9 @@ const EditHeader = ({
       } else {
         // 如果路由中没参数，说明不是从草稿箱跳转过来的，是新文章
         await add_drftbox_essay({
-          title: value.length ? value : "草稿",
-          content: contentEdit.length > 1 ? contentEdit : "请填写文章主要内容",
-          introduction: introduction.length ? introduction : "请填写文章介绍",
+          title: value ?? "草稿",
+          content: contentEdit ?? "请填写文章主要内容",
+          introduction: introduction ?? "请填写文章介绍",
           tab_id: selectTab_id ? selectTab_id : 1
         });
         message.success("文章已新增至草稿箱");
@@ -308,9 +308,10 @@ const EditHeader = ({
 
       setTimeout(() => {
         navigate("/draftBox");
-      }, 1000);
+      }, 2000);
     } catch (err) {
-      message.info("网络异常");
+      console.log(err);
+      message.info("异常情况，请稍后再试");
     }
   }
 

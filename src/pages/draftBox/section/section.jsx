@@ -32,7 +32,7 @@ const Section = () => {
   // 删除文章
   async function deleteEssay() {
     try {
-      console.log(deleteIndex);
+      draftList.splice(deleteIndex, 1);
       setDraftList([...draftList]);
       await delete_draftbox_essay({ id: deleteID });
       message.success("草稿删除成功");
@@ -59,7 +59,6 @@ const Section = () => {
                     <span style={{ marginRight: "10px" }}>
                       {item.introduction}
                     </span>
-                    {/* <Dropdown overlay={menu} trigger={['click']} placement="bottomCenter" onClick={handleMenuClick}><EllipsisOutlined className="dots"/></Dropdown> */}
                     <Dropdown
                       overlay={() => {
                         return (

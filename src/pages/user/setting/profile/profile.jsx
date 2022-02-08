@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { ProfileStyle } from "./profile";
-import { Card, Form, Input, Button, Upload, message, Space } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  Upload,
+  message,
+  Space,
+  Tooltip
+} from "antd";
+import { LoadingOutlined, PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { set_user_info, set_user_avatar } from "../../../../service/user";
 
 const SettingProfile = () => {
@@ -11,6 +20,7 @@ const SettingProfile = () => {
   const [position, setPosition] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [avatar_url, setAvatar_url] = useState("");
+  const [disable, setDisable] = useState(true);
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
   // 表单初始化
   const initialForm = {
@@ -140,27 +150,37 @@ const SettingProfile = () => {
             initialValues={initialForm}
           >
             <Form.Item label="用户名" name="username">
-              <Input placeholder="请输入用户名" />
+              <Input placeholder="请输入用户名" disabled={disable} />
             </Form.Item>
             <Form.Item label="手机" name="phone">
-              <Input placeholder="请输入手机" />
+              <Input placeholder="请输入手机" disabled={disable} />
             </Form.Item>
             <Form.Item label="职位" name="position">
-              <Input placeholder="请输入职位" />
+              <Input placeholder="请输入职位" disabled={disable} />
             </Form.Item>
             <Form.Item label="个人介绍" name="introduction">
-              <Input.TextArea placeholder="请输入个人介绍" />
+              <Input.TextArea placeholder="请输入个人介绍" disabled={disable} />
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button
-                loading={signLoading}
-                type="primary"
-                htmlType="submit"
-                onClick={saveChange}
-              >
-                保存修改
-              </Button>
+              <Space size="large">
+                <Button
+                  loading={signLoading}
+                  type="primary"
+                  htmlType="submit"
+                  onClick={saveChange}
+                >
+                  保存修改
+                </Button>
+                <Tooltip title="切换编辑状态">
+                  <EditOutlined
+                    style={{ transform: "scale(1.5)" }}
+                    onClick={() => {
+                      setDisable(!disable);
+                    }}
+                  />
+                </Tooltip>
+              </Space>
             </Form.Item>
           </Form>
           <Space className="right" direction="vertical">
