@@ -29,7 +29,6 @@ import {
   QuestionCircleFilled,
   ExportOutlined
 } from "@ant-design/icons";
-import { colorGrey } from "../../reducer/constant";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -45,24 +44,22 @@ const Header = () => {
 
   // 初始化antd主题色
   useEffect(() => {
-    if (
-      location.href.split("/")[3] === "" ||
-      location.href.split("/")[3] === "login"
-    ) {
+    if (localStorage.getItem("userInfo")) {
       ConfigProvider.config({
         theme: {
-          primaryColor: "#1890ff"
+          primaryColor:
+            JSON.parse(localStorage.getItem("userInfo")).theme_color ??
+            "#1890ff"
         }
       });
     } else {
       ConfigProvider.config({
         theme: {
-          // 默认背景色为 #F4F5F5
-          primaryColor: colorGrey === "#F4F5F5" ? "#1890ff" : colorGrey
+          primaryColor: "#1890ff"
         }
       });
     }
-  }, [localStorage]);
+  }, []);
 
   const showModal = () => {
     setIsModalVisible(true);

@@ -35,20 +35,20 @@ const Account = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item key="0" onClick={() => selectColor("#F4F5F5")}>
+      <Menu.Item key="0" onClick={() => selectColor("#1890ff")}>
         <p>默认</p>
       </Menu.Item>
       <Menu.Item key="1" onClick={() => selectColor("#e74c3c")}>
         <p>红色</p>
       </Menu.Item>
-      <Menu.Item key="2" onClick={() => selectColor("#87CEFA")}>
-        <p>天蓝色</p>
+      <Menu.Item key="2" onClick={() => selectColor("#f39c12")}>
+        <p>橙色</p>
       </Menu.Item>
       <Menu.Item key="3" onClick={() => selectColor("#8470FF")}>
         <p>紫色</p>
       </Menu.Item>
-      <Menu.Item key="4" onClick={() => selectColor("#AFEEEE")}>
-        <p>蓝绿色</p>
+      <Menu.Item key="4" onClick={() => selectColor("#FF69B4")}>
+        <p>粉色</p>
       </Menu.Item>
     </Menu>
   );
@@ -57,7 +57,7 @@ const Account = () => {
   const selectColor = (e) => {
     ConfigProvider.config({
       theme: {
-        primaryColor: e === "#F4F5F5" ? "#1890ff" : e
+        primaryColor: e
       }
     });
     setTheme_color(e);
@@ -178,9 +178,6 @@ const Account = () => {
 
       setTimeout(() => {
         message.success("保存成功!");
-        setTimeout(() => {
-          message.info("请刷新页面以更改主题色");
-        }, 1000);
         setSignLoading(false);
       }, 1000);
     } catch (err) {

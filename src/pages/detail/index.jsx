@@ -314,7 +314,14 @@ const Detail = () => {
                 paragraph={{ rows: 16 }}
                 round
               >
-                <Tag color="blue" className="hotTitle">
+                <Tag
+                  color={
+                    localStorage.getItem("userInfo")
+                      ? JSON.parse(localStorage.getItem("userInfo")).theme_color
+                      : "blue"
+                  }
+                  className="hotTitle"
+                >
                   作者热门文章
                 </Tag>
                 {/* 作者热门文章 */}
