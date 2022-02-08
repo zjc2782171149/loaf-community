@@ -20,6 +20,7 @@ export const FishStyle = styled.div`
 export const LeftSideStyle = styled.div`
   .left-aside {
     flex: 0.13;
+    min-width: 120px;
   }
   .left-title {
     font-weight: 600;
@@ -34,6 +35,7 @@ export const LeftSideStyle = styled.div`
 export const MiddleStyle = styled.div`
 .middle-aside {
   flex: 0.7;
+  min-width: 800px;
   margin: 0 20px;
 }
 .main {
@@ -86,6 +88,7 @@ export const MiddleStyle = styled.div`
 export const RightSideStyle = styled.div`
   .right-aside {
     flex: 0.25;
+    min-width: 260px;
   }
   .right-aside-card {
     width: 100%;

@@ -9,7 +9,7 @@ moment.locale();
 
 const { Meta } = Card;
 
-const Self = () => {
+const Self = ({ topicNum }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -67,6 +67,14 @@ const Self = () => {
     }
     initUser();
   }, []);
+
+  // 改变个人信息帖子数
+  useEffect(() => {
+    setUser({
+      ...user,
+      topic_num: user.topic_num + 1
+    });
+  }, [topicNum]);
 
   // 跳转到主页
   const turnHome = (key) => {

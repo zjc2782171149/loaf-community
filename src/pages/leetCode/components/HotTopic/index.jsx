@@ -3,7 +3,6 @@ import { Card, Tag, List } from "antd";
 import { createFromIconfontCN } from "@ant-design/icons";
 
 const HotTopic = ({ data }) => {
-  // iconfont图标
   const [randomLen, setRandom] = useState(0);
   const IconFont = createFromIconfontCN({
     scriptUrl: "//at.alicdn.com/t/font_3155494_c8d2d91r6m.js"

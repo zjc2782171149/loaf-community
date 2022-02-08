@@ -44,6 +44,7 @@ const Fish = () => {
   const [textValue, setTextValue] = useState("");
   const [nowSendKind, setNowSendKind] = useState("圈子类型");
   const [nowTopic, setNowTopic] = useState("全部");
+  const [topicNum, setTopicNum] = useState(0);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 文章相关
@@ -196,6 +197,7 @@ const Fish = () => {
         tab_id: selectTab_id
       });
       message.success("发送唠嗑成功！");
+      setTopicNum(topicNum + 1);
       if (nowSendKind === "技术圈" && nowTopic === "技术圈") {
         flag = 1;
       } else if (nowSendKind === "吐槽圈" && nowTopic === "吐槽圈") {
@@ -358,7 +360,7 @@ const Fish = () => {
         <RightSideStyle>
           <div className="right-aside">
             {/* 个人信息展示 */}
-            <Self />
+            <Self topicNum={topicNum} />
 
             {/* 热门唠嗑 */}
             <Hot contentList={contentList} />
