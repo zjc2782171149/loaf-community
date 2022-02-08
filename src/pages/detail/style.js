@@ -18,7 +18,7 @@ export const DetailWrapper = styled.div`
   }
   .main {
     flex: 0.7;
-    max-width: 800px;
+    min-width: 800px;
     transition: all 0.5s;
     background-color: white;
     padding: 20px;
@@ -68,7 +68,7 @@ export const DetailWrapper = styled.div`
   .right-sidebar {
     display: flex;
     flex: 0.3;
-    max-width: 350px;
+    min-width: 350px;
     margin-left: 20px;
     background-color: ${colorWhite};
     flex-direction: column;

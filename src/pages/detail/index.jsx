@@ -213,6 +213,7 @@ const Detail = () => {
             {/* 左侧交互按钮 */}
 
             <LeftSide
+              className="left-sidebar"
               articleInfo={statesGroup}
               size={userInfo.font_size}
               handleCollect={handleCollect}
@@ -227,7 +228,6 @@ const Detail = () => {
                   {formatDate(article.publish_time)}
                   {author.username}
                 </Space>
-                {/* <Article content={article.content} /> */}
 
                 <article
                   dangerouslySetInnerHTML={{

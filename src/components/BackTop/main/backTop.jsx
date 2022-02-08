@@ -29,10 +29,6 @@ const BackTop = () => {
     setInterval(timer, 60000);
   }, []);
 
-  // window.onload = function(){
-  //     console.log("loaded!")
-  // };
-
   function toTop() {
     const offSet = window.pageYOffset;
     console.log("offset" + window.pageYOffset);
@@ -41,7 +37,8 @@ const BackTop = () => {
       setTimeout(() => {
         window.scrollTo({
           left: 0,
-          top: 0
+          top: 0,
+          behavior: "smooth"
         });
       }, 100);
     }

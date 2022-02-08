@@ -268,7 +268,7 @@ const EssayShowDetail = () => {
                       )}
                       {Boolean(item.is_like) && (
                         <Space
-                          className="hoverBlue"
+                          className="hoverBlue animate__animated animate__heartBeat"
                           onClick={() => changeLike(item.id, false)}
                         >
                           <IconText
