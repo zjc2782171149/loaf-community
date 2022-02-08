@@ -28,7 +28,6 @@ import "moment/locale/zh-cn";
 const { TextArea } = Input;
 
 const Comments = ({ id, type, commentNum, handleComment }) => {
-  console.log(id);
   // 文章的评论数据
   const [data, setData] = useState([]); // 记录每一条评论的数据(非回复)
   const [likes, setLikes] = useState([]); // 记录每一条评论的点赞数(非回复)
@@ -64,7 +63,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
           });
         }
 
-        console.log(res_comment);
         setComment_list([...res_comment.data]);
       } catch (err) {
         console.log(err);
@@ -129,7 +127,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
   async function like(element) {
     //获取到标签下标
     const index = element.getAttribute("index");
-    console.log("点赞下标：", index);
     //如果点赞了，就加1，如果没有的话，就减-1
     if (action[index]) {
       // 点过赞，那现在就要取消
@@ -185,7 +182,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
      * 下面进行api更新操作
      */
     let index = data.length;
-    console.log(index);
     setValue("");
     try {
       let result;
@@ -243,7 +239,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       }
       setCommentLoding(false);
     } catch (err) {
-      console.log(err);
       setCommentLoding(false);
     }
   }
@@ -293,7 +288,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
 
     // 每条评论的回复区进行初始化渲染
     useEffect(() => {
-      console.log(props?.pinlun);
       const len = props.pinlun?.length;
       if (len) {
         for (let i = 0; i < len; i++) {
@@ -338,7 +332,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
           // 找到这个评论，接下来找要删除的回复
           item.reply_comment.forEach((item2, index) => {
             if (item2.id === delete_comment_id) {
-              console.log(item2, index);
               delete_index = index;
             }
           });
@@ -346,7 +339,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
           item.reply_comment.splice(delete_index, 1);
         }
       });
-      // console.log(comment_list);
       /**
        *
        * 下面重新渲染该评论的回复评论区域
@@ -354,7 +346,6 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
        */
       setReplyList([]);
       const arr = [];
-      console.log(comment_list[props.pinglunIndex]);
       const replyListContent = comment_list[props.pinglunIndex].reply_comment;
 
       for (let i = 0; i < replyListContent.length; i++) {
@@ -396,10 +387,8 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
         return;
       }
       if (val !== "") {
-        console.log(userInfo);
         const which_user_reply_comment_id = userInfo.id; // 谁评论的，读取本地userInfo中的id即可
         let reply_which_comment_id = commentId[props.pinglunIndex]; // 当前评论的id
-        console.log(reply_which_comment_id, which_user_reply_comment_id);
 
         // 调用接口去更新、添加评论
         let addReplyResult;

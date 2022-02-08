@@ -1,15 +1,9 @@
-import React, { useEffect } from "react";
-// import Header from "./components/header/index.jsx";
-// import LeftSide from "./components/leftSide/index.jsx";
+import React from "react";
 import RightSide from "./components/rightSide/index.jsx";
 import { LoginStyle } from "./style";
 import ParticlesBg from "particles-bg";
 
 const Login = () => {
-  useEffect(() => {
-    console.log("成功跳转到登录页面");
-  }, []);
-
   return (
     <LoginStyle>
       <ParticlesBg
@@ -21,15 +15,11 @@ const Login = () => {
           width: "100%",
           height: "100vh",
           margin: "0",
-          // backgroundColor: "#f6f6f6",
           opacity: 0.6
         }}
       />
       <div className="login">
         <div className="container">
-          {/* <Header />
-          <LeftSide />
-          <RightSide /> */}
           <div className="main">
             <div className="left">
               <img

@@ -47,7 +47,6 @@ const EditHeader = ({
 
   // 初始化，主要用于从草稿箱点击编辑跳转到此
   useEffect(() => {
-    console.log(contentEdit, titleEdit, introductionEdit, tab_idEdit);
     setValue(titleEdit);
     setIntroduction(introductionEdit);
     setSelectTab_id(tab_idEdit);
@@ -93,7 +92,6 @@ const EditHeader = ({
 
   //点击下拉菜单选项
   function handleMenuClick(item) {
-    console.log(item);
     setMenuKey([item.key]);
     switch (item.key) {
       case "2":
@@ -182,7 +180,6 @@ const EditHeader = ({
   };
 
   async function handleSubmit() {
-    console.log(value, contentEdit, introduction, selectTab_id);
     try {
       await add_essay({
         title: value,
@@ -195,7 +192,6 @@ const EditHeader = ({
         navigate("/");
       }, 1000);
     } catch (err) {
-      console.log(err);
       message.success("发布文章失败");
     }
   }
@@ -203,7 +199,6 @@ const EditHeader = ({
   // 表单数据改变时反馈
   const onValuesChange = (item) => {
     Object.keys(item).forEach((key) => {
-      console.log(key, item[key]);
       switch (key) {
         case "introduction":
           setIntroduction(item[key]);
@@ -250,7 +245,6 @@ const EditHeader = ({
 
   // 发送消息时选择圈子类型
   async function selectKind(key) {
-    console.log(key);
     switch (key) {
       case "推荐":
         setNowSendKind("推荐");
@@ -298,7 +292,6 @@ const EditHeader = ({
   // 去草稿箱
   async function toDraftBox() {
     try {
-      console.log("id为：", id);
       if (id) {
         // 如果没参数，说明是旧草稿
         message.success("文章已保存至草稿箱");
@@ -317,7 +310,6 @@ const EditHeader = ({
         navigate("/draftBox");
       }, 1000);
     } catch (err) {
-      console.log(err);
       message.info("网络异常");
     }
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import { FollowStyle } from "./follow";
 import {
   List,
@@ -22,7 +22,7 @@ import {
 const { TabPane } = Tabs;
 
 const Follow = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [loading, setLoading] = useState([]);
   const [followList, setFollowList] = useState([]);
 
@@ -34,7 +34,6 @@ const Follow = () => {
   // 切换关注的用户、关注者
   async function changeTabs(key) {
     try {
-      console.log(key);
       if (key === "following") {
         // 正在关注的用户
         const res = await get_user_follow();
@@ -60,26 +59,23 @@ const Follow = () => {
         setLoading(false);
       }
     } catch (err) {
-      console.log(err);
       setLoading(false);
     }
   }
 
   function callback(key) {
-    console.log(key);
     if (key === "1") changeTabs("following");
     else changeTabs("followed");
   }
 
   // 跳转到他人主页
-  const turntOtherHome = (id) => {
-    console.log("跳转到他人主页");
-    navigate(`/user/${id}/posts`);
-  };
+  // const turntOtherHome = (id) => {
+  //   console.log("跳转到他人主页");
+  //   navigate(`/user/${id}/posts`);
+  // };
 
   // 处理关注用户事件
   const focusUser = (item, index) => {
-    console.log(item, index);
     try {
       if (item.is_follow) {
         Modal.confirm({
@@ -141,7 +137,7 @@ const Follow = () => {
               }
             >
               <List.Item.Meta
-                onClick={() => turntOtherHome(item.id)}
+                // onClick={() => turntOtherHome(item.id)}
                 avatar={
                   <Avatar
                     src={

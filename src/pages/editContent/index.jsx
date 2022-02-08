@@ -21,7 +21,6 @@ const EditContent = () => {
 
     // 保存文章
     const saveDoc = () => {
-      console.log(vditor.getHTML());
       setMdValue(vditor && vditor.getHTML());
     };
 
@@ -122,7 +121,6 @@ const EditContent = () => {
         },
         handler(files) {
           async function uploadImage() {
-            console.log(files);
             try {
               const formData = new FormData();
               formData.append("file", files[0]); //名字和后端接口名字对应
@@ -147,9 +145,7 @@ const EditContent = () => {
   useEffect(() => {
     async function init() {
       if (id) {
-        console.log("从草稿箱跳转过来，id为：", id);
         const res = await get_essay_detail({ id: id });
-        console.log(res.data);
         setMdValue(res.data.content);
         setTitle(res.data.title);
         setIntroduction(res.data.introduction ?? "请填写文章介绍");

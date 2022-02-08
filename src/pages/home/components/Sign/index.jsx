@@ -33,7 +33,6 @@ const Sign = () => {
       setDailySign(true);
       message.success(`恭喜您，${res.msg}!`);
     } catch (err) {
-      console.log(err);
       message.error("签到失败");
       setSignLoading(false);
     }

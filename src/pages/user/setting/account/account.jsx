@@ -55,7 +55,6 @@ const Account = () => {
 
   // 主题颜色
   const selectColor = (e) => {
-    console.log(e);
     ConfigProvider.config({
       theme: {
         primaryColor: e === "#F4F5F5" ? "#1890ff" : e
@@ -185,7 +184,6 @@ const Account = () => {
         setSignLoading(false);
       }, 1000);
     } catch (err) {
-      console.log(err);
       message.error("保存失败");
       setSignLoading(false);
     }

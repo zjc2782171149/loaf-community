@@ -32,12 +32,11 @@ const Section = () => {
   // 删除文章
   async function deleteEssay() {
     try {
-      console.log(draftList.splice(deleteIndex, 1));
+      console.log(deleteIndex);
       setDraftList([...draftList]);
       await delete_draftbox_essay({ id: deleteID });
       message.success("草稿删除成功");
     } catch (err) {
-      console.log(err);
       message.success("网络异常，请稍后再试");
     }
   }

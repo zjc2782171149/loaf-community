@@ -29,7 +29,6 @@ const Announce = () => {
   ];
 
   const openAnnouncement = (title) => {
-    console.log(title);
     announcementList.forEach((item) => {
       if (item.title === title) {
         notification.open({

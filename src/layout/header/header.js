@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { colorBlue, colorGrey } from "../../reducer/constant";
 
 const width = document.body.clientWidth;
-const height = document.body.clientHeight;
-console.log(width, height);
 
 export const HeaderStyle = styled.div`
   .home {

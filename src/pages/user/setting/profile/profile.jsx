@@ -22,7 +22,6 @@ const SettingProfile = () => {
 
   // 用户信息改变时进行初始化
   useEffect(() => {
-    console.log("用户信息发生变动，进行初始化");
     setUsername(userInfo.username);
     setPhone(userInfo.phone);
     setPosition(userInfo.position);
@@ -32,7 +31,6 @@ const SettingProfile = () => {
 
   const onValuesChange = (item) => {
     Object.keys(item).forEach((key) => {
-      console.log(key, item[key]);
       switch (key) {
         case "username":
           setUsername(item[key]);
@@ -48,7 +46,6 @@ const SettingProfile = () => {
           break;
       }
     });
-    console.log(username, position, introduction);
   };
 
   function beforeUpload(file) {
@@ -114,10 +111,7 @@ const SettingProfile = () => {
       async function uploadImage() {
         const formData = new FormData();
         formData.append("file", info.file); //名字和后端接口名字对应
-        console.log(info.file);
-        console.log(formData);
         const res = await set_user_avatar(formData);
-        console.log(res);
         setAvatar_url("http://loaf.youlan-lan.xyz" + res.data.data.path);
         userInfo.avatar_url = "http://loaf.youlan-lan.xyz" + res.data.data.path;
         localStorage.setItem("userInfo", JSON.stringify(userInfo));

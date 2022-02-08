@@ -8,10 +8,8 @@ const BackToTop = () => {
     function getUserInfo() {
       if (localStorage.getItem("userInfo")) {
         setLogin(true);
-        console.log("logining!");
       } else {
         setLogin(false);
-        console.log("need login!");
       }
     }
     getUserInfo();

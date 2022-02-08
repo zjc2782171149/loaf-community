@@ -43,7 +43,6 @@ const Self = ({ topicNum }) => {
             });
           }
           userNow.topic_num = topic_num;
-          console.log(userNow);
           setUser({ ...userNow });
         } catch (err) {
           console.log(err);
@@ -78,7 +77,6 @@ const Self = ({ topicNum }) => {
 
   // 跳转到主页
   const turnHome = (key) => {
-    console.log("跳转到主页");
     if (key === "topic") {
       navigate(`/user/${userInfo.id}/says`);
     } else if (key === "posts") {

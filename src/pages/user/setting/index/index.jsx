@@ -17,7 +17,6 @@ const PersonalSetting = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const tabsChange = (item) => {
-    console.log(item.key);
     setActiveKey(item.key);
     navigate(`/user/setting/${item.key}`);
   };
@@ -29,7 +28,6 @@ const PersonalSetting = () => {
   // activeKey 初始化
   useEffect(() => {
     if (location.href.split("/")[5]) {
-      console.log(location.href.split("/")[5]);
       setActiveKey(location.href.split("/")[5]);
     }
   }, []);

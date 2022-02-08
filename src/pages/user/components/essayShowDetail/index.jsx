@@ -41,7 +41,6 @@ const EssayShowDetail = ({ name }) => {
   async function tabsChange(func, id) {
     setLoading(true);
 
-    console.log(func);
     let res;
     try {
       if (id) res = await func({ id: id });
@@ -53,7 +52,6 @@ const EssayShowDetail = ({ name }) => {
       setEssayList([...arr]);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       setLoading(false);
     }
   }
@@ -67,7 +65,6 @@ const EssayShowDetail = ({ name }) => {
 
   // 跳转到文章详情
   const turntoEssayDetail = (id) => {
-    console.log("跳转到动态详情");
     navigate(`/detail/${id}`);
   };
 
@@ -79,9 +76,6 @@ const EssayShowDetail = ({ name }) => {
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: (page) => {
-                console.log(page);
-              },
               pageSize: 5
             }}
             dataSource={essayList}

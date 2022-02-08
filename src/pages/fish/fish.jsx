@@ -108,7 +108,6 @@ const Fish = () => {
   // 发送消息时选择圈子类型
   async function selectKind(key) {
     try {
-      console.log(key);
       if (key === "IT") {
         // 获取每个话题分类下的详细文章
         setNowSendKind("技术圈");
@@ -128,7 +127,6 @@ const Fish = () => {
   // 排序
   async function sorted(key) {
     try {
-      console.log(key);
       if (key === "all") {
         // 获取每个话题分类下的详细文章
         const res1 = await get_tabs_topic_({ id: 1 });
@@ -157,7 +155,6 @@ const Fish = () => {
 
   // 切换热门、最新
   function tabsChange(key) {
-    console.log(key, typeof key);
     let arr = [...contentList];
     if (key === "1") {
       // 热门
@@ -175,7 +172,6 @@ const Fish = () => {
 
   // 文字输入时，改变文本域的值
   function onChange(e) {
-    console.log(e.target.value);
     setTextValue(e.target.value);
   }
 
@@ -224,14 +220,12 @@ const Fish = () => {
       setTextValue("");
       setSendLoading(false);
     } catch (err) {
-      console.log(err);
       setSendLoading(false);
     }
   }
 
   // 跳转到唠嗑详情
   const turnTopicDetail = (id) => {
-    console.log("跳转到唠嗑详情");
     navigate(`/topic/${id}`);
   };
 

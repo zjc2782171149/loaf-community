@@ -9,7 +9,6 @@ const LeftSide = ({
   handleComment,
   handleLove
 }) => {
-  console.log(articleInfo, size);
   return (
     <LeftSection>
       <div className="container">

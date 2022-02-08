@@ -117,12 +117,10 @@ const Detail = () => {
         const userArticle = await get_publish_essay({
           id: article.publish_user_id
         });
-        console.log(userArticle.data);
         // 添加热门文章数据
         setArticleList(userArticle.data);
         setArtLoading(false);
       } catch (error) {
-        console.log(error);
         setArtLoading(false);
       }
     };
@@ -172,8 +170,7 @@ const Detail = () => {
         Modal.confirm({
           title: "你确定要取消关注作者吗？",
           onOk: () => {
-            const res = delete_user_follow({ id: article.publish_user_id });
-            console.log(res);
+            delete_user_follow({ id: article.publish_user_id });
             setStatesGroup({
               ...statesGroup,
               focus: !statesGroup.focus
@@ -181,8 +178,7 @@ const Detail = () => {
           }
         });
       } else {
-        const res = set__user_follow({ id: article.publish_user_id });
-        console.log(res);
+        set__user_follow({ id: article.publish_user_id });
         setStatesGroup({
           ...statesGroup,
           focus: !statesGroup.focus

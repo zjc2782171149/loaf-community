@@ -32,7 +32,6 @@ const LeetCode = () => {
         const res = await get_leetCode_all();
         initLeetcodeDetail(res.data);
       } catch (err) {
-        console.log(err);
         setLoading(false);
       }
     }
@@ -57,7 +56,6 @@ const LeetCode = () => {
       setData([...list]);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       setLoading(false);
     }
   }
@@ -226,22 +224,18 @@ const LeetCode = () => {
   // 改变题目完成状态
   function changeDone(value, key, topic) {
     // 改变该题目的值
-    console.log(value, key, topic);
     changeStatus(value, key, topic); // 这里传的0，代表修改完成状态
   }
   // 改变题目点赞状态
   function changeLike(value, key, topic) {
-    console.log(value, key, topic);
     changeStatus(value, key, topic); // 这里传的1，代表修改点赞状态
   }
   // 改变题目收藏状态
   function changeCollect(value, key, topic) {
-    console.log(value, key, topic);
     changeStatus(value, key, topic); // 这里传的1，代表修改收藏状态
   }
   // 改变
   async function changeStatus(value, key, topic) {
-    console.log(value, key, topic);
     try {
       if (key === 0) {
         // 改变完成

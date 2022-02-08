@@ -32,7 +32,6 @@ const addCustomize = () => (config) => {
     config.devServer = {
       historyApiFallback: true
     };
-    console.log(config);
   }
   return config;
 };

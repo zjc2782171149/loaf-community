@@ -139,7 +139,6 @@ const EssayShowDetail = () => {
       setEssayList([...arr]);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       setLoading(false);
     }
   }
@@ -153,7 +152,6 @@ const EssayShowDetail = () => {
 
   // 跳转到文章详情
   const turntoEssayDetail = (id) => {
-    console.log("跳转到动态详情");
     navigate(`/detail/${id}`);
   };
 
@@ -186,7 +184,6 @@ const EssayShowDetail = () => {
 
   // 改变文章收藏状态
   async function changeCollect(id, bool) {
-    console.log(id, bool);
     const length = essayList.length;
     for (let i = 0; i < length; i++) {
       if (essayList[i].id === id) {
@@ -233,9 +230,6 @@ const EssayShowDetail = () => {
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: (page) => {
-                console.log(page);
-              },
               pageSize: 5
             }}
             dataSource={essayList}

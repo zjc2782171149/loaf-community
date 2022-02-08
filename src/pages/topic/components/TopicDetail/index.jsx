@@ -46,7 +46,6 @@ const TopicDetail = ({ id }) => {
         setTopicDetail(publishUser);
         setTopicLoading(false);
       } catch (err) {
-        console.log(err);
         setTopicLoading(false);
       }
     }

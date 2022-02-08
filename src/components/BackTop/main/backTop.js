@@ -1,9 +1,5 @@
 import styled from "styled-components";
 
-const width = document.body.clientWidth;
-const height = document.body.clientHeight;
-console.log(width, height);
-
 export const BackTopStyle = styled.div`
   .container {
     width: 100px;

@@ -22,15 +22,11 @@ export const uploadFile = axios.create({
 uploadFile.interceptors.request.use(
   (request) => {
     if (localStorage.getItem("token")) {
-      // console.log("有token", localStorage.getItem("token"));
       const token = JSON.parse(localStorage.getItem("token"));
-      // console.log(token);
       request.headers["Authorization"] = `Bearer ${token}`; // 如果有token，每次请求都在axios请求头上进行携带
     } else {
-      console.log("删除 token 了");
       delete request.headers["Authorization"]; // 如果本地token没了，就要将请求头中的token删掉，
     }
-    // console.log("请求拦截 成功");
     return request;
   },
   (error) => Promise.reject(error)
@@ -40,15 +36,11 @@ uploadFile.interceptors.request.use(
 request.interceptors.request.use(
   (request) => {
     if (localStorage.getItem("token")) {
-      // console.log("有token", localStorage.getItem("token"));
       const token = JSON.parse(localStorage.getItem("token"));
-      // console.log(token);
       request.headers["Authorization"] = `Bearer ${token}`; // 如果有token，每次请求都在axios请求头上进行携带
     } else {
-      console.log("删除 token 了");
       delete request.headers["Authorization"]; // 如果本地token没了，就要将请求头中的token删掉，
     }
-    // console.log("请求拦截 成功");
     return request;
   },
   (error) => Promise.reject(error)
@@ -57,7 +49,6 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
-    // console.log(response);
     // 后端接口判断请求头有无 token，没有或者 token 过期，返回403；
     if (response.data.status === 403) {
       //用户token失效

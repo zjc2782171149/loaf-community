@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { colorWhite, colorBlue, colorGrey } from "../../reducer/constant";
 
 const width = document.body.clientWidth;
-console.log(width);
 
 export const SectionStyle = styled.div`
   .section {

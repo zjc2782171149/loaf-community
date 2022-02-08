@@ -14,7 +14,6 @@ const RightSide = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onValuesChange = (item) => {
-    console.log(item);
     Object.keys(item).forEach((key) => {
       switch (key) {
         case "用户名":
@@ -28,7 +27,6 @@ const RightSide = () => {
           break;
       }
     });
-    console.log(username, phone, password);
   };
 
   async function Submit() {
@@ -85,7 +83,6 @@ const RightSide = () => {
           return false;
         }
         // 格式正确，允许登录
-        console.log("登录", phone, password);
         setIsLoading(true);
         const res = await user_login({
           phone,
@@ -132,7 +129,6 @@ const RightSide = () => {
         }, 1000);
       }
     } catch (err) {
-      console.log(err);
       message.error("账号密码错误");
       setIsLoading(false);
     }

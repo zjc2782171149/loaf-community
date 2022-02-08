@@ -27,7 +27,6 @@ const Says = () => {
         setSaysList(res.data);
         setLoading(false);
       } catch (err) {
-        console.log(err);
         setLoading(false);
       }
     }
@@ -36,7 +35,6 @@ const Says = () => {
 
   // 跳转到文章详情
   const turntoEssayDetail = (id) => {
-    console.log("跳转到动态详情");
     navigate(`/topic/${id}`);
   };
 

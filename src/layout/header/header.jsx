@@ -38,13 +38,12 @@ const Header = () => {
   const navigate = useNavigate();
   const [isShow, setIsShow] = useState(true);
   const [active, setActive] = useState();
-  const [value, setValue] = useState(""); // 搜索有关动作
+  // const [value, setValue] = useState(""); // 搜索有关动作
   const [menuKey, setMenuKey] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
-    console.log(colorGrey);
     if (
       location.href.split("/")[3] === "" ||
       location.href.split("/")[3] === "login"
@@ -78,7 +77,6 @@ const Header = () => {
 
   //点击下拉菜单选项
   function handleMenuClick(item) {
-    console.log(item);
     setMenuKey([item.key]);
     switch (item.key) {
       case "1":
@@ -174,10 +172,9 @@ const Header = () => {
     }
   }
 
-  function onSearch(inputValue) {
-    setValue(inputValue);
-    console.log(value);
-  }
+  // function onSearch(inputValue) {
+  //   setValue(inputValue);
+  // }
 
   // 路由守卫，没登录就跳到登录页面，登录了就获取用户信息
   useEffect(() => {
@@ -213,7 +210,6 @@ const Header = () => {
         };
         localStorage.setItem("userInfo", JSON.stringify(userInfo)); // 本地设置缓存
       } catch (err) {
-        console.log(err);
         // 后端返回的不是401状态码，而是设置成了我无法访问直接报401错，所以我只能通过catch err 捕获异常得知token过期
         console.log("token失效，返回登录页面");
         localStorage.removeItem("token"); // 本地存储中的token不会过期，得手动删除
@@ -227,7 +223,6 @@ const Header = () => {
   // 页头激活标签初始化;
   useEffect(() => {
     let urlArray = location.href.split("/");
-    console.log(urlArray[3]);
     if (
       urlArray[3].length === 0 ||
       urlArray[3] === "leetCode" ||
@@ -273,7 +268,7 @@ const Header = () => {
           <Search
             className="search"
             placeholder="搜索摸鱼社区"
-            onSearch={onSearch}
+            // onSearch={onSearch}
           />
           <Button
             className="button"

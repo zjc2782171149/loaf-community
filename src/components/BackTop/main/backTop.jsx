@@ -31,7 +31,6 @@ const BackTop = () => {
 
   function toTop() {
     const offSet = window.pageYOffset;
-    console.log("offset" + window.pageYOffset);
     countClick ? setSrc("cat3") : setSrc("cat5");
     if (offSet !== 0) {
       setTimeout(() => {

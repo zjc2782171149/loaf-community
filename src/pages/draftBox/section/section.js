@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { colorWhite, colorBlue } from "../../../reducer/constant";
 
 //const width = document.body.clientWidth;
-//const height = document.body.clientHeight;
+//
 
 export const SectionStyle = styled.div`
   .container {
