@@ -15,6 +15,15 @@ const BackToTop = () => {
     getUserInfo();
   }, [localStorage]);
 
+  useEffect(() => {
+    function timer() {
+      if (location.href && location.href.split("/")[3] !== "login") {
+        setLogin(true);
+      }
+    }
+    setInterval(timer, 1000);
+  }, []);
+
   return (
     <div>
       <Suspense fallback={<div></div>}>

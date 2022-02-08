@@ -43,6 +43,7 @@ const Header = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
+  // 初始化antd主题色
   useEffect(() => {
     if (
       location.href.split("/")[3] === "" ||
