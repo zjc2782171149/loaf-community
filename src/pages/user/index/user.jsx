@@ -7,8 +7,8 @@ import Says from "../says/says.jsx";
 import Likes from "../likes/likes.jsx";
 import Follow from "../follow/follow.jsx";
 import Self from "../components/Self/index.jsx";
+import YearlyReport from "../components/YearlyReport/index.jsx";
 import { Space, Card, Image, Button, Divider, Tabs } from "antd";
-// Avatar, Button
 import {
   WeiboCircleOutlined,
   GithubOutlined,
@@ -22,6 +22,7 @@ const { TabPane } = Tabs;
 
 const PersonalHome = () => {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 跳转到对应组件
@@ -100,7 +101,10 @@ const PersonalHome = () => {
               </div>
             </div>
 
-            <div className="send">
+            <div
+              className="send animate__animated animate__fadeIn"
+              style={visible ? { display: "none" } : {}}
+            >
               <Tabs
                 size="large"
                 centered
@@ -119,6 +123,14 @@ const PersonalHome = () => {
               {activeKey === "likes" && <Likes />}
               {activeKey === "follow" && <Follow />}
             </div>
+
+            {/* 年度报告弹窗 */}
+            <div
+              className="yearly animate__animated animate__zoomIn"
+              style={!visible ? { display: "none" } : {}}
+            >
+              <YearlyReport />
+            </div>
           </div>
           <div className="right-aside">
             {/* 公告栏 */}
@@ -126,13 +138,16 @@ const PersonalHome = () => {
 
             {/* 照片/广告 */}
             <Card
+              onClick={() => {
+                setVisible(!visible);
+              }}
               className="right-aside-card"
               hoverable="true"
               cover={
-                <img alt="example" src="https://joeschmoe.io/api/v1/random" />
+                <img alt="example" src={require("../../../assets/left.jpg")} />
               }
             >
-              <Meta title="广告位招租" description="有需要的可以来找我们哈哈" />
+              <Meta title="年度报告" description="快点击我查收你的年度报告" />
             </Card>
           </div>
         </section>

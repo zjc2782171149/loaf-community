@@ -105,6 +105,12 @@ export const UserStyle = styled.div`
     padding: 10px 0 0 10px;
     background-color: ${colorWhite};
   }
+  .yearly {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: ${colorWhite};
+  }
   .tabPane {
     transform: scale(1.5);
   }
