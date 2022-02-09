@@ -79,11 +79,11 @@ export const LeftSection = styled.div`
     margin: -45px 0 0 40px;
   }
   .fontsize {
-    width: 50px;
+    width: 70px;
     font-size: 14px;
     height: 30px;
     line-height: 30px;
-    margin: -10px 0 0 -30px;
+    margin: -10px 0 0 -25px;
   }
   .slide {
     width: 120px;

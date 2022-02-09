@@ -242,6 +242,11 @@ const Detail = () => {
                 </Space>
 
                 <article
+                  style={
+                    userInfo.font_size <= 20 && userInfo.font_size >= 14
+                      ? { fontSize: userInfo.font_size }
+                      : { fontSize: "14px" }
+                  }
                   dangerouslySetInnerHTML={{
                     __html: article.content
                   }}

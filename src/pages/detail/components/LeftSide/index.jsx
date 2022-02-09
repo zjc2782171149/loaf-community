@@ -37,7 +37,7 @@ const LeftSide = ({
         </div>
 
         <div className="fontsize">
-          <div className="slide">字体大小:{size}</div>
+          <div className="slide">字体大小:{size}px</div>
         </div>
       </div>
     </LeftSection>
