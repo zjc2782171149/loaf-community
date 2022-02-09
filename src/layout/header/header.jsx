@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { throttle } from "lodash";
 import { HeaderStyle } from "./header";
+import { getScrollTop } from "../../utils/getScrollTop";
 import { get_user_info } from "../../service/user";
 import {
   Input,
@@ -36,6 +38,7 @@ const { TabPane } = Tabs;
 const Header = () => {
   const navigate = useNavigate();
   const [isShow, setIsShow] = useState(true);
+  const [show, setShow] = useState(false); // 是否在顶部黏住
   const [active, setActive] = useState();
   // const [value, setValue] = useState(""); // 搜索有关动作
   const [menuKey, setMenuKey] = useState([]);
@@ -216,7 +219,7 @@ const Header = () => {
       }
     }
     getUserInfo();
-  }, [navigate]);
+  }, [isShow]);
 
   // 页头激活标签初始化;
   useEffect(() => {
@@ -244,9 +247,101 @@ const Header = () => {
     }
   }, [location.href]);
 
+  // 处理定位
+  let scrollTop = 0;
+  // 获取距离顶部的距离
+  const bindHandleScroll = throttle(() => {
+    scrollTop = getScrollTop();
+    // 大于一定距离后显示固定
+    scrollTop >= 150 && location.href.split("/")[3] !== "detail"
+      ? setShow(true)
+      : setShow(false);
+  }, 100);
+  // 初始化滚动事件
+  useEffect(() => {
+    window.addEventListener("scroll", bindHandleScroll);
+    return () => {
+      window.removeEventListener("scroll", bindHandleScroll);
+    };
+  }, []);
+
   return (
     <HeaderStyle style={isShow ? {} : { display: "none" }}>
-      <div className="header">
+      <div className="header" style={show ? { display: "none" } : {}}>
+        <div className="left">
+          <img className="image" src={require("../../assets/LOGO.png")} />
+          <p className="textt">摸鱼学社</p>
+          <Tabs
+            onChange={tabsChange}
+            size="large"
+            className="header-tabs"
+            activeKey={active}
+          >
+            <TabPane tab="首页" key="home"></TabPane>
+            <TabPane tab="力扣专区" key="leetCode"></TabPane>
+            <TabPane tab="唠嗑圈" key="fish"></TabPane>
+            <TabPane tab="其他" key="other"></TabPane>
+          </Tabs>
+        </div>
+        <div className="right">
+          <Search
+            className="search"
+            placeholder="搜索摸鱼社区"
+            // onSearch={onSearch}
+          />
+          <Button
+            className="button"
+            type="primary"
+            onClick={() => {
+              navigate("/editContent");
+            }}
+          >
+            发表文章
+          </Button>
+          <Badge count={0} overflowCount={99} className="badge" />
+          <Dropdown overlay={menu} placement="bottomCenter" arrow>
+            <BellOutlined className="bell" />
+          </Dropdown>
+          <Dropdown overlay={menuAvatar} placement="bottomCenter" arrow>
+            <Avatar
+              className="avatar"
+              src={
+                <Image
+                  src={
+                    userInfo?.avatar_url ?? require("../../assets/LoginOut.png")
+                  }
+                  style={{ width: 32, height: 32 }}
+                  preview={false}
+                />
+              }
+              alt="wait"
+            />
+          </Dropdown>
+        </div>
+        <Modal
+          title="关于我们"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Space direction="vertical">
+            <span className="modalTitle">Bug生产队</span>
+            <span>
+              灵感来源于程序员在工作中经常会做的一件事哈哈，bug可谓是贯穿了我们的职业生涯，可以说是对它又爱又恨，当然，遇到
+              bug时我们第一时间便是进行Debug，思考这个bug是如何产生的，经过一系列搜索引擎，如果还没得到很好的解决，我们会及时记录并反馈，让大家一同来解决。
+            </span>
+            <spann className="modalFooter">
+              目标：致力于打造一个信息覆盖面广、体验良好、找到家一般的功能社区网站
+            </spann>
+          </Space>
+        </Modal>
+      </div>
+
+      <div
+        className={`header animate__animated animate__fadeInDown ${
+          show ? "sticky" : "unShow"
+        }`}
+      >
         <div className="left">
           <img className="image" src={require("../../assets/LOGO.png")} />
           <p className="textt">摸鱼学社</p>

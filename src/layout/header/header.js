@@ -85,4 +85,15 @@ export const HeaderStyle = styled.div`
   .modalFooter {
     font-weight: 600;
   }
+  .sticky {
+    position: fixed;
+    transition: all 0.3s;
+    transform: translate3d(0, -100%, 0);
+    z-index: 1000;
+    top: 0;
+    margin-buttom: 20px;
+  }
+  .unShow {
+    display: none;
+  }
 `;
