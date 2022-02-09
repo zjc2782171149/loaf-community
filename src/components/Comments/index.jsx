@@ -234,8 +234,9 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       };
       setData([newComment, ...data]); // 评论区数组压到第一位
       setComment_list([essay_new_comment, ...comment_list]);
+      setComAll(++commentNum);
       if (type === "essay") {
-        handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+        handleComment(commentNum); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
       }
       setCommentLoding(false);
     } catch (err) {
@@ -376,7 +377,7 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       setReplyNum([...replyNum]);
       setComAll(--commentNum);
       if (type === "essay") {
-        handleComment(comAll - 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+        handleComment(commentNum); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
       }
     }
 
@@ -436,7 +437,7 @@ const Comments = ({ id, type, commentNum, handleComment }) => {
       }
       setComAll(++commentNum);
       if (type === "essay") {
-        handleComment(comAll + 1); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
+        handleComment(commentNum); // 调用父组件传过来的函数进行更新父组件传给左侧的评论数
       }
       setVal("");
       setIsreply(false);
