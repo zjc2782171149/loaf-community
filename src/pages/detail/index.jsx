@@ -35,6 +35,7 @@ const Detail = () => {
   const [author, setAuthor] = useState({}); // 文章数据
   const [article, setArticle] = useState({}); // 文章数据
   const [articleList, setArticleList] = useState([]); // 该用户发布的文章列表数据
+  const [is_self, setIs_self] = useState(false); // 右侧粘性栏目是否显示
   const [show, setShow] = useState(false); // 右侧粘性栏目是否显示
   const [statesGroup, setStatesGroup] = useState({
     loveNum: 0,
@@ -68,6 +69,11 @@ const Detail = () => {
         // 用发布者id去请求发布者详细信息
         const author = await get_user_info({ id: article.publish_user_id });
         setAuthor(author.data);
+
+        // 对比作者和本地用户信息id是否一致，一致的话是本人的文章，则不显示关注
+        if (author.data.id === userInfo.id) {
+          setIs_self(true);
+        }
 
         // 用发布者id去请求发布者的总被点赞、收藏量
         const author_like_comment = await get_like_collect_num({
@@ -292,7 +298,7 @@ const Detail = () => {
                         ? { backgroundColor: "#2ecc71", border: "none" }
                         : {}
                     }
-                    className="author-love"
+                    className={is_self ? "unMounted" : ""}
                   >
                     {statesGroup.focus ? "已关注" : "+ 关注"}
                   </Button>
@@ -381,7 +387,7 @@ const Detail = () => {
                         ? { backgroundColor: "#2ecc71", border: "none" }
                         : {}
                     }
-                    className="author-love"
+                    className={`author-love ${is_self ? "unMounted" : ""}`}
                   >
                     {statesGroup.focus ? "已关注" : "+ 关注"}
                   </Button>

@@ -76,6 +76,7 @@ export const DetailWrapper = styled.div`
     width: 100%;
   }
   .authorInfo {
+    margin-left: 5px;
     font-size: 14px;
   }
   .author-message {
@@ -87,6 +88,9 @@ export const DetailWrapper = styled.div`
   }
   .hotArticle {
     background-color: ${colorWhite};
+  }
+  .unMounted {
+    display: none;
   }
   .right-sidebar-sticky {
     position: fixed;
