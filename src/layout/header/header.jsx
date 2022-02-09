@@ -275,7 +275,7 @@ const Header = () => {
               navigate("/editContent");
             }}
           >
-            发文
+            发表文章
           </Button>
           <Badge count={0} overflowCount={99} className="badge" />
           <Dropdown overlay={menu} placement="bottomCenter" arrow>

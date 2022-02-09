@@ -49,6 +49,7 @@ export const LeftSection = styled.div`
   .eachButton {
     flex: 1;
     width: 55px;
+    height: 55px;
     background-color: #fff;
     box-shadow: 0.4rem 0.4rem 0.8rem #c8d0e7;
     border-radius: 50%;

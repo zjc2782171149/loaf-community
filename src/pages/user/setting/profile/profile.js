@@ -26,6 +26,10 @@ export const ProfileStyle = styled.div`
     margin: 40px 0 0 50px;
   }
   .ps {
-    margin-top: 20px;
+    margin-top: 15px;
+  }
+  .ps2 {
+    margin-top: 15px;
+    font-weight: 600;
   }
 `;

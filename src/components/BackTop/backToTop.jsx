@@ -19,6 +19,8 @@ const BackToTop = () => {
     function timer() {
       if (location.href && location.href.split("/")[3] !== "login") {
         setLogin(true);
+      } else {
+        setLogin(false);
       }
     }
     setInterval(timer, 1000);

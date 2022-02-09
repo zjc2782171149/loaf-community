@@ -20,7 +20,10 @@ const LeftSide = ({
             />
             <div className="count">{articleInfo.loveNum ?? 0}</div>
           </div>
-          <div className="eachButton" onClick={() => handleComment()}>
+          <div
+            className="eachButton"
+            onClick={() => handleComment(articleInfo.commentNum)}
+          >
             <MessageFilled className="icon" />
             <div className="count">{articleInfo.commentNum ?? 0}</div>
           </div>

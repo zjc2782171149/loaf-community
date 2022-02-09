@@ -32,7 +32,8 @@ import {
   LikeTwoTone,
   StarTwoTone,
   FireTwoTone,
-  DashboardTwoTone
+  DashboardTwoTone,
+  SwapOutlined
 } from "@ant-design/icons";
 
 const { TabPane } = Tabs;
@@ -82,7 +83,7 @@ const EssayShowDetail = () => {
 
   const operations = (
     <Dropdown overlay={menu} placement="bottomLeft" arrow>
-      <Button>排序</Button>
+      <Button icon={<SwapOutlined />}>文章排序</Button>
     </Dropdown>
   );
 

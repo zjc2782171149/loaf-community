@@ -82,12 +82,13 @@ const Sign = () => {
                     userInfo.avatar_url ??
                     require("../../../../assets/LoginOut.png")
                   }
-                  style={{ width: 45, height: 45 }}
+                  style={{ width: 32, height: 32 }}
+                  preview={false}
                 />
               }
             />
           }
-          title="上午好！"
+          title="下午好！"
           description="点亮你在社区的每一天"
         />
       </Card>

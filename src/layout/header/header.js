@@ -26,10 +26,12 @@ export const HeaderStyle = styled.div`
   }
   .left {
     display: flex;
+    min-width: 500px;
   }
   .image {
     display: inline-block;
     margin: 5px 20px;
+    max-width: 50px;
   }
   .textt {
     font-size: 20px;
@@ -38,6 +40,7 @@ export const HeaderStyle = styled.div`
   .right {
     position: relative;
     flex: 1;
+    min-width: 700px;
   }
   .search {
     position: absolute;

@@ -109,7 +109,7 @@ const SettingProfile = () => {
       }, 1000);
     } catch (err) {
       setSignLoading(false);
-      message.info("请保证所有信息上传完整");
+      message.info("请确保消息填写完整或更换用户名");
     }
   }
 
@@ -169,6 +169,7 @@ const SettingProfile = () => {
                   type="primary"
                   htmlType="submit"
                   onClick={saveChange}
+                  disabled={disable}
                 >
                   保存修改
                 </Button>
@@ -195,7 +196,8 @@ const SettingProfile = () => {
                 uploadButton
               )}
             </Upload>
-            <p className="ps">支持jpg、png、jpeg格式大小5M以内的图片</p>
+            <p className="ps2">点击头像可再次上传</p>
+            <span className="ps">支持jpg、png、jpeg格式大小5M以内的图片</span>
           </Space>
         </div>
       </Card>

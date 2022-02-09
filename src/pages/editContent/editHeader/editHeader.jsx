@@ -13,7 +13,8 @@ import {
   Space,
   message,
   Modal,
-  Form
+  Form,
+  Tooltip
 } from "antd";
 import {
   UserOutlined,
@@ -180,6 +181,22 @@ const EditHeader = ({
   };
 
   async function handleSubmit() {
+    if (!value) {
+      message.info("标题不能为空");
+      return;
+    }
+    if (!contentEdit) {
+      message.info("文章内容不能为空");
+      return;
+    }
+    if (!introduction) {
+      message.info("文章介绍不能为空");
+      return;
+    }
+    if (!selectTab_id) {
+      message.info("板块不能为空");
+      return;
+    }
     try {
       await add_essay({
         title: value,
@@ -291,6 +308,11 @@ const EditHeader = ({
 
   // 去草稿箱
   async function toDraftBox() {
+    if (!value || !contentEdit) {
+      message.info("标题或文章内容不可为空");
+      return;
+    }
+
     try {
       if (id) {
         // 如果没参数，说明是旧草稿
@@ -329,13 +351,16 @@ const EditHeader = ({
         </div>
         <div className="right">
           <Space className="button">
-            <Button
-              className="draftButton"
-              size="middle"
-              onClick={() => toDraftBox()}
-            >
-              草稿箱
-            </Button>
+            <Tooltip title="保存草稿并跳转到草稿箱">
+              <Button
+                className="draftButton"
+                size="middle"
+                onClick={() => toDraftBox()}
+              >
+                草稿箱
+              </Button>
+            </Tooltip>
+
             <Button type="primary" size="middle" onClick={() => showModal()}>
               发布
             </Button>
