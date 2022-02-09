@@ -8,36 +8,17 @@ import { formatDate } from "../../../../utils/date";
 const HotArticle = ({ articleList }) => {
   const navigate = useNavigate();
 
-  // 侧边栏文章详情跳转
-  const getSideDetail = (id) => {
-    navigate(`/detail/${id}`);
-  };
-
-  // const image = (data) => {
-  //   //是否有封面及显示
-  //   return data ? (
-  //     <div className="article-image">
-  //       <Image
-  //         preview={false}
-  //         src={data}
-  //         onError={(event) => {
-  //           event.target.parentNode.parentNode.style.display = "none";
-  //         }}
-  //       />
-  //     </div>
-  //   ) : null;
-  // };
-
   return (
     <ArticleSection>
       {articleList?.map((article) => (
         <div key={article?.id} className="article-main">
-          {/* {image(article?.image_url)} */}
           <div className="article-main-list">
             <Space direction="vertical" size="middle">
               <a
                 className="article-title"
-                onClick={() => getSideDetail(article.id)}
+                onClick={() => {
+                  navigate(`/detail/${article.id}`, { replace: true });
+                }}
               >
                 {article.title}
               </a>

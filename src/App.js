@@ -3,6 +3,7 @@ import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import routes from "../src/router/index";
 import Header from "./layout/header/header.jsx";
 import BackToTop from "./components/BackTop/backToTop.jsx";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 // 配置路由
 const App = () => {
@@ -14,7 +15,15 @@ const Wrapper = () => {
     <>
       <Router>
         <Header />
-        <App />
+        <TransitionGroup>
+          <CSSTransition
+            key={location.pathname}
+            classNames="alert"
+            timeout={300}
+          >
+            <App />
+          </CSSTransition>
+        </TransitionGroup>
         <BackToTop />
       </Router>
     </>

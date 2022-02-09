@@ -4,6 +4,7 @@ import { colorGrey, colorWhite } from "../../reducer/constant";
 const width = document.body.clientWidth;
 
 export const DetailWrapper = styled.div`
+  transition: all 0.5s;
   .essay {
     background-color: ${colorGrey};
     padding: 20px ${width / 10}px;
@@ -19,7 +20,7 @@ export const DetailWrapper = styled.div`
     flex: 0.7;
     min-width: 800px;
     transition: all 0.5s;
-    background-color: white;
+    background-color: ${colorWhite};
     padding: 20px;
   }
   .article-meta {
@@ -65,12 +66,11 @@ export const DetailWrapper = styled.div`
     cursor: "auto";
   }
   .right-sidebar {
-    display: flex;
     flex: 0.3;
     min-width: 350px;
+    max-height: 200px;
     margin-left: 20px;
     background-color: ${colorWhite};
-    flex-direction: column;
   }
   .author {
     width: 100%;
@@ -85,8 +85,27 @@ export const DetailWrapper = styled.div`
   .hotTitle {
     margin: 15px 37%;
   }
-  .clearBgColor {
-    height: 20px;
-    background-color: ${colorGrey};
+  .hotArticle {
+    background-color: ${colorWhite};
+  }
+  .right-sidebar-sticky {
+    position: fixed;
+    opacity: 0;
+    transition: all 0.2s;
+    z-index: -1;
+    top: 40px;
+    right: 150px;
+    margin-left: 20px;
+    width: 350px;
+    min-width: 350px;
+    background-color: ${colorWhite};
+  }
+  .show {
+    opacity: 1 !important;
+    z-index: 1 !important;
+  }
+  .unShow {
+    opacity: -1 !important;
+    z-index: -1 !important;
   }
 `;

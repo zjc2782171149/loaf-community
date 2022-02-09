@@ -1,11 +1,9 @@
 // 文章详情
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
-import "dayjs/locale/zh-cn";
+import { useParams } from "react-router";
 import { Skeleton, Button, Modal, Card, Avatar, Space, Tag } from "antd";
 import { HeartTwoTone, EyeTwoTone, FireTwoTone } from "@ant-design/icons";
+import { throttle } from "lodash";
 import {
   like_essay,
   dislike_essay,
@@ -26,22 +24,18 @@ import { formatDate } from "../../utils/date.js";
 import Comments from "../../components/Comments/index.jsx";
 import HotArticle from "./components/HotArticle";
 import LeftSide from "./components/LeftSide";
+import { getScrollTop } from "../../utils/getScrollTop";
 import { DetailWrapper } from "./style";
 import RenderIfVisible from "react-render-if-visible";
-
-const { Meta } = Card;
-// dayjs 配置
-dayjs.locale("zh-cn"); // use locale
-dayjs.extend(relativeTime);
 
 const Detail = () => {
   // 状态定义
   const { id } = useParams(); // 从路由中读取文章id
-  const navigate = useNavigate();
   const [artLoading, setArtLoading] = useState(false); // 骨架屏显示
   const [author, setAuthor] = useState({}); // 文章数据
   const [article, setArticle] = useState({}); // 文章数据
   const [articleList, setArticleList] = useState([]); // 该用户发布的文章列表数据
+  const [show, setShow] = useState(false); // 右侧粘性栏目是否显示
   const [statesGroup, setStatesGroup] = useState({
     loveNum: 0,
     commentNum: 0,
@@ -125,7 +119,7 @@ const Detail = () => {
       }
     };
     getArticle();
-  }, []);
+  }, [id]);
 
   // 处理点赞事件
   const handleLove = () => {
@@ -200,6 +194,22 @@ const Detail = () => {
     anchorElement.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
+  // 处理侧边栏定位
+  let scrollTop = 0;
+  // 获取距离顶部的距离
+  const bindHandleScroll = throttle(() => {
+    scrollTop = getScrollTop();
+    // 大于一定距离后显示固定
+    scrollTop >= 800 ? setShow(true) : setShow(false);
+  }, 100);
+  // 初始化滚动事件
+  useEffect(() => {
+    window.addEventListener("scroll", bindHandleScroll);
+    return () => {
+      window.removeEventListener("scroll", bindHandleScroll);
+    };
+  }, []);
+
   return (
     <DetailWrapper>
       <div className="essay">
@@ -244,16 +254,15 @@ const Detail = () => {
               </div>
             </div>
             {/* 右侧侧边栏 */}
-            <div className="right-sidebar">
+            <div
+              className={show ? "right-sidebar unShow" : "right-sidebar show"}
+            >
               {/* 作者信息 */}
               <Card
                 className="author"
                 title={
                   <Space>
                     <Avatar
-                      onClick={() => {
-                        navigate(`/user/${article.publish_user_id}`);
-                      }}
                       src={
                         author.avatar_url
                           ? author.avatar_url
@@ -262,9 +271,6 @@ const Detail = () => {
                       size={50}
                     />
                     <Space
-                      onClick={() => {
-                        navigate(`/user/${article.publish_user_id}`);
-                      }}
                       direction="vertical"
                       className="authorInfo"
                       size="small"
@@ -314,33 +320,111 @@ const Detail = () => {
                 paragraph={{ rows: 16 }}
                 round
               >
-                <Tag
-                  color={
-                    localStorage.getItem("userInfo")
-                      ? JSON.parse(localStorage.getItem("userInfo")).theme_color
-                      : "blue"
-                  }
-                  className="hotTitle"
-                >
-                  作者热门文章
-                </Tag>
-                {/* 作者热门文章 */}
-                <HotArticle articleList={articleList} />
+                <div className="hotArticle">
+                  <Tag
+                    color={
+                      localStorage.getItem("userInfo")
+                        ? JSON.parse(localStorage.getItem("userInfo"))
+                            .theme_color
+                        : "blue"
+                    }
+                    className="hotTitle"
+                  >
+                    作者热门文章
+                  </Tag>
+                  {/* 作者热门文章 */}
+                  <HotArticle articleList={articleList} />
+                </div>
               </Skeleton>
-              <div className="clearBgColor"></div>
-              {/* 照片/广告 */}
+            </div>
+
+            {/* 滚动时固定的右侧栏目 */}
+            <div
+              className={
+                show
+                  ? "right-sidebar-sticky show"
+                  : "right-sidebar-sticky unShow"
+              }
+            >
+              {/* 作者信息 */}
               <Card
                 className="author"
-                hoverable="true"
-                cover={
-                  <img alt="example" src="https://joeschmoe.io/api/v1/random" />
+                title={
+                  <Space>
+                    <Avatar
+                      src={
+                        author.avatar_url
+                          ? author.avatar_url
+                          : require("../../assets/LoginOut.png")
+                      }
+                      size={50}
+                    />
+                    <Space
+                      direction="vertical"
+                      className="authorInfo"
+                      size="small"
+                    >
+                      <span className="author-title">{author.username}</span>
+                      <Space className="author-message" direction="vertical">
+                        <span>@{author.position}</span>
+                        <span>{author.introduction}</span>
+                      </Space>
+                    </Space>
+                  </Space>
+                }
+                extra={
+                  <Button
+                    onClick={() => focusUser()}
+                    type="primary"
+                    style={
+                      statesGroup.focus
+                        ? { backgroundColor: "#2ecc71", border: "none" }
+                        : {}
+                    }
+                    className="author-love"
+                  >
+                    {statesGroup.focus ? "已关注" : "+ 关注"}
+                  </Button>
                 }
               >
-                <Meta
-                  title="广告位招租"
-                  description="有需要的可以来找我们哈哈"
-                />
+                <Space direction="vertical">
+                  <Space size={5}>
+                    <HeartTwoTone className="iconNum" />
+                    获得点赞{author.like_count}
+                  </Space>
+                  <Space size={5}>
+                    <EyeTwoTone className="iconNum" />
+                    文章被收藏{author.collect_count}
+                  </Space>
+                  <Space size={5}>
+                    <FireTwoTone className="iconNum" />
+                    潜力值{parseInt(Math.random() * Math.random() * 1000)}
+                  </Space>
+                </Space>
               </Card>
+              {/* 右侧文章列表 */}
+              <Skeleton
+                active
+                loading={!articleList}
+                paragraph={{ rows: 16 }}
+                round
+              >
+                <div className="hotArticle">
+                  <Tag
+                    color={
+                      localStorage.getItem("userInfo")
+                        ? JSON.parse(localStorage.getItem("userInfo"))
+                            .theme_color
+                        : "blue"
+                    }
+                    className="hotTitle"
+                  >
+                    作者热门文章
+                  </Tag>
+                  {/* 作者热门文章 */}
+                  <HotArticle articleList={articleList} />
+                </div>
+              </Skeleton>
             </div>
           </Skeleton>
         </div>
