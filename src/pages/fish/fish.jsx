@@ -194,7 +194,9 @@ const Fish = () => {
       });
       message.success("发送唠嗑成功！");
       setTopicNum(topicNum + 1);
-      if (nowSendKind === "技术圈" && nowTopic === "技术圈") {
+      if (nowTopic === "全部") {
+        flag = 1;
+      } else if (nowSendKind === "技术圈" && nowTopic === "技术圈") {
         flag = 1;
       } else if (nowSendKind === "吐槽圈" && nowTopic === "吐槽圈") {
         flag = 1;
@@ -207,9 +209,8 @@ const Fish = () => {
             id: res.data.id,
             username: userInfo.username,
             publish_time: new Date().getTime(),
-            avatar: userInfo.avatar_url
-              ? userInfo.avatar_url
-              : require("../../assets/LoginOut.png"),
+            avatar_url:
+              userInfo.avatar_url ?? require("../../assets/LoginOut.png"),
             content: textValue,
             comment_num: 0
           },
