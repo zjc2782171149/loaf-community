@@ -338,8 +338,10 @@ const Header = () => {
       </div>
 
       <div
-        className={`header animate__animated animate__fadeInDown ${
-          show ? "sticky" : "unShow"
+        className={`header ${
+          show
+            ? "sticky animate__animated animate__fadeInDown"
+            : "unShow animate__animated animate__fadeOutUp"
         }`}
       >
         <div className="left">

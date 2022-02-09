@@ -348,8 +348,8 @@ const Detail = () => {
             <div
               className={
                 show
-                  ? "right-sidebar-sticky show"
-                  : "right-sidebar-sticky unShow"
+                  ? "right-sidebar-sticky show animate__animated animate__fadeInRight"
+                  : "right-sidebar-sticky unShow animate__animated animate__fadeOutRight"
               }
             >
               {/* 作者信息 */}
