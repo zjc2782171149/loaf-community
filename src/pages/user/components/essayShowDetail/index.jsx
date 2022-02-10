@@ -20,7 +20,6 @@ const EssayShowDetail = ({ name }) => {
   const navigate = useNavigate();
   const [essayList, setEssayList] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 初始化，获取首页所有文章的分类
   useEffect(() => {

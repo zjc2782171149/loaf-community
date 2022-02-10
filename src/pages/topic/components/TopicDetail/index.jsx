@@ -6,7 +6,7 @@ import {
   get_user_info,
   set__user_follow,
   delete_user_follow,
-  get_which_user_follow
+  get_user_follow
 } from "../../../../service/user";
 import { formatDate } from "../../../../utils/date";
 
@@ -15,6 +15,7 @@ const { Meta } = Card;
 const TopicDetail = ({ id }) => {
   const [topicDetail, setTopicDetail] = useState({});
   const [topicLoading, setTopicLoading] = useState(false);
+  // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
     async function initTopic() {
@@ -36,9 +37,9 @@ const TopicDetail = ({ id }) => {
         publishUser.position = res2.data.position;
 
         // 根据自己id请求是否关注了该用户
-        const res3 = await get_which_user_follow({ id: res.data.user_id });
+        const res3 = await get_user_follow();
         res3.data.forEach((item) => {
-          if (item.id === res.data.publish_user_id) {
+          if (item.id === res.data.user_id) {
             flag = 1;
           }
         });
