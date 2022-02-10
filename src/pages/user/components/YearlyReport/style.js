@@ -42,7 +42,9 @@ export const YearlyReportStyle = styled.div`
       }
       .one-section {
         font-weight: 600;
-        margin: 0 0 40px 0;
+        margin: 0 0 20px 0;
+      }
+      .empty {
       }
     }
   }
