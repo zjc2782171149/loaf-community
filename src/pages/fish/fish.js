@@ -65,6 +65,8 @@ export const MiddleStyle = styled.div`
   margin-top: -5px;
   padding-right: 10px;
   padding-bottom: 10px;
+  min-width: 900px;
+  max-width: 900px;
 }
 .topicHover {
   cursor: pointer;
