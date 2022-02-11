@@ -1,14 +1,25 @@
 import React from "react";
 import { LeftSection } from "./style";
-import { LikeFilled, MessageFilled, StarFilled } from "@ant-design/icons";
+import { Tooltip } from "antd";
+import {
+  LikeFilled,
+  MessageFilled,
+  StarFilled,
+  TagsFilled,
+  CodepenCircleFilled
+} from "@ant-design/icons";
 
 const LeftSide = ({
   articleInfo,
   size,
   handleCollect,
   handleComment,
-  handleLove
+  handleLove,
+  handleWait,
+  openDrawer
 }) => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   return (
     <LeftSection>
       <div className="container">
@@ -16,7 +27,9 @@ const LeftSide = ({
           <div className="eachButton" onClick={() => handleLove()}>
             <LikeFilled
               className="icon"
-              style={articleInfo.loveDone ? { color: "#1890FF" } : {}}
+              style={
+                articleInfo.loveDone ? { color: userInfo.theme_color } : {}
+              }
             />
             <div className="count">{articleInfo.loveNum ?? 0}</div>
           </div>
@@ -30,9 +43,30 @@ const LeftSide = ({
           <div className="eachButton" onClick={() => handleCollect()}>
             <StarFilled
               className="icon"
-              style={articleInfo.collect ? { color: "#1890FF" } : {}}
+              style={articleInfo.collect ? { color: userInfo.theme_color } : {}}
             />
             <div className="count">{articleInfo.collectNum ?? 0}</div>
+          </div>
+          <div className="eachButton2">
+            <Tooltip
+              className="hover"
+              title="稍后在看"
+              placement="left"
+              color={userInfo.theme_color}
+            >
+              <TagsFilled
+                className="icon"
+                style={articleInfo.wait ? { color: userInfo.theme_color } : {}}
+                onClick={() => handleWait()}
+              />
+            </Tooltip>
+            <Tooltip title="打开稍后在看列表" color={userInfo.theme_color}>
+              <CodepenCircleFilled
+                className="waitArr"
+                style={{ color: userInfo.theme_color }}
+                onClick={() => openDrawer()}
+              />
+            </Tooltip>
           </div>
         </div>
 

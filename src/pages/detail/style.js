@@ -18,7 +18,7 @@ export const DetailWrapper = styled.div`
   }
   .main {
     flex: 0.7;
-    min-width: 800px;
+    min-width: 830px;
     transition: all 0.5s;
     background-color: ${colorWhite};
     padding: 20px;

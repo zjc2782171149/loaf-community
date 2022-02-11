@@ -36,13 +36,12 @@ export const LeftSection = styled.div`
     top: 140px;
     z-index: 1000;
     transform: translateX(-70px);
-    height: 340px;
   }
   .button {
     display: flex;
     flex-direction: column;
     width: 65px;
-    height: 300px;
+    height: 320px;
     color: #999999;
     transition: all 0.5s;
   }
@@ -54,12 +53,31 @@ export const LeftSection = styled.div`
     box-shadow: 0.4rem 0.4rem 0.8rem #c8d0e7;
     border-radius: 50%;
     cursor: pointer;
-    margin: 20px 0;
+    margin: 10px 0;
     text-align: center;
     line-height: 30px;
   }
   .eachButton:hover {
     color: ${colorBlue} !important;
+  }
+  .hover:hover {
+    color: ${colorBlue} !important;
+  }
+  .eachButton2 {
+    flex: 1;
+    width: 55px;
+    height: 55px;
+    background-color: #fff;
+    box-shadow: 0.4rem 0.4rem 0.8rem #c8d0e7;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 10px 0;
+    text-align: center;
+    line-height: 30px;
+  }
+  .waitArr {
+    transform: scale(1.5);
+    margin-left: 60px;
   }
   .icon {
     margin-top: 22px;
@@ -83,7 +101,7 @@ export const LeftSection = styled.div`
     font-size: 14px;
     height: 30px;
     line-height: 30px;
-    margin: -10px 0 0 -25px;
+    margin: 10px 0 0 -25px;
   }
   .slide {
     width: 120px;

@@ -1,7 +1,16 @@
 // 文章详情
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Skeleton, Button, Modal, Card, Avatar, Space, Tag } from "antd";
+import {
+  Skeleton,
+  Button,
+  Modal,
+  Card,
+  Avatar,
+  Space,
+  Tag,
+  Drawer
+} from "antd";
 import { HeartTwoTone, EyeTwoTone, FireTwoTone } from "@ant-design/icons";
 import { throttle } from "lodash";
 import {
@@ -21,9 +30,10 @@ import {
   get_which_user_follow
 } from "../../service/user.js";
 import { formatDate } from "../../utils/date.js";
-import Comments from "../../components/Comments/index.jsx";
+import Comments from "../../components/Comments";
 import HotArticle from "./components/HotArticle";
 import LeftSide from "./components/LeftSide";
+import WaitArticle from "./components/WaitArticle";
 import { getScrollTop } from "../../utils/getScrollTop";
 import { DetailWrapper } from "./style";
 import RenderIfVisible from "react-render-if-visible";
@@ -44,7 +54,7 @@ const Detail = () => {
     loveDone: false,
     collect: false,
     focus: false,
-    read: false
+    wait: false
   });
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -96,13 +106,20 @@ const Detail = () => {
         const isFollow = flag === 1 ? true : false;
 
         // 存储文章点赞数据，点赞状态迁移
+        // 本地缓存查询当前文章是否已添加到 稍后在看队列
+        const waitArr = JSON.parse(localStorage.getItem("waitArr")).queue;
+        let is_wait = false;
+        waitArr.forEach((item) => {
+          if (item === Number(id)) is_wait = true;
+        });
         setStatesGroup({
           loveNum: article.like_count,
           commentNum: article.comment_count,
           collectNum: article.collect_count,
           loveDone: is_like,
           collect: is_collect,
-          focus: isFollow
+          focus: isFollow,
+          wait: is_wait
         });
         setArticle(article);
         /**
@@ -200,6 +217,40 @@ const Detail = () => {
     anchorElement.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
+  // 添加/移除 稍后在看
+  const handleWait = () => {
+    // 更新稍后在看 状态
+    let deleteIndex = 0;
+    let waitArr = JSON.parse(localStorage.getItem("waitArr")) ?? { queue: [] };
+
+    if (statesGroup.wait) {
+      // 本地缓存移除该篇文章id
+      waitArr.queue.forEach((item, index) => {
+        if (item === Number(id)) {
+          deleteIndex = index;
+        }
+      });
+      waitArr.queue.splice(deleteIndex, 1);
+    } else {
+      waitArr.queue.push(Number(id));
+    }
+
+    localStorage.setItem("waitArr", JSON.stringify(waitArr));
+
+    setStatesGroup({
+      ...statesGroup,
+      wait: !statesGroup.wait
+    });
+  };
+
+  // 稍后在看抽屉
+  const [visible, setVisible] = useState(false);
+  const [xuanran, setXuanran] = useState(false); // 控制抽屉重复渲染的变量
+  const openDrawer = () => {
+    setVisible(true);
+    setXuanran(!xuanran);
+  };
+
   // 处理侧边栏定位
   let scrollTop = 0;
   // 获取距离顶部的距离
@@ -231,6 +282,8 @@ const Detail = () => {
               handleCollect={handleCollect}
               handleComment={handleComment}
               handleLove={handleLove}
+              handleWait={handleWait}
+              openDrawer={openDrawer}
             />
             {/* 文章内容 */}
             <div className="main">
@@ -439,6 +492,17 @@ const Detail = () => {
             </div>
           </Skeleton>
         </div>
+        <Drawer
+          title="稍后再看"
+          placement="right"
+          onClose={() => setVisible(false)}
+          visible={visible}
+        >
+          <WaitArticle
+            closeDrawer={() => setVisible(false)}
+            xuanran={xuanran}
+          />
+        </Drawer>
       </div>
     </DetailWrapper>
   );
