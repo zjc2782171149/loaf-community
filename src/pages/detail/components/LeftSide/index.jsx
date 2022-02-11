@@ -26,6 +26,7 @@ const LeftSide = ({
         <div className="button">
           <div className="eachButton" onClick={() => handleLove()}>
             <LikeFilled
+              id="likeSpecial"
               className="icon"
               style={
                 articleInfo.loveDone ? { color: userInfo.theme_color } : {}
