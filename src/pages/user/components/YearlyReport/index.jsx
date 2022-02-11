@@ -8,6 +8,12 @@ import {
   get_publish_essay,
   get_like_essay
 } from "../../../../service/user";
+// echarts
+import * as echarts from "echarts/lib/echarts";
+import "echarts/lib/chart/pie";
+import "echarts/lib/component/title";
+import "echarts/lib/component/tooltip";
+import "echarts/lib/component/visualMap";
 
 const { Meta } = Card;
 
@@ -22,6 +28,83 @@ const YearlyReport = () => {
   // 帖子初始化
   useEffect(() => {
     changeTabs();
+  }, []);
+
+  // Echarts初始化
+  useEffect(() => {
+    setTimeout(() => {
+      let myChart = echarts.init(document.getElementById("echartShow"));
+      // 指定图表的配置项和数据
+      const option = {
+        backgroundColor: "white",
+
+        title: {
+          text: "年度报告总览",
+          left: "center",
+          top: 20,
+          textStyle: {
+            color: userInfo.theme_color
+          }
+        },
+        tooltip: {
+          // trigger: "item",
+          // formatter: "{a} <br/>{b} : {d}%"
+        },
+        visualMap: {
+          show: false,
+          min: 500,
+          max: 600,
+          inRange: {
+            colorLightness: [0, 1]
+          }
+        },
+        series: [
+          {
+            name: "年度报告总览",
+            type: "pie",
+            clockwise: "true",
+            startAngle: "0",
+            radius: "60%",
+            center: ["50%", "50%"],
+            data: [
+              {
+                value: followList.length,
+                name: "关注用户数",
+                itemStyle: {
+                  normal: {
+                    color: "#3bafff",
+                    shadowBlur: "90",
+                    shadowColor: userInfo.theme_color,
+                    shadowOffsetY: "30"
+                  }
+                }
+              },
+              {
+                value: essayNum,
+                name: "发表文章数",
+                itemStyle: {
+                  normal: {
+                    color: "#f1bb4c"
+                  }
+                }
+              },
+              {
+                value: likeNum,
+                name: "点赞文章数",
+                itemStyle: {
+                  normal: {
+                    color: "#3feed4"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      };
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+    }, 1000);
   }, []);
 
   // 关注、文章、点赞数量初始化
@@ -82,6 +165,9 @@ const YearlyReport = () => {
             />
           </div>
           <div className="main">
+            <div className="echart">
+              <div id="echartShow" style={{ width: 400, height: 400 }}></div>
+            </div>
             <div className="one">
               <span
                 className="one-title"

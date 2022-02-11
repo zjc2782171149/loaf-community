@@ -33,7 +33,7 @@ export const YearlyReportStyle = styled.div`
   }
   .main {
     position: relative;
-    margin-top: 200px;
+    margin-top: 150px;
     .one {
       margin-top: 60px;
       .one-title {
@@ -47,5 +47,10 @@ export const YearlyReportStyle = styled.div`
       .empty {
       }
     }
+  }
+  .echart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
